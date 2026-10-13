@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import Artwork from '../../components/art/Artwork.astro';
 
 const guides = (await getCollection('guias')).sort((a, b) => a.data.title.localeCompare(b.data.title, 'es'));
-const title = 'Guías para organizar un cumpleaños | Cumple en Orden';
+const title = 'Guías para organizar un cumpleaños | Festejito';
 const description = 'Guías prácticas para calcular comida, armar el presupuesto y comparar un cumple en casa o en salón.';
 
 const artFor = (id: string) => {

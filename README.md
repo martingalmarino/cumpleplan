@@ -1,8 +1,8 @@
-# Cumple en Orden
+# Festejito
 
 Planificador estático para cumpleaños infantiles en Argentina. El plan se guarda en el navegador. El directorio inicial es de Córdoba Capital y solo publica fichas con datos revisados.
 
-El nombre es provisorio. No es una marca registrada ni un dominio contratado.
+El sitio es festejito.com.ar.
 
 ## Requisitos
 

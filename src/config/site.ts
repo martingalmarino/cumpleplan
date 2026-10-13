@@ -31,7 +31,8 @@ const adsenseSlot = readEnv('PUBLIC_ADSENSE_SLOT');
 const analyticsId = readEnv('PUBLIC_ANALYTICS_ID');
 
 export const site = {
-  brand: 'Cumple en Orden',
+  brand: 'Festejito',
+  domain: 'festejito.com.ar',
   promise:
     'Organizá el cumple: calculá cuánto comprar, compará presupuestos y llevá el control de lo que falta.',
   description:

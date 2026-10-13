@@ -1,8 +1,8 @@
-# Guía de marca — Cumple en Orden
+# Guía de marca — Festejito
 
 Concepto: “La alegría del cumple, con todo en su lugar.”
 
-La marca habla con adultos que organizan un cumpleaños infantil en Argentina. El tono es alegre, práctico y cercano, en voseo. El símbolo es un tilde con confeti: orden más festejo. No es un logo de imagen ni un set de emojis.
+La marca habla con adultos que organizan un cumpleaños infantil en Argentina. El tono es alegre, práctico y cercano, en voseo. El sitio es festejito.com.ar. El isotipo es una F blanca sobre un cuadrado verde `#237A32`, con una llama amarilla al final del trazo de arriba: la inicial del nombre convertida en vela. En una sola tinta, la F y la llama van blancas sobre azul marino. El nombre va escrito como texto, nunca como imagen.
 
 ## Color
 

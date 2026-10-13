@@ -16,7 +16,7 @@ interface Props {
 
 const { guide } = Astro.props;
 const { Content } = await render(guide);
-const branded = `${guide.data.title} | Cumple en Orden`;
+const branded = `${guide.data.title} | Festejito`;
 const title = branded.length <= 60 ? branded : guide.data.title;
 const path = `/guias/${guide.id}/`;
 const pageUrl = absoluteUrl(path);

@@ -23,7 +23,7 @@ export function PrintSheet({ plan }: { plan: Plan }) {
   return (
     <article className="print-sheet">
       <h1>{plan.event.label}</h1>
-      <p>Cumple en Orden · Estimación orientativa · Los cambios de este plan viven en el navegador donde lo armaste.</p>
+      <p>Festejito · Estimación orientativa · Los cambios de este plan viven en el navegador donde lo armaste.</p>
       <p>
         {settingLabels[plan.event.setting]} · {plan.event.durationHours} horas · {plan.event.childrenCount} chicos · {plan.event.adultsCount} adultos
         {plan.event.date ? ` · ${plan.event.date}` : ''}
