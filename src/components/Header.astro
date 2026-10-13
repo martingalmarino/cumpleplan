@@ -1,0 +1,115 @@
+---
+import { site } from '../config/site';
+import { publishedProviders } from '../data/providers/records';
+
+interface Props {
+  path: string;
+}
+const { path } = Astro.props;
+const showDirectory = publishedProviders().length > 0;
+const tools = [
+  { href: '/calculadora-comida-cumpleanos/', label: 'Comida y bebida' },
+  { href: '/presupuesto-cumpleanos/', label: 'Presupuesto' },
+  { href: '/checklist-cumpleanos/', label: 'Checklist' },
+  { href: '/lista-compras-cumpleanos/', label: 'Compras' },
+];
+---
+
+<header class="site-header no-print" data-site-header>
+  <div class="container">
+    <div class="header-row">
+      <a class="brand" href="/">
+        <svg class="brand-mark" viewBox="0 0 36 36" aria-hidden="true">
+          <rect width="36" height="36" rx="10" fill="#237A32"></rect>
+          <path d="M9 18.4 15.1 24.2 27 12.2" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"></path>
+          <circle cx="29" cy="7" r="2.4" fill="#FFCC33"></circle>
+          <path d="M5.5 8.2 8 6l1.2 3.2z" fill="#FF6633"></path>
+        </svg>
+        <span class="brand-name">{site.brand}</span>
+      </a>
+      <nav class="desktop-nav" aria-label="Principal">
+        <div class="tools-menu">
+          <button type="button" class="tools-trigger" data-tools-button aria-expanded="false" aria-controls="tools-panel" aria-haspopup="true">
+            Herramientas
+          </button>
+          <div id="tools-panel" class="tools-panel" data-tools-panel hidden>
+            {tools.map((link) => (
+              <a href={link.href} aria-current={path === link.href ? 'page' : undefined}>{link.label}</a>
+            ))}
+          </div>
+        </div>
+        <a href="/guias/" aria-current={path.startsWith('/guias') ? 'page' : undefined}>Guías</a>
+        {showDirectory && (
+          <a href="/cumpleanos-infantiles-cordoba/" aria-current={path.startsWith('/cumpleanos-infantiles-cordoba') ? 'page' : undefined}>Proveedores en Córdoba</a>
+        )}
+        <a class="button button-primary" href="/organizador/">Organizar mi cumple</a>
+      </nav>
+      <button type="button" class="menu-toggle" data-menu-button aria-expanded="false" aria-controls="mobile-menu">Menú</button>
+    </div>
+    <nav id="mobile-menu" class="mobile-panel" data-menu-panel hidden aria-label="Principal">
+      <p class="kicker">Herramientas</p>
+      {tools.map((link) => (
+        <a href={link.href} aria-current={path === link.href ? 'page' : undefined}>{link.label}</a>
+      ))}
+      <a href="/guias/" aria-current={path.startsWith('/guias') ? 'page' : undefined}>Guías</a>
+      {showDirectory && (
+        <a href="/cumpleanos-infantiles-cordoba/" aria-current={path.startsWith('/cumpleanos-infantiles-cordoba') ? 'page' : undefined}>Proveedores en Córdoba</a>
+      )}
+      <a class="button button-primary" href="/organizador/">Organizar mi cumple</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  if (header) {
+    const toolsButton = header.querySelector<HTMLButtonElement>('[data-tools-button]');
+    const toolsPanel = header.querySelector<HTMLElement>('[data-tools-panel]');
+    const menuButton = header.querySelector<HTMLButtonElement>('[data-menu-button]');
+    const menuPanel = header.querySelector<HTMLElement>('[data-menu-panel]');
+
+    const setOpen = (button: HTMLButtonElement | null, panel: HTMLElement | null, open: boolean, focusButton = false) => {
+      if (!button || !panel) return;
+      button.setAttribute('aria-expanded', open ? 'true' : 'false');
+      panel.hidden = !open;
+      if (!open && focusButton) button.focus();
+    };
+
+    toolsButton?.addEventListener('click', () => {
+      const open = toolsButton.getAttribute('aria-expanded') === 'true';
+      setOpen(toolsButton, toolsPanel, !open);
+    });
+
+    menuButton?.addEventListener('click', () => {
+      const open = menuButton.getAttribute('aria-expanded') === 'true';
+      setOpen(menuButton, menuPanel, !open);
+    });
+
+    header.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      if (toolsButton?.getAttribute('aria-expanded') === 'true') {
+        event.preventDefault();
+        setOpen(toolsButton, toolsPanel, false, true);
+      } else if (menuButton?.getAttribute('aria-expanded') === 'true') {
+        event.preventDefault();
+        setOpen(menuButton, menuPanel, false, true);
+      }
+    });
+
+    toolsPanel?.addEventListener('focusout', (event) => {
+      const next = event.relatedTarget;
+      if (next instanceof Node && (toolsPanel.contains(next) || toolsButton?.contains(next))) return;
+      setOpen(toolsButton, toolsPanel, false);
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Node) || header.contains(event.target)) return;
+      setOpen(toolsButton, toolsPanel, false);
+      setOpen(menuButton, menuPanel, false);
+    });
+
+    menuPanel?.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => setOpen(menuButton, menuPanel, false));
+    });
+  }
+</script>

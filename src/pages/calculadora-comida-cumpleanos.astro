@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PlannerApp from '../components/planner/PlannerApp';
+import { calculateFood, lineByKey, workedExampleInput } from '../lib/planner/calculations';
+import { formatQty } from '../lib/planner/money';
+
+const example = calculateFood(workedExampleInput());
+const sandwiches = lineByKey(example, 'sandwich');
+const cake = lineByKey(example, 'cake');
+const water = lineByKey(example, 'water');
+const other = lineByKey(example, 'otherDrink');
+const title = 'Calculadora de comida para cumpleaños | Cumple en Orden';
+const description = 'Estimá sándwiches, pizza, panchos, torta y bebidas para un cumpleaños infantil. Los supuestos se pueden editar y el plan queda en este navegador.';
+---
+
+<Base title={title} description={description} path="/calculadora-comida-cumpleanos/">
+  <div class="container tool-page">
+    <article class="prose no-print">
+      <h1>Calculadora de comida para un cumpleaños</h1>
+      <p>Sirve para decidir cuánto comprar antes de pedir precios. El resultado dice “estimación orientativa” porque el apetito, las edades, el clima, el menú y la duración cambian lo que se come. No es una tabla nutricional ni una cantidad garantizada.</p>
+      <h2>Cómo está armado el cálculo</h2>
+      <p>Primero se arman porciones saladas equivalentes: cada adulto cuenta como una y cada chico, por defecto, como 0,6. Esa demanda se reparte según el porcentaje de cada alimento. Pizza, sándwiches y panchos son alternativas del mismo pedido: un menú mitad y mitad no sirve dos comidas completas.</p>
+      <p>En merienda, el punto de partida es 1,5 porciones de pizza, o 1 sándwich chico, o 1 pancho por porción equivalente. En comida principal, 3 porciones de pizza, o 2 sándwiches, o 2 panchos. La torta arranca en 0,100 kg por chico y 0,120 kg por adulto, y la compra se redondea de a 0,250 kg.</p>
+      <p>Las bebidas salen de un solo total: 0,150 L por chico por hora y 0,200 L por adulto por hora. Ese total se parte, por defecto, mitad agua y mitad otras bebidas. No hay alcohol en el cálculo inicial. El margen, si lo activás, se aplica una sola vez a cada total y después se redondea la compra. La duración no multiplica la comida salada ni la torta.</p>
+      <h2>Un ejemplo reproducible</h2>
+      <p>Con 20 chicos, 10 adultos, 3 horas, merienda, 100 % sándwiches y 10 % de margen, el cálculo da {formatQty(example.equivalentServings)} porciones equivalentes. Los sándwiches pasan de {formatQty(sandwiches?.consumption ?? 0)} a {sandwiches?.purchase} unidades. La torta pasa de {formatQty(cake?.consumption ?? 0)} kg a {formatQty(cake?.purchase ?? 0)} kg. Las bebidas estiman {formatQty(example.beverageConsumptionLiters)} L de consumo y, con envases de 2 L, {water?.purchase} de agua y {other?.purchase} de otras bebidas: {formatQty(example.beveragePurchaseLiters)} L comprados, que no son lo mismo que los litros que se espera tomar.</p>
+      <p>Podés cambiar cada coeficiente. Si ajustás una compra a mano, queda marcada como “Ajustado por vos”. Si después cambiás los asistentes, el ajuste se conserva y te pedimos que lo revises.</p>
+      <p>Los chicos y los adultos se cargan en el mismo plan. Abrir esta página no borra lo que ya tenías guardado en el navegador.</p>
+      <p>También podés leer <a href="/guias/como-calcular-comida-para-un-cumpleanos/">cómo calcular la comida</a> y <a href="/guias/como-calcular-bebidas-para-un-cumpleanos/">cómo calcular las bebidas</a>.</p>
+    </article>
+    <div class="container no-print">
+      <AdSlot placement="debajo-de-la-explicacion" />
+    </div>
+    <section class="no-print">
+      <h2>Calculá con tu plan</h2>
+      <p>Los cambios se guardan en tu plan de este navegador.</p>
+      <PlannerApp client:load view="comida" />
+    </section>
+  </div>
+</Base>

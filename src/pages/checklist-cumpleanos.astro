@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PlannerApp from '../components/planner/PlannerApp';
+
+const title = 'Checklist para un cumpleaños infantil | Cumple en Orden';
+const description = 'Tareas desde cuatro semanas antes hasta el día del cumple. Si cambiás la fecha, se mueven las relativas y se conservan las que ya marcaste.';
+---
+
+<Base title={title} description={description} path="/checklist-cumpleanos/">
+  <div class="container tool-page">
+    <article class="prose no-print">
+      <h1>Checklist de un cumpleaños infantil</h1>
+      <p>La lista inicial reparte el trabajo en momentos concretos: cuatro, tres y dos semanas antes, la última semana, dos días antes, la víspera y el día del festejo. Podés editar, borrar y agregar tareas.</p>
+      <h2>Fechas sin corrimientos raros</h2>
+      <p>Si cargás la fecha del cumple, cada tarea relativa muestra el día correspondiente en el calendario, no en un huso que reste un día. Si no hay fecha, ves “4 semanas antes” y la tarea no se marca vencida por un calendario que todavía no existe. Una fecha que hayas puesto a mano no se mueve cuando cambiás el día del festejo. Lo que ya marcaste como hecho tampoco se borra.</p>
+      <p>Una tarea atrasada sigue en la lista, con el estado “Vencida”. No desaparece sola.</p>
+      <h2>Para qué sirve cada tramo</h2>
+      <p>Al principio conviene cerrar presupuesto, una estimación de gente, el lugar y pedidos comparables. Después, reservar, definir el menú y avisar la fecha. Más cerca, encargar la torta si hace falta, revisar decoración y anotar qué lleva cada adulto. La última semana es para actualizar asistentes, confirmar servicios y mirar saldos. Los dos días previos alcanzan para lo no perecedero y, si es al aire libre, para un plan de lluvia.</p>
+      <p>El recorrido completo está en <a href="/guias/como-organizar-un-cumpleanos-infantil/">cómo organizar el cumpleaños paso a paso</a>.</p>
+    </article>
+    <AdSlot placement="debajo-de-la-explicacion" />
+    <section>
+      <h2 class="no-print">Seguí las tareas de tu plan</h2>
+      <p class="no-print">Los cambios se guardan en tu plan de este navegador.</p>
+      <PlannerApp client:load view="checklist" />
+    </section>
+  </div>
+</Base>

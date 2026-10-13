@@ -1,0 +1,38 @@
+---
+import { site } from '../config/site';
+import { publishedProviders } from '../data/providers/records';
+
+const showDirectory = publishedProviders().length > 0;
+---
+
+<footer class="site-footer no-print">
+  <div class="container footer-grid">
+    <div>
+      <p><strong>{site.brand}</strong></p>
+      <p>Planificador gratuito para cumpleaños infantiles en Argentina. La alegría del cumple, con todo en su lugar.</p>
+    </div>
+    <div>
+      <h2>Herramientas</h2>
+      <ul>
+        <li><a href="/calculadora-comida-cumpleanos/">Comida y bebida</a></li>
+        <li><a href="/presupuesto-cumpleanos/">Presupuesto</a></li>
+        <li><a href="/checklist-cumpleanos/">Checklist</a></li>
+        <li><a href="/lista-compras-cumpleanos/">Compras</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>El sitio</h2>
+      <ul>
+        <li><a href="/guias/">Guías</a></li>
+        {showDirectory && <li><a href="/cumpleanos-infantiles-cordoba/">Proveedores en Córdoba</a></li>}
+        <li><a href="/sobre-el-proyecto/">Sobre el proyecto</a></li>
+        <li><a href="/contacto/">Contacto</a></li>
+        <li><a href="/privacidad/">Privacidad</a></li>
+        <li><a href="/terminos/">Términos</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <p class="footer-note">Las cantidades son estimaciones para organizar compras. No reemplazan el criterio de quien cocina ni un consejo de salud.</p>
+  </div>
+</footer>

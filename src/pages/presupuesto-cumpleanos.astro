@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import AdSlot from '../components/AdSlot.astro';
+import PlannerApp from '../components/planner/PlannerApp';
+
+const title = 'Presupuesto de cumpleaños infantil | Cumple en Orden';
+const description = 'Anotá tus precios en pesos, compará hasta tres alternativas del mismo servicio y mirá qué falta pagar. Sin precios de mercado inventados.';
+---
+
+<Base title={title} description={description} path="/presupuesto-cumpleanos/">
+  <div class="container tool-page">
+    <article class="prose no-print">
+      <h1>Presupuesto para un cumpleaños infantil</h1>
+      <p>El presupuesto empieza vacío. Cada precio lo ingresás vos, en pesos, porque un número publicado hoy puede no servir el mes que viene y porque esta herramienta no releva el mercado.</p>
+      <h2>Qué suma cada total</h2>
+      <p>El estimado es cantidad por precio unitario. El comprometido usa el importe contratado cuando lo cargaste y, si no, el estimado. Lo pagado incluye la seña: no la cargues otra vez como un gasto nuevo. El pendiente es contratado menos pagado, solo en las líneas que ya tienen un importe cerrado. Si el pago supera lo contratado, te pedimos que lo corrijas.</p>
+      <p>Con cero asistentes no calculamos costo por persona, para no dividir por cero. Si hay gente pero faltan precios, el promedio usa solo las líneas que ya tienen importe y lo aclara.</p>
+      <h2>Comparar dos o tres opciones del mismo servicio</h2>
+      <p>El total de una alternativa es tarifa fija, más el importe por persona multiplicado por los chicos, los adultos o ambos, más traslado y extras. Si falta un dato, no inventamos un cero silencioso: lo marcamos. Entre las alternativas con importes completos podés ver cuál es la más económica según lo cargado. Eso no la vuelve “la mejor”.</p>
+      <p>Elegir una alternativa no borra las otras ni suma las tres. Antes de pasarla al presupuesto ves si va a crear o reemplazar una línea. Si esa propuesta ya incluye comida, bebida o decoración, marcás qué ítems quedan cubiertos. Esos ítems dejan de sumar y se pueden volver a incluir.</p>
+      <p>Un ejemplo de cuenta, con cifras hipotéticas y no de mercado: $ 100.000 fijos, más $ 2.000 por 30 personas, más $ 10.000 de traslado, suman $ 170.000. Si ya pagaste $ 50.000, quedan $ 120.000 pendientes de esa línea, no $ 220.000.</p>
+      <p>Para no olvidar rubros, leé <a href="/guias/como-armar-un-presupuesto-de-cumpleanos/">cómo armar el presupuesto</a>.</p>
+    </article>
+    <AdSlot placement="debajo-de-la-explicacion" />
+    <section>
+      <h2 class="no-print">Cargá los precios de tu plan</h2>
+      <p class="no-print">Los cambios se guardan en tu plan de este navegador.</p>
+      <PlannerApp client:load view="presupuesto" />
+    </section>
+  </div>
+</Base>

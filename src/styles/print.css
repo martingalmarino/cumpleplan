@@ -1,0 +1,57 @@
+.print-sheet {
+  display: none;
+}
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  body > *:not(.print-sheet) {
+    display: none !important;
+  }
+
+  .print-sheet {
+    display: block !important;
+    position: static;
+    width: 100%;
+    color: black;
+    font-family: "Nunito Sans", "Segoe UI", sans-serif;
+    background: white;
+  }
+
+  .print-sheet h1,
+  .print-sheet h2 {
+    font-family: "Nunito Sans", "Segoe UI", sans-serif;
+    break-after: avoid;
+  }
+
+  .print-sheet section {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  .print-sheet table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .print-sheet th,
+  .print-sheet td {
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+    padding: 0.25rem 0.3rem;
+    vertical-align: top;
+  }
+
+  .print-sheet tr {
+    break-inside: avoid;
+  }
+
+  .ad-slot,
+  .ad-placeholder,
+  .no-print {
+    display: none !important;
+  }
+}

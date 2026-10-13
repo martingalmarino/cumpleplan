@@ -1,0 +1,18 @@
+---
+import { site } from '../config/site';
+
+interface Props {
+  placement: string;
+}
+const { placement } = Astro.props;
+---
+
+{site.adsEnabled ? (
+  <aside class="ad-slot no-print" aria-label="Publicidad" data-placement={placement}>
+    Publicidad
+  </aside>
+) : import.meta.env.DEV ? (
+  <aside class="ad-placeholder no-print" aria-hidden="true">
+    Publicidad desactivada · espacio reservado · {placement}
+  </aside>
+) : null}

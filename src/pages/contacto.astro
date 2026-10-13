@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../config/site';
+
+const title = 'Contacto | Cumple en Orden';
+const description = site.contactEmail
+  ? `Escribinos a ${site.contactEmail}. No hay formulario: el mensaje sale por tu correo.`
+  : 'El contacto todavía no está habilitado porque falta un correo real de quien opera el sitio.';
+---
+
+<Base title={title} description={description} path="/contacto/">
+  <div class="container prose">
+    <h1>Contacto</h1>
+    {site.contactEmail ? (
+      <>
+        <p>El correo de quien opera el sitio es <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>. El mensaje lo enviás desde tu propio correo. Esta página no confirma envíos porque no hay un servidor que los reciba.</p>
+      </>
+    ) : (
+      <>
+        <p>El contacto todavía no está habilitado. Falta configurar un correo real de quien opera el proyecto. No hay formulario para no mostrar un “mensaje enviado” que nadie recibe.</p>
+        <p>Antes de publicar el sitio hace falta completar ese dato, junto con el dominio definitivo si se quiere indexar.</p>
+      </>
+    )}
+  </div>
+</Base>

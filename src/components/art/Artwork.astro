@@ -1,0 +1,93 @@
+---
+interface Props {
+  name: 'cake' | 'drinks' | 'bag' | 'list' | 'receipt' | 'hero' | 'lost';
+  class?: string;
+}
+const { name, class: className } = Astro.props;
+---
+
+{name === 'cake' && (
+  <svg class={className} viewBox="0 0 160 120" fill="none" aria-hidden="true">
+    <path d="M28 78 80 28l52 50H28z" fill="#FFCC33"/>
+    <path d="M28 78h104v8c0 8-10 14-52 14S28 94 28 86v-8z" fill="#FF6633"/>
+    <rect x="76" y="18" width="8" height="18" rx="2" fill="#17324D"/>
+    <circle cx="80" cy="14" r="5" fill="#FF6633"/>
+    <circle cx="24" cy="28" r="5" fill="#339933"/>
+    <path d="M132 24 138 16l4 8z" fill="#3366CC"/>
+  </svg>
+)}
+
+{name === 'drinks' && (
+  <svg class={className} viewBox="0 0 160 120" fill="none" aria-hidden="true">
+    <rect x="28" y="28" width="36" height="68" rx="12" fill="#339933"/>
+    <rect x="36" y="18" width="20" height="14" rx="4" fill="#237A32"/>
+    <rect x="78" y="42" width="48" height="40" rx="8" fill="#EDF3FF" stroke="#3366CC" stroke-width="4"/>
+    <path d="M90 42c6-14 22-14 28 0" stroke="#3366CC" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="132" cy="26" r="5" fill="#FFCC33"/>
+  </svg>
+)}
+
+{name === 'bag' && (
+  <svg class={className} viewBox="0 0 160 120" fill="none" aria-hidden="true">
+    <path d="M40 48h80l-8 52H48L40 48z" fill="#FFCC33"/>
+    <path d="M62 48V36a18 18 0 0 1 36 0v12" stroke="#17324D" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="34" cy="30" r="5" fill="#FF6633"/>
+    <path d="M124 34 130 26l5 8z" fill="#339933"/>
+  </svg>
+)}
+
+{name === 'list' && (
+  <svg class={className} viewBox="0 0 160 120" fill="none" aria-hidden="true">
+    <rect x="36" y="18" width="88" height="86" rx="12" fill="#FFFFFF" stroke="#3366CC" stroke-width="4"/>
+    <path d="M52 42h12M52 62h12M52 82h12" stroke="#339933" stroke-width="4" stroke-linecap="round"/>
+    <path d="M74 42h32M74 62h32M74 82h24" stroke="#17324D" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="128" cy="22" r="6" fill="#FFCC33"/>
+  </svg>
+)}
+
+{name === 'receipt' && (
+  <svg class={className} viewBox="0 0 160 120" fill="none" aria-hidden="true">
+    <path d="M46 16h68v88l-8-6-8 6-8-6-8 6-8-6-8 6-8-6-12 6V16z" fill="#FFF0E8" stroke="#FF6633" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M60 40h40M60 56h40M60 72h24" stroke="#17324D" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="36" cy="28" r="5" fill="#FFCC33"/>
+  </svg>
+)}
+
+{name === 'lost' && (
+  <svg class={className} viewBox="0 0 220 160" fill="none" aria-hidden="true">
+    <circle cx="110" cy="78" r="52" fill="#EDF7EA"/>
+    <path d="M78 92c8 16 56 16 64 0" stroke="#17324D" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="92" cy="70" r="5" fill="#17324D"/>
+    <circle cx="128" cy="70" r="5" fill="#17324D"/>
+    <path d="M96 48 104 36l6 10" fill="#FF6633"/>
+    <circle cx="150" cy="40" r="6" fill="#FFCC33"/>
+    <path d="M62 44 70 36l4 10z" fill="#3366CC"/>
+  </svg>
+)}
+
+{name === 'hero' && (
+  <svg class={className} viewBox="0 0 560 460" fill="none" aria-hidden="true">
+    <circle cx="300" cy="230" r="188" fill="#EDF7EA"/>
+    <path d="M118 86c18-22 42-22 60 0 16 18 8 28-6 34 18 2 28 14 22 32-20 8-48-4-58-22-16 10-36 4-40-14-4-16 6-24 22-30z" fill="#FFF7D9"/>
+    <rect x="132" y="250" width="250" height="18" rx="9" fill="#17324D"/>
+    <rect x="124" y="262" width="266" height="92" rx="18" fill="#FFFFFF" stroke="#DCE3E8" stroke-width="3"/>
+    <path d="M168 262c18-46 52-70 78-70s60 24 78 70" fill="#FFCC33"/>
+    <path d="M168 262h156v18c0 16-28 28-78 28s-78-12-78-28v-18z" fill="#FF6633"/>
+    <rect x="242" y="176" width="8" height="22" rx="3" fill="#17324D"/>
+    <circle cx="246" cy="170" r="7" fill="#FF6633"/>
+    <rect x="292" y="168" width="8" height="22" rx="3" fill="#17324D"/>
+    <circle cx="296" cy="162" r="7" fill="#339933"/>
+    <g transform="rotate(-8 430 250)">
+      <rect x="360" y="168" width="118" height="150" rx="12" fill="#17324D"/>
+      <rect x="368" y="160" width="118" height="150" rx="12" fill="#FFFFFF" stroke="#3366CC" stroke-width="4"/>
+      <path d="M386 196h14M386 224h14M386 252h14" stroke="#339933" stroke-width="4" stroke-linecap="round"/>
+      <path d="M410 196h52M410 224h52M410 252h36" stroke="#17324D" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <rect x="150" y="292" width="28" height="58" rx="10" fill="#339933"/>
+    <rect x="156" y="280" width="16" height="16" rx="4" fill="#237A32"/>
+    <rect x="188" y="312" width="42" height="32" rx="8" fill="#FFF0E8" stroke="#FF6633" stroke-width="4"/>
+    <circle cx="96" cy="150" r="8" fill="#FF6633"/>
+    <circle cx="470" cy="120" r="7" fill="#FFCC33"/>
+    <path d="M500 210 512 196l6 14z" fill="#3366CC"/>
+  </svg>
+)}

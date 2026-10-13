@@ -1,0 +1,95 @@
+---
+import Base from '../../../layouts/Base.astro';
+import JsonLd from '../../../components/seo/JsonLd.astro';
+import { publishedProviders, type ProviderRecord } from '../../../data/providers/records';
+import { absoluteUrl, site } from '../../../config/site';
+
+export function getStaticPaths() {
+  return publishedProviders().map((provider) => ({
+    params: { slug: provider.slug },
+    props: { provider },
+  }));
+}
+
+interface Props {
+  provider: ProviderRecord;
+}
+
+const { provider } = Astro.props;
+const path = `/cumpleanos-infantiles-cordoba/proveedores/${provider.slug}/`;
+const title = `${provider.name} en Córdoba Capital`;
+const description = `${provider.description} Datos de contacto publicados por el negocio, revisados el 13 de octubre de 2026.`;
+const pageUrl = absoluteUrl(path);
+const crumbs = site.origin
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: absoluteUrl('/') },
+        { '@type': 'ListItem', position: 2, name: 'Córdoba Capital', item: absoluteUrl('/cumpleanos-infantiles-cordoba/') },
+        { '@type': 'ListItem', position: 3, name: provider.name, item: pageUrl },
+      ],
+    }
+  : null;
+const business = site.origin
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'LocalBusiness',
+      name: provider.name,
+      url: provider.website,
+      telephone: provider.phoneTel,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: provider.address,
+        addressLocality: provider.city,
+        addressRegion: provider.province,
+        postalCode: provider.postalCode,
+        addressCountry: 'AR',
+      },
+    }
+  : null;
+if (business && !provider.address) delete business.address.streetAddress;
+if (business && !provider.postalCode) delete business.address.postalCode;
+if (business && !provider.website) delete business.url;
+if (business && !provider.phoneTel) delete business.telephone;
+---
+
+<Base title={title} description={description} path={path}>
+  <JsonLd slot="head" data={crumbs} />
+  <JsonLd slot="head" data={business} />
+  <div class="container prose">
+    <nav aria-label="Migas">
+      <ol class="crumbs">
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/cumpleanos-infantiles-cordoba/">Córdoba Capital</a></li>
+        <li>{provider.name}</li>
+      </ol>
+    </nav>
+    <h1>{provider.name}</h1>
+    <p>{provider.locality}{provider.neighborhood ? ` · ${provider.neighborhood}` : ''}. {provider.categories.includes('salones') ? 'Salón' : provider.categories.includes('tortas-catering') ? 'Tortas y catering' : 'Decoración y alquileres'}.</p>
+    <h2>Contacto publicado</h2>
+    <ul>
+      {provider.address && <li>Dirección: {provider.address}{provider.postalCode ? `, CP ${provider.postalCode}` : ''}, {provider.city}</li>}
+      {provider.website && <li><a href={provider.website} data-analytics="provider_contact_clicked" data-provider-id={provider.id}>Sitio oficial</a></li>}
+      {provider.socialUrl && <li><a href={provider.socialUrl} data-analytics="provider_contact_clicked" data-provider-id={provider.id}>Perfil oficial</a></li>}
+      {provider.phoneTel && provider.phoneDisplay && <li><a href={`tel:${provider.phoneTel}`} data-analytics="provider_contact_clicked" data-provider-id={provider.id}>Llamar al {provider.phoneDisplay}</a></li>}
+      {provider.secondaryPhoneTel && provider.secondaryPhoneDisplay && <li><a href={`tel:${provider.secondaryPhoneTel}`} data-analytics="provider_contact_clicked" data-provider-id={provider.id}>Llamar al {provider.secondaryPhoneDisplay}</a></li>}
+      {provider.whatsappUrl && <li><a href={provider.whatsappUrl} data-analytics="provider_contact_clicked" data-provider-id={provider.id}>WhatsApp</a></li>}
+      {provider.mapUrl && <li><a href={provider.mapUrl}>Ver la dirección en el mapa</a></li>}
+    </ul>
+    <p>{provider.description}</p>
+    <p>Datos revisados el 13 de octubre de 2026. La revisión confirma lo que el negocio publica sobre identidad, servicio y contacto. No es una certificación de calidad ni una reserva.</p>
+    <h2>Qué preguntar al pedir un presupuesto</h2>
+    <ul>
+      {provider.quoteQuestions.map((question) => <li>{question}</li>)}
+    </ul>
+    <h2>De dónde salen estos datos</h2>
+    <ul>
+      {provider.sources.map((source) => (
+        <li><a href={source.url}>{source.label}</a>: {source.fields}.</li>
+      ))}
+    </ul>
+    <p>La ilustración de las tarjetas del directorio no muestra este lugar. El trato y el pago son directos con {provider.name}.</p>
+    <p><a href="/cumpleanos-infantiles-cordoba/">Volver al directorio</a> · <a href="/presupuesto-cumpleanos/">Anotar el presupuesto en tu plan</a></p>
+  </div>
+</Base>

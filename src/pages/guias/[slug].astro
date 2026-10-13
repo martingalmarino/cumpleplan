@@ -1,0 +1,86 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import { absoluteUrl, site } from '../../config/site';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guias');
+  return guides.map((guide) => ({ params: { slug: guide.id }, props: { guide } }));
+}
+
+interface Props {
+  guide: CollectionEntry<'guias'>;
+}
+
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+const branded = `${guide.data.title} | Cumple en Orden`;
+const title = branded.length <= 60 ? branded : guide.data.title;
+const path = `/guias/${guide.id}/`;
+const pageUrl = absoluteUrl(path);
+const article = site.origin
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: guide.data.title,
+      datePublished: guide.data.publishedAt.toISOString(),
+      dateModified: guide.data.updatedAt.toISOString(),
+      inLanguage: 'es-AR',
+      mainEntityOfPage: pageUrl,
+      publisher: { '@type': 'Organization', name: site.brand },
+    }
+  : null;
+const headings = ('body' in guide && typeof guide.body === 'string'
+  ? [...guide.body.matchAll(/^## (.+)$/gm)].map((match) => match[1].trim())
+  : []);
+const related = guide.id.includes('bebida')
+  ? { href: '/calculadora-comida-cumpleanos/', label: 'Abrir la calculadora de comida y bebida' }
+  : guide.id.includes('comida') || guide.id.includes('lista')
+    ? { href: '/calculadora-comida-cumpleanos/', label: 'Abrir la calculadora' }
+    : guide.id.includes('presupuesto') || guide.id.includes('ajustado')
+      ? { href: '/presupuesto-cumpleanos/', label: 'Abrir el presupuesto' }
+      : guide.id.includes('organizar')
+        ? { href: '/checklist-cumpleanos/', label: 'Abrir la checklist' }
+        : { href: '/organizador/', label: 'Abrir el plan' };
+const crumbs = site.origin
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: absoluteUrl('/') },
+        { '@type': 'ListItem', position: 2, name: 'Guías', item: absoluteUrl('/guias/') },
+        { '@type': 'ListItem', position: 3, name: guide.data.title, item: pageUrl },
+      ],
+    }
+  : null;
+---
+
+<Base title={title} description={guide.data.description} path={path} ogType="article">
+  <JsonLd slot="head" data={article} />
+  <JsonLd slot="head" data={crumbs} />
+  <div class="container prose">
+    <nav aria-label="Migas">
+      <ol class="crumbs">
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/guias/">Guías</a></li>
+        <li>{guide.data.title}</li>
+      </ol>
+    </nav>
+    <h1>{guide.data.title}</h1>
+    <p class="lede">{guide.data.description}</p>
+    {headings.length > 2 && (
+      <nav class="callout" aria-label="En esta guía">
+        <strong>En esta guía</strong>
+        <ol>
+          {headings.map((heading) => <li>{heading}</li>)}
+        </ol>
+      </nav>
+    )}
+    <Content />
+    <AdSlot placement="entre-guia-y-enlaces" />
+    <p class="callout"><a href={related.href}>{related.label}</a></p>
+    <p><a href="/organizador/">Organizar mi cumple</a> · <a href="/guias/">Volver a las guías</a></p>
+  </div>
+</Base>

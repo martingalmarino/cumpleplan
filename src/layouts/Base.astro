@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import '@fontsource/fredoka/latin-500.css';
+import '@fontsource/fredoka/latin-600.css';
+import '@fontsource/nunito-sans/latin-400.css';
+import '@fontsource/nunito-sans/latin-600.css';
+import '@fontsource/nunito-sans/latin-700.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site, absoluteUrl } from '../config/site';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+}
+
+const { title, description, path, noindex = false, ogType = 'website' } = Astro.props;
+const indexable = site.allowIndexing && !noindex;
+const canonical = absoluteUrl(path);
+const image = absoluteUrl('/og.svg');
+const robots = indexable ? 'index, follow' : 'noindex, nofollow';
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content="es_AR" />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {image && <meta property="og:image" content={image} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <Header path={path} />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import { track } from '../lib/analytics';
+      document.addEventListener('click', (event) => {
+        const target = event.target instanceof Element ? event.target.closest('[data-analytics]') : null;
+        if (!(target instanceof HTMLElement)) return;
+        if (target.dataset.analytics !== 'provider_contact_clicked') return;
+        const providerId = target.dataset.providerId;
+        track('provider_contact_clicked', providerId ? { providerId } : undefined);
+      });
+    </script>
+  </body>
+</html>

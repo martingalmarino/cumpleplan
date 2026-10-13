@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import PlannerApp from '../components/planner/PlannerApp';
+
+const title = 'Tu plan de cumpleaños';
+const description = 'El plan personal queda en este navegador: comida, presupuesto, checklist y compras.';
+---
+
+<Base title={title} description={description} path="/organizador/" noindex={true}>
+  <div class="container tool-page">
+    <h1 class="no-print">Tu plan</h1>
+    <p class="no-print">Esta página es tuya, en este navegador. No entra en el mapa del sitio ni se indexa.</p>
+    <PlannerApp client:load view="resumen" mode="dashboard" />
+  </div>
+</Base>

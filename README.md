@@ -1,0 +1,55 @@
+# Cumple en Orden
+
+Planificador estático para cumpleaños infantiles en Argentina. El plan se guarda en el navegador. El directorio inicial es de Córdoba Capital y solo publica fichas con datos revisados.
+
+El nombre es provisorio. No es una marca registrada ni un dominio contratado.
+
+## Requisitos
+
+Node.js 22 o superior.
+
+## Comandos
+
+```bash
+npm install
+npm run dev
+npm test
+npm run check
+npm run build
+npm run preview
+```
+
+`npm run dev` abre el sitio local. `npm run build` genera `dist/` para un hosting estático. `npm test` corre las pruebas de cálculo, presupuesto, compras, fechas y respaldos.
+
+## Dominio e indexación
+
+Copiá `.env.example` a `.env`.
+
+- `PUBLIC_SITE_URL`: origen real, por ejemplo `https://www.tudominio.com`, sin barra final. Si está vacío, no se inventa un dominio canónico.
+- `PUBLIC_ALLOW_INDEXING=true` solo cuando ese origen sea el de producción.
+
+Si falta el origen o la variable no es exactamente `true`, las páginas salen con `noindex`. El mapa del sitio queda vacío en ese caso. `/organizador/` no se indexa nunca y no entra al mapa.
+
+En Vercel u otro hosting estático: comando de build `npm run build`, directorio de salida `dist`. Cargá las mismas variables en el panel y volvé a construir. No actives la indexación en un dominio de preview.
+
+## Coeficientes y contenido
+
+Los supuestos de comida y bebida están en `src/config/calculator.ts`. Las páginas y las pruebas usan esas funciones, así que un cambio de coeficiente tiene que seguir siendo explícito en los textos si el ejemplo publicado deja de coincidir.
+
+Las guías viven en `src/content/guias/`. El esquema está en `src/content.config.ts`.
+
+## Proveedores
+
+Las fichas están en `src/data/providers/records.ts`. Solo se publican las que tienen `publicationStatus: "published"`. Hace falta sitio oficial, ciudad, servicio y al menos un contacto público, más la fecha de revisión y la fuente de cada dato. No se completan precios, horarios, cupos ni reseñas. `featured` queda en `false`.
+
+Si no hay fichas publicadas, el directorio sale del menú, la ruta explica que está vacío y lleva `noindex`.
+
+## Plan en el navegador
+
+La clave es `cumple-en-orden:plan:v1`. No hay cuenta ni sincronización. Borrar los datos del navegador borra el plan. El archivo JSON es la forma de llevarlo a otro dispositivo. Un archivo de una versión futura, uno dañado o uno con campos no permitidos no reemplaza el plan actual.
+
+## Publicidad y analítica
+
+Siguen apagadas. Completar `PUBLIC_ADSENSE_CLIENT`, `PUBLIC_ADSENSE_SLOT` o `PUBLIC_ANALYTICS_ID` no las enciende: en `src/config/site.ts`, `consentImplemented` está en `false` hasta que exista un consentimiento real. No hay `ads.txt` porque no hay un identificador de editor para publicar.
+
+Los lugares previstos para anuncios están debajo de las explicaciones y entre la guía y los enlaces, nunca dentro del formulario ni en el plan personal ni en la impresión.

@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import Artwork from '../components/art/Artwork.astro';
+
+const title = 'Página no encontrada | Cumple en Orden';
+const description = 'Esa dirección no existe en Cumple en Orden.';
+---
+
+<Base title={title} description={description} path="/404.html" noindex={true}>
+  <div class="container not-found">
+    <Artwork name="lost" />
+    <h1>No encontramos esta página</h1>
+    <p>El enlace puede estar viejo o el proveedor no está publicado.</p>
+    <a class="button button-primary" href="/">Volver al inicio</a>
+  </div>
+</Base>

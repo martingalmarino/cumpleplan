@@ -1,0 +1,36 @@
+---
+import Base from '../../layouts/Base.astro';
+import DirectoryBrowser from '../../components/planner/DirectoryBrowser';
+import { publishedProviders } from '../../data/providers/records';
+import { site } from '../../config/site';
+
+const providers = publishedProviders();
+const empty = providers.length === 0;
+const title = 'Cumpleaños infantiles en Córdoba Capital';
+const description = empty
+  ? 'El directorio de proveedores de Córdoba Capital todavía no tiene fichas publicadas.'
+  : 'Salones, tortas y decoración de Córdoba Capital con datos revisados en sus sitios oficiales. No es un ranking ni cubre toda la provincia.';
+---
+
+<Base title={title} description={description} path="/cumpleanos-infantiles-cordoba/" noindex={empty || !site.allowIndexing}>
+  <div class="container guide-index">
+    <div class="prose">
+      <h1>Cumpleaños infantiles en Córdoba Capital</h1>
+      {empty ? (
+        <p>Todavía no hay fichas publicadas. El planificador de comida, presupuesto y compras sigue disponible. Falta completar la revisión de proveedores con sitios oficiales.</p>
+      ) : (
+        <>
+          <p>Estas fichas son de la ciudad de Córdoba, no de toda la provincia. Publicamos solo negocios cuyo nombre, servicio y al menos un contacto pudimos ver en su propio sitio. Datos revisados el 13 de octubre de 2026: esa fecha dice cuándo miramos la información, no certifica calidad, precios ni disponibilidad.</p>
+          <p>No hay posiciones pagas en esta versión. Si más adelante hubiera un espacio destacado, va a decir “Destacado · Publicidad” y no va a ordenar el resto como si fuera una evaluación.</p>
+          <p>El directorio no está completo. Faltan muchos salones, animaciones y locales de la ciudad que todavía no revisamos en una fuente oficial.</p>
+        </>
+      )}
+    </div>
+    {!empty && (
+      <>
+        <DirectoryBrowser client:load providers={providers} />
+        <p>Antes de pedir un número, conviene leer <a href="/guias/preguntas-antes-de-contratar-un-salon-en-cordoba/">qué preguntar al cotizar un salón en Córdoba</a>.</p>
+      </>
+    )}
+  </div>
+</Base>

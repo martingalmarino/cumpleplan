@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../config/site';
+
+const title = 'Privacidad | Cumple en Orden';
+const description = 'El plan del cumpleaños se guarda en el navegador. No hay cuenta ni envío automático de esos datos.';
+---
+
+<Base title={title} description={description} path="/privacidad/">
+  <div class="container prose">
+    <h1>Privacidad</h1>
+    <p>Falta completar la razón social o el nombre de quien opera el sitio antes de una publicación definitiva. Este texto describe cómo funciona el producto hoy. No es un dictamen jurídico.</p>
+    <h2>Qué queda en tu navegador</h2>
+    <p>El plan se guarda en el almacenamiento local de este navegador, con la clave <code>{site.storageKey}</code>. Incluye lo que vos cargues: etiqueta del evento, fecha del festejo si la ponés, cantidades, precios, tareas y notas. No pedimos nombre del niño, fecha de nacimiento, colegio ni datos de contacto de los invitados.</p>
+    <p>No hay cuenta ni copia automática en un servidor nuestro. Exportar o importar un JSON es un archivo que manejás vos. Si borrás los datos del navegador, el plan se pierde. Otra persona con acceso a ese navegador puede ver el plan guardado ahí.</p>
+    <h2>Qué puede ver el alojamiento</h2>
+    <p>El sitio es estático. Quien lo aloje puede registrar datos técnicos habituales de una visita, como la dirección IP, según su propia política. Por eso no decimos que no exista ningún registro de conexión.</p>
+    <h2>Publicidad y analítica</h2>
+    <p>Los anuncios están {site.adsEnabled ? 'configurados' : 'apagados'}. La analítica está {site.analyticsEnabled ? 'configurada' : 'apagada'}. No hay un aviso de cookies que reemplace un consentimiento real. Aunque se completen identificadores en la configuración, no se activan hasta que exista ese consentimiento y se cambie el código a propósito.</p>
+    <p>Si en el futuro se mide algo, los eventos previstos son de herramienta: calculadora, presupuesto, checklist, lista, impresión, exportación y clic en un contacto público de proveedor. No está previsto enviar nombres, fechas, notas, importes, cantidades de invitados ni el contenido importado.</p>
+    <h2>Enlaces a proveedores</h2>
+    <p>Las fichas enlazan a sitios, teléfonos o WhatsApp publicados por esos negocios. Al salir, esa visita la rige el otro sitio. No recibimos el mensaje que les escribas.</p>
+  </div>
+</Base>

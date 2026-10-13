@@ -1,0 +1,70 @@
+:root {
+  --color-ink: #17324d;
+  --color-muted: #526477;
+  --color-paper: #fffdf7;
+  --color-surface: #ffffff;
+  --color-border: #dce3e8;
+  --color-green: #339933;
+  --color-green-action: #237a32;
+  --color-green-hover: #195d26;
+  --color-orange: #ff6633;
+  --color-blue: #3366cc;
+  --color-blue-link: #244fa8;
+  --color-yellow: #ffcc33;
+  --color-mint: #edf7ea;
+  --color-peach: #fff0e8;
+  --color-sky: #edf3ff;
+  --color-butter: #fff7d9;
+  --color-danger: #8c2f2f;
+  --color-warning: #8a4b12;
+  --color-on-action: #ffffff;
+
+  --font-display: "Fredoka", "Nunito Sans", "Trebuchet MS", sans-serif;
+  --font-text: "Nunito Sans", "Segoe UI", sans-serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 88px;
+
+  --radius-input: 12px;
+  --radius-button: 14px;
+  --radius-card: 18px;
+  --radius-hero: 28px;
+
+  --content: 1200px;
+  --shadow: 0 10px 24px rgba(23, 50, 77, 0.06);
+  --focus: 0 0 0 3px rgba(36, 79, 168, 0.35);
+
+  --bg: var(--color-paper);
+  --surface: var(--color-surface);
+  --ink: var(--color-ink);
+  --muted: var(--color-muted);
+  --primary: var(--color-green-action);
+  --primary-strong: var(--color-green-hover);
+  --on-primary: var(--color-on-action);
+  --peach: var(--color-peach);
+  --lavender: var(--color-sky);
+  --mint: var(--color-mint);
+  --line: var(--color-border);
+  --danger: var(--color-danger);
+  --warning: var(--color-warning);
+  --radius: var(--radius-card);
+  --sans: var(--font-text);
+  --serif: var(--font-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

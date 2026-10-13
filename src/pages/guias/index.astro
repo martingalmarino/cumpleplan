@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Artwork from '../../components/art/Artwork.astro';
+
+const guides = (await getCollection('guias')).sort((a, b) => a.data.title.localeCompare(b.data.title, 'es'));
+const title = 'Guías para organizar un cumpleaños | Cumple en Orden';
+const description = 'Guías prácticas para calcular comida, armar el presupuesto y comparar un cumple en casa o en salón.';
+
+const artFor = (id: string) => {
+  if (id.includes('bebida')) return 'drinks';
+  if (id.includes('comida') || id.includes('lista')) return 'cake';
+  if (id.includes('presupuesto') || id.includes('ajustado')) return 'receipt';
+  if (id.includes('salon') || id.includes('casa')) return 'bag';
+  return 'list';
+};
+
+const topicFor = (id: string) => {
+  if (id.includes('comida') || id.includes('bebida') || id.includes('lista')) return 'Comida y compras';
+  if (id.includes('presupuesto') || id.includes('ajustado')) return 'Presupuesto';
+  if (id.includes('salon') || id.includes('casa')) return 'Lugar';
+  return 'Organización';
+};
+---
+
+<Base title={title} description={description} path="/guias/">
+  <div class="container guide-index">
+    <p class="kicker">Para decidir antes de comprar</p>
+    <h1>Guías para organizar un cumpleaños</h1>
+    <p class="lede">Textos para decidir antes de comprar o reservar. Los ejemplos usan los mismos supuestos de la calculadora. Cuando aparece un precio, es hipotético.</p>
+    <div class="guide-catalog">
+      {guides.map((guide) => (
+        <article>
+          <Artwork name={artFor(guide.id)} />
+          <div>
+            <p class="kicker">{topicFor(guide.id)}</p>
+            <h2><a href={`/guias/${guide.id}/`}>{guide.data.title}</a></h2>
+            <p>{guide.data.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</Base>
