@@ -4,16 +4,15 @@ import JsonLd from '../components/seo/JsonLd.astro';
 import Artwork from '../components/art/Artwork.astro';
 import QuickStart from '../components/planner/QuickStart';
 import { site } from '../config/site';
-import { publishedProviders } from '../data/providers/records';
+import { CategoryIcon } from '../components/directory/CategoryIcon';
+import { categoryLabel, publishedProviders } from '../data/providers/records';
 
 const title = 'Organizá el cumpleaños infantil | Festejito';
 const description = 'Calculá comida y bebida, ordená el presupuesto y llevá una lista de lo que falta para un cumpleaños infantil en Argentina.';
 const website = site.origin
   ? { '@context': 'https://schema.org', '@type': 'WebSite', name: site.brand, url: site.origin, inLanguage: 'es-AR' }
   : null;
-const providers = publishedProviders();
-const categoryName = (categories: string[]) =>
-  categories.includes('salones') ? 'Salón' : categories.includes('tortas-catering') ? 'Tortas' : 'Decoración';
+const providers = publishedProviders().sort((a, b) => a.name.localeCompare(b.name, 'es'));
 ---
 
 <Base title={title} description={description} path="/">
@@ -141,8 +140,9 @@ const categoryName = (categories: string[]) =>
           {providers.map((provider) => (
             <li>
               <a href={`/cumpleanos-infantiles-cordoba/proveedores/${provider.slug}/`}>
+                <CategoryIcon category={provider.categories[0]} size="sm" />
                 <span>{provider.name}</span>
-                <span>{categoryName(provider.categories)}</span>
+                <span>{categoryLabel(provider.categories[0])}</span>
               </a>
             </li>
           ))}

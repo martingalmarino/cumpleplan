@@ -1,7 +1,16 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import JsonLd from '../../../components/seo/JsonLd.astro';
-import { publishedProviders, type ProviderRecord } from '../../../data/providers/records';
+import { CategoryIcon } from '../../../components/directory/CategoryIcon';
+import { ContactActions } from '../../../components/directory/ContactActions';
+import { ProviderRow } from '../../../components/directory/ProviderRow';
+import {
+  categoryLabel,
+  formatVerifiedDate,
+  providersByCategory,
+  publishedProviders,
+  type ProviderRecord,
+} from '../../../data/providers/records';
 import { absoluteUrl, site } from '../../../config/site';
 
 export function getStaticPaths() {
@@ -17,8 +26,28 @@ interface Props {
 
 const { provider } = Astro.props;
 const path = `/cumpleanos-infantiles-cordoba/proveedores/${provider.slug}/`;
+const mainCategory = provider.categories[0];
+const categories = provider.categories.map(categoryLabel).join(' · ');
+const reviewDate = formatVerifiedDate(provider.verifiedAt);
+const isVenue = provider.categories.includes('salones');
 const title = `${provider.name} en Córdoba Capital`;
-const description = `${provider.description} Datos de contacto publicados por el negocio, revisados el 13 de octubre de 2026.`;
+const description = `${provider.summary ?? provider.description} Datos publicados por el negocio, revisados el ${reviewDate}.`;
+const related = providersByCategory(mainCategory)
+  .filter((item) => item.id !== provider.id)
+  .slice(0, 3);
+const fullAddress = provider.address
+  ? `${provider.address}${provider.postalCode ? `, CP ${provider.postalCode}` : ''}, ${provider.city}`
+  : undefined;
+
+const keyFacts = [
+  { term: 'Rubro', value: categories },
+  { term: 'Zona', value: provider.neighborhood ? `${provider.neighborhood}, ${provider.locality}` : provider.locality },
+  { term: 'Cobertura', value: provider.coverage },
+  { term: 'Capacidad', value: provider.capacity },
+  { term: 'Edades', value: provider.ageRange },
+  { term: 'Revisión', value: `Datos revisados el ${reviewDate}` },
+].filter((fact): fact is { term: string; value: string } => Boolean(fact.value));
+
 const pageUrl = absoluteUrl(path);
 const crumbs = site.origin
   ? {
@@ -31,65 +60,145 @@ const crumbs = site.origin
       ],
     }
   : null;
+
 const business = site.origin
-  ? {
-      '@context': 'https://schema.org',
-      '@type': 'LocalBusiness',
-      name: provider.name,
-      url: provider.website,
-      telephone: provider.phoneTel,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: provider.address,
-        addressLocality: provider.city,
-        addressRegion: provider.province,
-        postalCode: provider.postalCode,
-        addressCountry: 'AR',
-      },
-    }
+  ? Object.fromEntries(
+      Object.entries({
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        name: provider.name,
+        description: provider.summary ?? provider.description,
+        url: provider.website,
+        telephone: provider.phoneTel,
+        sameAs: provider.socialUrl ? [provider.socialUrl] : undefined,
+        areaServed: provider.coverage ? { '@type': 'City', name: 'Córdoba', description: provider.coverage } : undefined,
+        address: Object.fromEntries(
+          Object.entries({
+            '@type': 'PostalAddress',
+            streetAddress: provider.address,
+            addressLocality: provider.city,
+            addressRegion: provider.province,
+            postalCode: provider.postalCode,
+            addressCountry: 'AR',
+          }).filter(([, value]) => value !== undefined),
+        ),
+      }).filter(([, value]) => value !== undefined),
+    )
   : null;
-if (business && !provider.address) delete business.address.streetAddress;
-if (business && !provider.postalCode) delete business.address.postalCode;
-if (business && !provider.website) delete business.url;
-if (business && !provider.phoneTel) delete business.telephone;
 ---
 
 <Base title={title} description={description} path={path}>
   <JsonLd slot="head" data={crumbs} />
   <JsonLd slot="head" data={business} />
-  <div class="container prose">
+  <div class="container provider-page">
     <nav aria-label="Migas">
       <ol class="crumbs">
         <li><a href="/">Inicio</a></li>
         <li><a href="/cumpleanos-infantiles-cordoba/">Córdoba Capital</a></li>
-        <li>{provider.name}</li>
+        <li><a href={`/cumpleanos-infantiles-cordoba/?rubro=${mainCategory}#listado`}>{categoryLabel(mainCategory)}</a></li>
+        <li aria-current="page">{provider.name}</li>
       </ol>
     </nav>
-    <h1>{provider.name}</h1>
-    <p>{provider.locality}{provider.neighborhood ? ` · ${provider.neighborhood}` : ''}. {provider.categories.includes('salones') ? 'Salón' : provider.categories.includes('tortas-catering') ? 'Tortas y catering' : 'Decoración y alquileres'}.</p>
-    <h2>Contacto publicado</h2>
-    <ul>
-      {provider.address && <li>Dirección: {provider.address}{provider.postalCode ? `, CP ${provider.postalCode}` : ''}, {provider.city}</li>}
-      {provider.website && <li><a href={provider.website} data-analytics="provider_contact_clicked" data-provider-id={provider.id}>Sitio oficial</a></li>}
-      {provider.socialUrl && <li><a href={provider.socialUrl} data-analytics="provider_contact_clicked" data-provider-id={provider.id}>Perfil oficial</a></li>}
-      {provider.phoneTel && provider.phoneDisplay && <li><a href={`tel:${provider.phoneTel}`} data-analytics="provider_contact_clicked" data-provider-id={provider.id}>Llamar al {provider.phoneDisplay}</a></li>}
-      {provider.secondaryPhoneTel && provider.secondaryPhoneDisplay && <li><a href={`tel:${provider.secondaryPhoneTel}`} data-analytics="provider_contact_clicked" data-provider-id={provider.id}>Llamar al {provider.secondaryPhoneDisplay}</a></li>}
-      {provider.whatsappUrl && <li><a href={provider.whatsappUrl} data-analytics="provider_contact_clicked" data-provider-id={provider.id}>WhatsApp</a></li>}
-      {provider.mapUrl && <li><a href={provider.mapUrl}>Ver la dirección en el mapa</a></li>}
-    </ul>
-    <p>{provider.description}</p>
-    <p>Datos revisados el 13 de octubre de 2026. La revisión confirma lo que el negocio publica sobre identidad, servicio y contacto. No es una certificación de calidad ni una reserva.</p>
-    <h2>Qué preguntar al pedir un presupuesto</h2>
-    <ul>
-      {provider.quoteQuestions.map((question) => <li>{question}</li>)}
-    </ul>
-    <h2>De dónde salen estos datos</h2>
-    <ul>
-      {provider.sources.map((source) => (
-        <li><a href={source.url}>{source.label}</a>: {source.fields}.</li>
-      ))}
-    </ul>
-    <p>La ilustración de las tarjetas del directorio no muestra este lugar. El trato y el pago son directos con {provider.name}.</p>
-    <p><a href="/cumpleanos-infantiles-cordoba/">Volver al directorio</a> · <a href="/presupuesto-cumpleanos/">Anotar el presupuesto en tu plan</a></p>
+
+    <header class="provider-header">
+      <CategoryIcon category={mainCategory} size="lg" />
+      <div>
+        <p class="kicker">{categories}</p>
+        <h1>{provider.name}</h1>
+        <p class="provider-header__area">{provider.neighborhood ? `${provider.neighborhood} · ` : ''}{provider.locality} · Datos revisados el {reviewDate}</p>
+        {provider.summary && <p class="provider-header__lead">{provider.summary}</p>}
+      </div>
+    </header>
+
+    <div class="provider-layout">
+      <aside class="provider-contact" aria-labelledby="contact-title">
+        <h2 id="contact-title">Contacto publicado</h2>
+        <ContactActions provider={provider} />
+        {fullAddress && (
+          <div class="provider-contact__block">
+            <h3>Dirección</h3>
+            <p>{fullAddress}</p>
+          </div>
+        )}
+        {provider.openingHours && (
+          <div class="provider-contact__block">
+            <h3>{isVenue ? 'Horarios de eventos' : 'Horarios'}</h3>
+            <p>{provider.openingHours}</p>
+          </div>
+        )}
+        {provider.bookingNote && (
+          <div class="provider-contact__block">
+            <h3>{isVenue ? 'Visitas y reservas' : 'Encargos'}</h3>
+            <p>{provider.bookingNote}</p>
+          </div>
+        )}
+        <p class="provider-contact__note">El trato y el pago son directos con {provider.name}. No recibimos el mensaje que les escribas.</p>
+      </aside>
+
+      <div class="provider-main">
+        <section aria-labelledby="about-title">
+          <h2 id="about-title">{isVenue ? 'Sobre el lugar' : `Sobre ${provider.name}`}</h2>
+          <p>{provider.description}</p>
+          {provider.services && provider.services.length > 0 && (
+            <ul class="tag-list" aria-label="Servicios publicados">
+              {provider.services.map((service) => <li>{service}</li>)}
+            </ul>
+          )}
+        </section>
+
+        <section aria-labelledby="facts-title">
+          <h2 id="facts-title">Datos clave</h2>
+          <dl class="key-facts">
+            {keyFacts.map((fact) => (
+              <div>
+                <dt>{fact.term}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))}
+          </dl>
+          <p class="hint">Mostramos solo lo que el negocio publica. Si un dato no aparece, preguntalo al pedir presupuesto.</p>
+        </section>
+
+        <section aria-labelledby="questions-title">
+          <h2 id="questions-title">Qué preguntar al pedir un presupuesto</h2>
+          <ul class="question-list">
+            {provider.quoteQuestions.map((question) => <li>{question}</li>)}
+          </ul>
+        </section>
+
+        <section class="provider-plan" aria-labelledby="plan-title">
+          <h2 id="plan-title">Anotalo en tu plan</h2>
+          <p>Cuando te pasen un precio, sumalo al presupuesto y agendá la seña en el checklist. Todo queda guardado en tu navegador.</p>
+          <p class="provider-plan__links">
+            <a class="button button-primary" href="/presupuesto-cumpleanos/">Anotar en el presupuesto</a>
+            <a class="button button-secondary" href="/checklist-cumpleanos/">Abrir el checklist</a>
+          </p>
+        </section>
+
+        <section aria-labelledby="sources-title">
+          <h2 id="sources-title">De dónde salen estos datos</h2>
+          <ul class="source-list">
+            {provider.sources.map((source) => (
+              <li><a href={source.url} rel="noopener">{source.label}</a>: {source.fields}.</li>
+            ))}
+          </ul>
+          <p class="hint">Revisado el {reviewDate}. La revisión confirma lo que el negocio publica sobre identidad, servicio y contacto. No es una certificación de calidad ni una reserva. El ícono del rubro es genérico y no muestra este lugar.</p>
+        </section>
+      </div>
+    </div>
+
+    <section class="provider-related" aria-labelledby="related-title">
+      <h2 id="related-title">Otros proveedores de {categoryLabel(mainCategory).toLocaleLowerCase('es')}</h2>
+      {related.length > 0 ? (
+        <ol class="provider-rows">
+          {related.map((item) => (
+            <li><ProviderRow provider={item} headingLevel={3} /></li>
+          ))}
+        </ol>
+      ) : (
+        <p>Por ahora no hay otras fichas revisadas de este rubro.</p>
+      )}
+      <p><a href="/cumpleanos-infantiles-cordoba/">Ver todo el directorio</a></p>
+    </section>
   </div>
 </Base>

@@ -40,7 +40,7 @@ Las guías viven en `src/content/guias/`. El esquema está en `src/content.confi
 
 ## Proveedores
 
-Las fichas están en `src/data/providers/records.ts`. Solo se publican las que tienen `publicationStatus: "published"`. Hace falta sitio oficial, ciudad, servicio y al menos un contacto público, más la fecha de revisión y la fuente de cada dato. No se completan precios, horarios, cupos ni reseñas. `featured` queda en `false`.
+Las fichas están en `src/data/providers/records.ts`. Solo se publican las que tienen `publicationStatus: "published"`. Hace falta sitio oficial, ciudad, servicio y al menos un contacto público, más la fecha de revisión y la fuente de cada dato. Los campos opcionales (`summary`, `services`, `coverage`, `capacity`, `ageRange`, `openingHours`, `bookingNote`) se completan solo si el proveedor los publica en su sitio oficial, y esa fuente se anota en `sources[].fields`. Si no están, la ficha no los muestra. Nunca se cargan precios, puntajes ni reseñas. `featured` queda en `false`.
 
 Si no hay fichas publicadas, el directorio sale del menú, la ruta explica que está vacío y lleva `noindex`.
 
