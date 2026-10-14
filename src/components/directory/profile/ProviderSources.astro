@@ -1,0 +1,23 @@
+---
+import { formatVerifiedDate } from '../../../data/providers/selectors';
+import type { ProviderRecord } from '../../../data/providers/records';
+
+interface Props {
+  provider: ProviderRecord;
+}
+const { provider } = Astro.props;
+---
+
+<section class="profile-sources" aria-labelledby="sources-title">
+  <h2 id="sources-title">Fuentes y actualización</h2>
+  <p>Revisamos estos datos el {formatVerifiedDate(provider.verifiedAt)} en las fuentes públicas del proveedor.</p>
+  <ul>
+    {provider.sources.map((source) => (
+      <li><a href={source.url} rel="noopener">{source.label}</a>: {source.fields}.</li>
+    ))}
+  </ul>
+  <details>
+    <summary>Qué significa esta revisión</summary>
+    <p>Confirma lo que el negocio publica sobre identidad, servicio y contacto. No es una certificación de calidad, no garantiza precios ni disponibilidad y no es una reserva. El trato y el pago son directos con {provider.name}. El ícono del rubro es genérico y no muestra este lugar.</p>
+  </details>
+</section>

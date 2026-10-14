@@ -1,0 +1,54 @@
+---
+import { Icon } from '../../icons/Icon';
+import type { ProviderRecord } from '../../../data/providers/records';
+
+interface Props {
+  provider: ProviderRecord;
+}
+const { provider } = Astro.props;
+const tracked = { 'data-analytics': 'provider_contact_clicked', 'data-provider-id': provider.id };
+const whatsappFirst = Boolean(provider.whatsappUrl);
+const socialLabel = provider.socialUrl?.includes('instagram.com') ? 'Instagram' : 'Perfil en redes';
+const hasLinks = Boolean(provider.website || provider.socialUrl || provider.address);
+---
+
+<aside class="contact-panel" aria-labelledby="contact-title">
+  <h2 id="contact-title">Consultá por tu festejo</h2>
+  <p class="contact-panel__help">Consultá disponibilidad, servicios y presupuesto directamente con el proveedor.</p>
+
+  <div class="contact-panel__actions">
+    {provider.whatsappUrl && (
+      <a class="button button-primary" href={provider.whatsappUrl} rel="noopener" {...tracked}>
+        <Icon name="message" /> Escribir por WhatsApp
+      </a>
+    )}
+    {provider.phoneTel && provider.phoneDisplay && (
+      <a class={`button ${whatsappFirst ? 'button-secondary' : 'button-primary'} contact-panel__phone`} href={`tel:${provider.phoneTel}`} {...tracked}>
+        <Icon name="phone" />
+        <span>Llamar <span class="contact-panel__number">{provider.phoneDisplay}</span></span>
+      </a>
+    )}
+    {provider.secondaryPhoneTel && provider.secondaryPhoneDisplay && (
+      <a class="button button-secondary contact-panel__phone" href={`tel:${provider.secondaryPhoneTel}`} {...tracked}>
+        <Icon name="phone" />
+        <span>Otro teléfono <span class="contact-panel__number">{provider.secondaryPhoneDisplay}</span></span>
+      </a>
+    )}
+  </div>
+
+  {hasLinks && (
+    <ul class="contact-panel__links">
+      {provider.website && (
+        <li><a href={provider.website} rel="noopener" {...tracked}><Icon name="globe" /> Sitio oficial</a></li>
+      )}
+      {provider.socialUrl && (
+        <li><a href={provider.socialUrl} rel="noopener" {...tracked}><Icon name="camera" /> {socialLabel}</a></li>
+      )}
+      {provider.address && (
+        <li><a href="#ubicacion"><Icon name="map" /> Ver ubicación</a></li>
+      )}
+    </ul>
+  )}
+
+  <p class="contact-panel__note">Contacto directo con {provider.name}.</p>
+</aside>

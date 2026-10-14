@@ -1,0 +1,20 @@
+---
+import type { ProviderFact } from '../../../data/providers/selectors';
+
+interface Props {
+  facts: ProviderFact[];
+}
+const { facts } = Astro.props;
+---
+
+<section class="profile-section profile-facts-section" aria-labelledby="facts-title">
+  <h2 id="facts-title" class="visually-hidden">Datos clave</h2>
+  <dl class="profile-facts-list">
+    {facts.map((fact) => (
+      <div>
+        <dt>{fact.term}</dt>
+        <dd>{fact.value}</dd>
+      </div>
+    ))}
+  </dl>
+</section>

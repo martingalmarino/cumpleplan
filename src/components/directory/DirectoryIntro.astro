@@ -1,0 +1,16 @@
+---
+interface Props {
+  empty: boolean;
+}
+const { empty } = Astro.props;
+---
+
+<header class="directory-intro">
+  <p class="kicker">Directorio · Córdoba Capital</p>
+  <h1>Encontrá opciones para el próximo cumple</h1>
+  {empty ? (
+    <p>Todavía no hay fichas publicadas. El planificador de comida, presupuesto y compras sigue disponible.</p>
+  ) : (
+    <p>Salones, tortas y servicios para organizar un cumpleaños infantil en Córdoba Capital.</p>
+  )}
+</header>

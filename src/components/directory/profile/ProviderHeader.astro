@@ -1,0 +1,34 @@
+---
+import { CategoryIcon } from '../CategoryIcon';
+import { Icon } from '../../icons/Icon';
+import { areaLine, categoryFilterPath, categoryLabel, categorySingular, directoryPath } from '../../../data/providers/selectors';
+import type { ProviderRecord } from '../../../data/providers/records';
+
+interface Props {
+  provider: ProviderRecord;
+}
+const { provider } = Astro.props;
+const mainCategory = provider.categories[0];
+---
+
+<nav aria-label="Migas">
+  <ol class="crumbs">
+    <li><a href="/">Inicio</a></li>
+    <li><a href={directoryPath}>Proveedores en Córdoba</a></li>
+    <li><a href={categoryFilterPath(mainCategory)}>{categoryLabel(mainCategory)}</a></li>
+    <li aria-current="page">{provider.name}</li>
+  </ol>
+</nav>
+
+<header class="profile-header">
+  <p class="profile-header__category">
+    <CategoryIcon category={mainCategory} size="sm" />
+    <span>{provider.categories.map(categorySingular).join(' · ')}</span>
+  </p>
+  <h1>{provider.name}</h1>
+  <p class="profile-header__area">
+    <Icon name="map" />
+    <span>{areaLine(provider)}</span>
+  </p>
+  <p class="profile-header__summary">{provider.summary}</p>
+</header>

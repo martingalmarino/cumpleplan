@@ -1,0 +1,25 @@
+---
+import { formatVerifiedDate } from '../../data/providers/selectors';
+import type { IsoDate } from '../../data/providers/records';
+
+interface Props {
+  latestReview: IsoDate;
+}
+const { latestReview } = Astro.props;
+---
+
+<aside class="directory-method" aria-label="Sobre las fichas">
+  <p>Información tomada de fuentes públicas de cada proveedor.</p>
+  <details>
+    <summary>Cómo seleccionamos y revisamos las fichas</summary>
+    <div class="directory-method__body">
+      <p>Las fichas son de la ciudad de Córdoba, no de toda la provincia. Publicamos solo negocios cuyo nombre, servicio y al menos un contacto pudimos ver en su propio sitio. La última revisión fue el {formatVerifiedDate(latestReview)}: esa fecha dice cuándo miramos la información, no certifica calidad, precios ni disponibilidad.</p>
+      <p>El orden es alfabético. No hay posiciones pagas en esta versión. Si más adelante hubiera un espacio destacado, va a decir “Destacado · Publicidad” y no va a ordenar el resto como si fuera una evaluación.</p>
+      <p>Los números junto a cada rubro cuentan todas las fichas publicadas de ese rubro. El total de resultados sí cambia con la búsqueda y con “Con WhatsApp”.</p>
+      <p>El directorio no está completo: faltan muchos salones, animaciones y locales que todavía no revisamos. Los íconos de cada rubro son genéricos y no muestran ningún lugar.</p>
+    </div>
+  </details>
+  <p class="directory-method__guide">
+    <a href="/guias/preguntas-antes-de-contratar-un-salon-en-cordoba/">Antes de consultar: qué preguntar al contratar un salón</a>
+  </p>
+</aside>

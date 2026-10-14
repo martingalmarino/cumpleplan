@@ -1,41 +1,36 @@
 ---
 import Base from '../../layouts/Base.astro';
 import DirectoryBrowser from '../../components/directory/DirectoryBrowser';
-import { formatVerifiedDate, publishedProviders } from '../../data/providers/records';
+import DirectoryIntro from '../../components/directory/DirectoryIntro.astro';
+import DirectoryMethodology from '../../components/directory/DirectoryMethodology.astro';
+import { publishedProviders } from '../../data/providers/records';
 import { site } from '../../config/site';
 
 const providers = publishedProviders();
 const empty = providers.length === 0;
 const latestReview = empty ? null : providers.map((provider) => provider.verifiedAt).sort().at(-1)!;
-const title = 'Cumpleaños infantiles en Córdoba Capital';
+const title = 'Cumpleaños infantiles en Córdoba Capital: salones, tortas y decoración';
 const description = empty
   ? 'El directorio de proveedores de Córdoba Capital todavía no tiene fichas publicadas.'
-  : 'Salones, tortas y decoración de Córdoba Capital con datos revisados en sus sitios oficiales. No es un ranking ni cubre toda la provincia.';
+  : 'Salones, tortas y decoración para cumpleaños infantiles en Córdoba Capital, con datos tomados de sus sitios oficiales. No es un ranking ni cubre toda la provincia.';
 ---
 
 <Base title={title} description={description} path="/cumpleanos-infantiles-cordoba/" noindex={empty || !site.allowIndexing}>
   <div class="container directory-page">
-    <header class="directory-header">
-      <p class="kicker">Directorio · Córdoba Capital</p>
-      <h1>Cumpleaños infantiles en Córdoba Capital</h1>
-      {empty ? (
-        <p>Todavía no hay fichas publicadas. El planificador de comida, presupuesto y compras sigue disponible. Falta completar la revisión de proveedores con sitios oficiales.</p>
-      ) : (
-        <p class="directory-header__lead">
-          {providers.length} proveedores de la ciudad con datos tomados de su propio sitio, revisados el {formatVerifiedDate(latestReview!)}. Sin ranking y sin posiciones pagas: el orden es alfabético.
-        </p>
-      )}
-    </header>
+    <DirectoryIntro empty={empty} />
     {!empty && (
       <>
+        <script is:inline>
+          (function () {
+            var params = new URLSearchParams(window.location.search);
+            if (!params.get('q') && !params.get('rubro') && params.get('whatsapp') !== '1') return;
+            var root = document.documentElement;
+            root.classList.add('directory-filtering');
+            window.setTimeout(function () { root.classList.remove('directory-filtering'); }, 2500);
+          })();
+        </script>
         <DirectoryBrowser client:load providers={providers} />
-        <details class="directory-notice">
-          <summary>Cómo armamos este directorio</summary>
-          <p>Estas fichas son de la ciudad de Córdoba, no de toda la provincia. Publicamos solo negocios cuyo nombre, servicio y al menos un contacto pudimos ver en su propio sitio. La fecha de revisión dice cuándo miramos la información: no certifica calidad, precios ni disponibilidad.</p>
-          <p>No hay posiciones pagas en esta versión. Si más adelante hubiera un espacio destacado, va a decir “Destacado · Publicidad” y no va a ordenar el resto como si fuera una evaluación.</p>
-          <p>El directorio no está completo. Faltan muchos salones, animaciones y locales de la ciudad que todavía no revisamos en una fuente oficial. Los íconos de cada rubro son genéricos y no muestran ningún lugar.</p>
-        </details>
-        <p class="callout">Antes de pedir un número, conviene leer <a href="/guias/preguntas-antes-de-contratar-un-salon-en-cordoba/">qué preguntar al cotizar un salón en Córdoba</a>.</p>
+        <DirectoryMethodology latestReview={latestReview!} />
       </>
     )}
   </div>

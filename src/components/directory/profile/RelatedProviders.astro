@@ -1,0 +1,25 @@
+---
+import { ProviderCard } from '../ProviderCard';
+import { directoryPath, relatedProviders, relatedTitle } from '../../../data/providers/selectors';
+import type { ProviderRecord } from '../../../data/providers/records';
+
+interface Props {
+  provider: ProviderRecord;
+}
+const { provider } = Astro.props;
+const related = relatedProviders(provider);
+---
+
+<section class="profile-related" aria-labelledby={related.length > 0 ? 'related-title' : undefined}>
+  {related.length > 0 && (
+    <>
+      <h2 id="related-title">{relatedTitle(provider.categories[0])}</h2>
+      <ul class="related-grid">
+        {related.map((item) => (
+          <li><ProviderCard provider={item} variant="compact" headingLevel={3} /></li>
+        ))}
+      </ul>
+    </>
+  )}
+  <p class="profile-related__all"><a href={directoryPath}>Ver todos los proveedores</a></p>
+</section>

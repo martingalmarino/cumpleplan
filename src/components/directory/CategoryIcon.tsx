@@ -8,7 +8,7 @@ const icons: Record<ProviderCategory, IconName> = {
   decoracion: 'balloon',
 };
 
-export function CategoryIcon({ category, size = 'md' }: { category: ProviderCategory; size?: 'sm' | 'md' | 'lg' }) {
+export function CategoryIcon({ category, size = 'md' }: { category: ProviderCategory; size?: 'xs' | 'sm' | 'md' | 'lg' }) {
   return (
     <span className={`category-icon category-icon--${category} category-icon--${size}`} aria-hidden="true">
       <Icon name={icons[category]} />

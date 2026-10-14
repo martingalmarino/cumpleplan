@@ -1,0 +1,38 @@
+---
+import { Icon } from '../../icons/Icon';
+import type { ProviderRecord } from '../../../data/providers/records';
+
+interface Props {
+  provider: ProviderRecord;
+}
+const { provider } = Astro.props;
+---
+
+{provider.address ? (
+  <section class="profile-section" id="ubicacion" aria-labelledby="location-title">
+    <h2 id="location-title">Ubicación</h2>
+    <div class="profile-location">
+      <Icon name="map" />
+      <div>
+        <p class="profile-location__address">{provider.address}</p>
+        <p>
+          {provider.neighborhood ? `${provider.neighborhood}, ` : ''}{provider.locality}{provider.postalCode ? ` (CP ${provider.postalCode})` : ''}
+        </p>
+        {provider.coverage && <p class="profile-hint">{provider.coverage}</p>}
+        {provider.mapUrl && (
+          <p>
+            <a href={provider.mapUrl} rel="noopener">Cómo llegar<span class="visually-hidden"> a {provider.name} en Google Maps</span></a>
+          </p>
+        )}
+      </div>
+    </div>
+  </section>
+) : provider.coverage ? (
+  <section class="profile-section" id="ubicacion" aria-labelledby="location-title">
+    <h2 id="location-title">Zona de atención</h2>
+    <div class="profile-location">
+      <Icon name="map" />
+      <p>{provider.coverage}</p>
+    </div>
+  </section>
+) : null}

@@ -40,7 +40,9 @@ Las guías viven en `src/content/guias/`. El esquema está en `src/content.confi
 
 ## Proveedores
 
-Las fichas están en `src/data/providers/records.ts`. Solo se publican las que tienen `publicationStatus: "published"`. Hace falta sitio oficial, ciudad, servicio y al menos un contacto público, más la fecha de revisión y la fuente de cada dato. Los campos opcionales (`summary`, `services`, `coverage`, `capacity`, `ageRange`, `openingHours`, `bookingNote`) se completan solo si el proveedor los publica en su sitio oficial, y esa fuente se anota en `sources[].fields`. Si no están, la ficha no los muestra. Nunca se cargan precios, puntajes ni reseñas. `featured` queda en `false`.
+Las fichas están en `src/data/providers/records.ts`. Solo se publican las que tienen `publicationStatus: "published"`. Hace falta sitio oficial, ciudad, servicio y al menos un contacto público, más la fecha de revisión y la fuente de cada dato. Cada ficha necesita `summary` (una oración, hasta 120 caracteres), `description` (el texto de “Sobre…”) y `highlights` (hasta 3 datos cortos para la tarjeta). Los campos opcionales (`services`, `addOns`, `coverage`, `capacity`, `ageRange`, `spaces`, `duration`, `openingHours`, `leadTime`, `delivery`, `bookingNote`, `images`) se completan solo si el proveedor los publica en su sitio oficial, y esa fuente se anota en `sources[].fields`. Si no están, la ficha no los muestra. `images` es solo para fotos reales con permiso y crédito. Nunca se cargan precios, puntajes ni reseñas. `featured` queda en `false`.
+
+Los filtros, conteos, textos por rubro y datos clave salen de `src/data/providers/selectors.ts`. Los conteos de los botones de rubro son fijos sobre todas las fichas publicadas; el total de resultados es el que cambia con la búsqueda y con “Con WhatsApp”. Las URL con filtros (`?rubro=`, `?q=`, `?whatsapp=1`) no van al sitemap.
 
 Si no hay fichas publicadas, el directorio sale del menú, la ruta explica que está vacío y lleva `noindex`.
 

@@ -1,8 +1,32 @@
 export const providerCategories = [
-  { id: 'salones', label: 'Salones' },
-  { id: 'animacion', label: 'Animación' },
-  { id: 'tortas-catering', label: 'Tortas y catering' },
-  { id: 'decoracion', label: 'Decoración y alquileres' },
+  {
+    id: 'salones',
+    label: 'Salones',
+    singular: 'Salón infantil',
+    servicesTitle: 'Instalaciones y servicios',
+    relatedTitle: 'Otros salones en Córdoba',
+  },
+  {
+    id: 'animacion',
+    label: 'Animación',
+    singular: 'Animación',
+    servicesTitle: 'Qué ofrece',
+    relatedTitle: 'Otras opciones de animación',
+  },
+  {
+    id: 'tortas-catering',
+    label: 'Tortas y catering',
+    singular: 'Tortas y catering',
+    servicesTitle: 'Qué ofrece',
+    relatedTitle: 'Otras opciones de tortas y catering',
+  },
+  {
+    id: 'decoracion',
+    label: 'Decoración y alquileres',
+    singular: 'Decoración y alquileres',
+    servicesTitle: 'Productos y servicios',
+    relatedTitle: 'Otras opciones de decoración',
+  },
 ] as const;
 
 export type ProviderCategory = (typeof providerCategories)[number]['id'];
@@ -11,6 +35,14 @@ export type ProviderSource = {
   label: string;
   url: string;
   fields: string;
+};
+
+export type ProviderImage = {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  credit: string;
 };
 
 export type IsoDate = `${number}-${number}-${number}`;
@@ -27,20 +59,33 @@ export type ProviderRecord = {
   neighborhood?: string;
   address?: string;
   postalCode?: string;
+  /** Una línea para la tarjeta y el encabezado de la ficha. */
+  summary: string;
+  /** Texto de "Sobre…": no repite el resumen ni la lista de servicios. */
   description: string;
-  summary?: string;
+  /** Hasta tres datos cortos para la tarjeta del directorio. */
+  highlights: string[];
   services?: string[];
+  /** Servicios que el proveedor publica como adicionales, aparte de su propuesta. */
+  addOns?: string[];
   coverage?: string;
   capacity?: string;
   ageRange?: string;
+  spaces?: string;
+  duration?: string;
   openingHours?: string;
+  leadTime?: string;
+  delivery?: string;
   bookingNote?: string;
+  /** Solo fotos reales del proveedor con permiso de uso. */
+  images?: ProviderImage[];
   website?: string;
   socialUrl?: string;
   phoneDisplay?: string;
   phoneTel?: string;
   secondaryPhoneDisplay?: string;
   secondaryPhoneTel?: string;
+  /** Solo si el proveedor publica WhatsApp; un teléfono no alcanza como prueba. */
   whatsappUrl?: string;
   mapUrl?: string;
   sources: ProviderSource[];
@@ -61,24 +106,24 @@ export const providers: ProviderRecord[] = [
     country: 'Argentina',
     locality: 'Córdoba Capital',
     neighborhood: 'Zona Norte',
-    address: 'Viracocha 6078',
+    address: 'Viracocha 6078, casi esquina Recta Martinoli',
+    summary: 'Salón de juego libre con inspiración Montessori, en Zona Norte. También arma festejos a domicilio.',
     description:
-      'Salón de cumpleaños infantiles en Zona Norte de la ciudad de Córdoba, casi esquina Recta Martinoli. En su sitio cuentan que la propuesta se basa en el juego libre con inspiración Montessori y que también arman festejos a domicilio, con ambientación, mesas temáticas e inflables.',
-    summary: 'Salón infantil en Zona Norte con juego libre de inspiración Montessori. También hace festejos a domicilio.',
+      'Ofrece un espacio pensado para que los chicos jueguen, exploren e imaginen, con instalaciones para chicos y para adultos. Tiene varias propuestas de cumpleaños en el salón y también lleva ambientación, mesas temáticas e inflables a domicilio.',
+    highlights: ['Hasta 60 personas', 'De 1 a 12 años', 'Visitas con cita previa'],
     services: [
-      'Cumpleaños en el salón',
-      'Festejos a domicilio',
-      'Ambientación y mesas temáticas',
-      'Juegos inflables',
-      'Baby showers y bautismos',
+      'Cumpleaños en el salón, con varias propuestas',
+      'Celebraciones de 1 y 2 años, baby showers y bautismos',
+      'Ambientación y mesas temáticas a domicilio',
+      'Juegos inflables para eventos',
     ],
-    coverage: 'Salón en Zona Norte; también van a domicilio',
+    coverage: 'También arman festejos a domicilio.',
     capacity: 'Hasta 60 personas',
     ageRange: 'De 1 a 12 años',
+    duration: 'Desde 2 h 30 min, con tiempo extra opcional',
     openingHours:
-      'Eventos de lunes a viernes desde las 16 h. Sábados, domingos y feriados, en turnos que empiezan a las 11, 14:30 o 18 h.',
-    bookingNote:
-      'Las visitas al salón son solo con cita previa por teléfono o WhatsApp. Los eventos duran desde 2 h 30 min y se puede sumar tiempo extra.',
+      'Lunes a viernes desde las 16 h. Sábados, domingos y feriados, en turnos que empiezan a las 11, 14:30 o 18 h.',
+    bookingNote: 'Solo con cita previa, por teléfono o WhatsApp',
     website: 'https://www.mariamembrillo.com/',
     socialUrl: 'https://www.instagram.com/mariamembrillo.eventos/',
     phoneDisplay: '(0351) 157 684331',
@@ -103,7 +148,7 @@ export const providers: ProviderRecord[] = [
     quoteQuestions: [
       'Qué incluye cada propuesta y qué se cobra aparte, sobre todo comida, torta y animación.',
       'Cuántos chicos y cuántos adultos entran en la propuesta que te pasan.',
-      'Cómo se paga la seña y qué pasa si tenés que cambiar la fecha.',
+      'Si piden seña, cuánto es y qué pasa si tenés que cambiar la fecha.',
       'Si podés llevar comida o torta de afuera.',
       'Cuánto cuesta el tiempo extra si el festejo se estira.',
     ],
@@ -118,17 +163,19 @@ export const providers: ProviderRecord[] = [
     country: 'Argentina',
     locality: 'Córdoba Capital',
     address: 'Av. Rafael Núñez 4615',
+    summary: 'Tres salas según la edad, con coordinadores, inflables y camas elásticas.',
     description:
-      'Salón de fiestas infantiles en la ciudad de Córdoba, sobre Av. Rafael Núñez. Su sitio describe tres salas ambientadas según la edad, con sector para adultos, aire acondicionado y calefacción, y coordinadores que llevan adelante el cumple.',
-    summary: 'Salón con tres salas según la edad, de 0 a 11 años, con coordinadores, inflables y camas elásticas.',
+      'Salón de fiestas infantiles en la ciudad de Córdoba. Cada sala está ambientada por separado, con luz natural, aire acondicionado y calefacción, y el cumple lo llevan adelante los coordinadores del salón.',
+    highlights: ['De 0 a 11 años', 'Sector para adultos', 'Aire acondicionado y calefacción'],
     services: [
-      'Tres salas según la edad',
-      'Coordinadores en el festejo',
-      'Inflables y camas elásticas',
+      'Sector de juegos con inflables y camas elásticas',
+      'Decoración del sector de chicos según la temática, en la Sala 2',
       'Sector para adultos',
-      'Coordinador extra como adicional',
+      'Coordinadores durante el festejo',
     ],
+    addOns: ['Coordinador extra'],
     ageRange: 'De 0 a 11 años, con una sala para 8 a 11',
+    spaces: 'Tres salas según la edad',
     website: 'https://diverworld.com.ar/',
     phoneDisplay: '351 3326949',
     phoneTel: '+543513326949',
@@ -137,7 +184,7 @@ export const providers: ProviderRecord[] = [
       {
         label: 'Sitio oficial',
         url: 'https://diverworld.com.ar/',
-        fields: 'Nombre, dirección, teléfono, edades, salas, servicios y coordinador extra',
+        fields: 'Nombre, dirección, teléfono, edades, salas, instalaciones y coordinador extra',
       },
     ],
     verifiedAt: '2026-10-13',
@@ -145,9 +192,9 @@ export const providers: ProviderRecord[] = [
     featured: false,
     quoteQuestions: [
       'Qué sala corresponde a la edad que festejás y qué queda incluido.',
-      'Si la coordinación del cumple está dentro del precio y cuánto suma un coordinador extra.',
+      'Si la coordinación está dentro del precio y cuánto suma un coordinador extra.',
       'Hasta qué horario se puede usar el espacio y cómo se cobra una extensión.',
-      'Qué pasa con la seña si cambiás la fecha.',
+      'Si piden seña, cuánto es y qué pasa si cambiás la fecha.',
       'Si podés llevar la torta y la comida, o si el salón las ofrece.',
     ],
   },
@@ -160,18 +207,19 @@ export const providers: ProviderRecord[] = [
     province: 'Córdoba',
     country: 'Argentina',
     locality: 'Córdoba Capital',
+    summary: 'Tortas temáticas, mesas dulces y saladas y catering con recetas venezolanas y argentinas.',
     description:
-      'Emprendimiento familiar que hace tortas temáticas, mesas dulces y saladas y catering para eventos en Córdoba Capital, con recetas venezolanas y argentinas. Trabajan por encargo y confirman los pedidos por WhatsApp.',
-    summary: 'Tortas temáticas, mesas dulces y saladas y catering con recetas venezolanas y argentinas, por encargo.',
+      'Emprendimiento familiar que trabaja por encargo: arma cada pedido según la fecha, la cantidad de invitados y si hace falta algo dulce, salado o las dos cosas. Confirman los pedidos por WhatsApp.',
+    highlights: ['Por encargo', 'Tortas con 72 h de anticipación', 'Envío con armado de mesas'],
     services: [
       'Tortas personalizadas y temáticas',
       'Mesas dulces y saladas',
       'Catering para eventos',
-      'Tequeños y pasapalos venezolanos',
+      'Tequeños, pasapalos y postres venezolanos',
     ],
-    coverage: 'Solo Córdoba Capital, todos los barrios',
-    bookingNote:
-      'Trabajan por encargo: piden 72 h para tortas decoradas y de 7 a 15 días para mesas completas o catering.',
+    coverage: 'Solo Córdoba Capital, en todos los barrios. Fuera de la ciudad no hacen entregas.',
+    leadTime: '72 h para tortas decoradas; de 7 a 15 días para mesas completas y catering',
+    delivery: 'Retiro coordinado, envío propio con armado de mesas o cadetería para productos sueltos',
     website: 'https://tentacionsys.com.ar/',
     socialUrl: 'https://www.instagram.com/tentacion_s_y_s/',
     phoneDisplay: '+54 9 351 787-6548',
@@ -181,7 +229,7 @@ export const providers: ProviderRecord[] = [
       {
         label: 'Sitio oficial',
         url: 'https://tentacionsys.com.ar/',
-        fields: 'Nombre, servicios, cobertura en Córdoba Capital, anticipación de encargos, teléfono, WhatsApp e Instagram',
+        fields: 'Nombre, servicios, cobertura en Córdoba Capital, anticipación, formas de entrega, teléfono, WhatsApp e Instagram',
       },
       {
         label: 'Página de tortas temáticas',
@@ -195,7 +243,7 @@ export const providers: ProviderRecord[] = [
     quoteQuestions: [
       'Si el precio de la torta separa el kilo de la decoración.',
       'Si tu fecha cae en un fin de semana o fecha pico que pida más anticipación.',
-      'Cómo se entrega en tu barrio y si el traslado se cobra aparte.',
+      'Cuánto cuesta el envío a tu barrio y si incluye el armado.',
       'Qué datos necesitan de sabores o ingredientes, sin asumir que un aviso resuelve una alergia.',
       'Si el catering y la torta se cotizan juntos o por separado.',
     ],
@@ -211,10 +259,16 @@ export const providers: ProviderRecord[] = [
     locality: 'Córdoba Capital',
     address: 'Diagonal Ica 1340',
     postalCode: '5000',
+    summary: 'Venta de helio en garrafas y cilindros para inflar globos en cumpleaños y eventos.',
     description:
-      'Empresa familiar que vende helio para decoraciones con globos. En su sitio ofrecen garrafas de helio para cumpleaños, cilindros y reguladores, y atención para elegir la opción según el evento y la cantidad de globos.',
-    summary: 'Venta de helio en garrafas y cilindros, y reguladores, para inflar globos en cumpleaños y eventos.',
-    services: ['Garrafas de helio', 'Cilindros y reguladores', 'Asesoramiento según la cantidad de globos'],
+      'Empresa familiar dedicada a la venta de helio para decoraciones con globos. Atienden de forma personalizada para ayudarte a elegir la opción según el evento, la cantidad y el tipo de globos.',
+    highlights: ['Garrafas de helio', 'Cilindros y reguladores', 'Atención personalizada'],
+    services: [
+      'Garrafas de helio para cumpleaños y eventos',
+      'Cilindros de helio',
+      'Reguladores',
+      'Asesoramiento según la cantidad y el tipo de globos',
+    ],
     website: 'https://www.oxinorglobos.com/',
     phoneDisplay: '(0351) 472 9562',
     phoneTel: '+543514729562',
@@ -247,76 +301,4 @@ export function publishedProviders(): ProviderRecord[] {
 
 export function providerBySlug(slug: string): ProviderRecord | undefined {
   return publishedProviders().find((provider) => provider.slug === slug);
-}
-
-export function categoryLabel(category: ProviderCategory): string {
-  return providerCategories.find((item) => item.id === category)?.label ?? category;
-}
-
-export function providersByCategory(category: ProviderCategory, list = publishedProviders()): ProviderRecord[] {
-  return list
-    .filter((provider) => provider.categories.includes(category))
-    .sort((a, b) => a.name.localeCompare(b.name, 'es'));
-}
-
-export type ContactActionType = 'whatsapp' | 'phone' | 'website' | 'social' | 'map';
-
-export type ContactAction = {
-  type: ContactActionType;
-  label: string;
-  href: string;
-  detail?: string;
-  external: boolean;
-};
-
-export function contactActions(provider: ProviderRecord): ContactAction[] {
-  const actions: ContactAction[] = [];
-  if (provider.whatsappUrl) {
-    actions.push({ type: 'whatsapp', label: 'WhatsApp', href: provider.whatsappUrl, external: true });
-  }
-  if (provider.phoneTel) {
-    actions.push({ type: 'phone', label: 'Llamar', href: `tel:${provider.phoneTel}`, detail: provider.phoneDisplay, external: false });
-  }
-  if (provider.secondaryPhoneTel) {
-    actions.push({
-      type: 'phone',
-      label: 'Llamar al otro número',
-      href: `tel:${provider.secondaryPhoneTel}`,
-      detail: provider.secondaryPhoneDisplay,
-      external: false,
-    });
-  }
-  if (provider.website) {
-    actions.push({ type: 'website', label: 'Sitio oficial', href: provider.website, external: true });
-  }
-  if (provider.socialUrl) {
-    const label = provider.socialUrl.includes('instagram.com') ? 'Instagram' : 'Perfil en redes';
-    actions.push({ type: 'social', label, href: provider.socialUrl, external: true });
-  }
-  if (provider.mapUrl) {
-    actions.push({ type: 'map', label: 'Ver en el mapa', href: provider.mapUrl, external: true });
-  }
-  return actions;
-}
-
-const monthNames = [
-  'enero',
-  'febrero',
-  'marzo',
-  'abril',
-  'mayo',
-  'junio',
-  'julio',
-  'agosto',
-  'septiembre',
-  'octubre',
-  'noviembre',
-  'diciembre',
-];
-
-export function formatVerifiedDate(date: IsoDate): string {
-  const [year, month, day] = date.split('-').map(Number);
-  const monthName = monthNames[month - 1];
-  if (!year || !monthName || !day) return date;
-  return `${day} de ${monthName} de ${year}`;
 }

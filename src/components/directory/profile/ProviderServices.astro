@@ -1,0 +1,27 @@
+---
+import { Icon } from '../../icons/Icon';
+import { servicesTitle } from '../../../data/providers/selectors';
+import type { ProviderRecord } from '../../../data/providers/records';
+
+interface Props {
+  provider: ProviderRecord;
+}
+const { provider } = Astro.props;
+const services = provider.services ?? [];
+const addOns = provider.addOns ?? [];
+---
+
+{services.length + addOns.length > 0 && (
+  <section class="profile-section" aria-labelledby="services-title">
+    <h2 id="services-title">{servicesTitle(provider.categories[0])}</h2>
+    <ul class="service-list">
+      {services.map((service) => (
+        <li><Icon name="check" /><span>{service}</span></li>
+      ))}
+      {addOns.map((addOn) => (
+        <li class="service-list__addon"><Icon name="plus" /><span>Adicional: {addOn.charAt(0).toLocaleLowerCase('es') + addOn.slice(1)}</span></li>
+      ))}
+    </ul>
+    <p class="profile-hint">Es lo que el proveedor publica que ofrece. No indica qué entra en el precio.</p>
+  </section>
+)}

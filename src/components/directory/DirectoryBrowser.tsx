@@ -1,152 +1,123 @@
-import { useEffect, useMemo, useState } from 'react';
-import { categoryLabel, providerCategories, type ProviderCategory, type ProviderRecord } from '../../data/providers/records';
-import { CategoryIcon } from './CategoryIcon';
-import { ProviderRow } from './ProviderRow';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { ProviderCategory, ProviderRecord } from '../../data/providers/records';
+import { categoryCounts, categoryLabel, filterProviders, isCategory } from '../../data/providers/selectors';
+import { DirectoryFilters } from './DirectoryFilters';
+import { ProviderCard } from './ProviderCard';
 
-type CategoryFilter = ProviderCategory | 'todas';
+/** La página agrega esta clase antes de pintar si la URL trae filtros, para no mostrar resultados que después desaparecen. */
+const filteringClass = 'directory-filtering';
 
-const categoryIds = providerCategories.map((item) => item.id) as readonly string[];
+type FilterState = { query: string; category: ProviderCategory | null; whatsappOnly: boolean };
 
-function normalize(text: string): string {
-  return text.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase('es');
+const emptyFilter: FilterState = { query: '', category: null, whatsappOnly: false };
+
+function readUrl(): FilterState {
+  const params = new URLSearchParams(window.location.search);
+  const rubro = params.get('rubro');
+  return {
+    query: params.get('q') ?? '',
+    category: isCategory(rubro) ? rubro : null,
+    whatsappOnly: params.get('whatsapp') === '1',
+  };
 }
 
-function isCategory(value: string | null): value is ProviderCategory {
-  return value !== null && categoryIds.includes(value);
-}
-
-function syncUrl(category: CategoryFilter) {
+function writeUrl(state: FilterState) {
   const url = new URL(window.location.href);
-  if (category === 'todas') url.searchParams.delete('rubro');
-  else url.searchParams.set('rubro', category);
-  window.history.replaceState(null, '', url);
+  const set = (key: string, value: string | null) => (value ? url.searchParams.set(key, value) : url.searchParams.delete(key));
+  set('q', state.query.trim() || null);
+  set('rubro', state.category);
+  set('whatsapp', state.whatsappOnly ? '1' : null);
+  if (url.href !== window.location.href) window.history.replaceState(window.history.state, '', url);
+}
+
+function resultLabel(count: number, filtered: boolean): string {
+  if (filtered) return count === 1 ? '1 opción encontrada' : `${count} opciones encontradas`;
+  return count === 1 ? '1 opción disponible' : `${count} opciones disponibles`;
 }
 
 export default function DirectoryBrowser({ providers }: { providers: ProviderRecord[] }) {
-  const [query, setQuery] = useState('');
-  const [category, setCategory] = useState<CategoryFilter>('todas');
-  const [onlyWhatsapp, setOnlyWhatsapp] = useState(false);
+  const [state, setState] = useState<FilterState>(emptyFilter);
+  const [ready, setReady] = useState(false);
+  const [announcement, setAnnouncement] = useState('');
+  const firstAnnouncement = useRef(true);
 
   useEffect(() => {
-    const initial = new URLSearchParams(window.location.search).get('rubro');
-    if (isCategory(initial)) setCategory(initial);
+    setState(readUrl());
+    setReady(true);
+    const onPop = () => setState(readUrl());
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
   }, []);
 
-  const sorted = useMemo(() => [...providers].sort((a, b) => a.name.localeCompare(b.name, 'es')), [providers]);
+  useEffect(() => {
+    if (!ready) return;
+    document.documentElement.classList.remove(filteringClass);
+    writeUrl(state);
+  }, [ready, state]);
 
-  const counts = useMemo(
-    () =>
-      providerCategories
-        .map((item) => ({ ...item, count: providers.filter((provider) => provider.categories.includes(item.id)).length }))
-        .filter((item) => item.count > 0),
-    [providers],
-  );
+  const counts = useMemo(() => categoryCounts(providers), [providers]);
+  const results = filterProviders(providers, state);
+  const filtered = state.query.trim() !== '' || state.category !== null || state.whatsappOnly;
+  const label = resultLabel(results.length, filtered);
 
-  const needle = normalize(query.trim());
-  const filtered = sorted.filter((provider) => {
-    const haystack = normalize(
-      [provider.name, provider.neighborhood, provider.address, provider.summary, ...(provider.services ?? []), ...provider.categories.map(categoryLabel)]
-        .filter(Boolean)
-        .join(' '),
-    );
-    if (needle && !haystack.includes(needle)) return false;
-    if (category !== 'todas' && !provider.categories.includes(category)) return false;
-    if (onlyWhatsapp && !provider.whatsappUrl) return false;
-    return true;
-  });
+  useEffect(() => {
+    if (firstAnnouncement.current) {
+      firstAnnouncement.current = false;
+      return;
+    }
+    const timer = window.setTimeout(() => setAnnouncement(label), 600);
+    return () => window.clearTimeout(timer);
+  }, [label]);
 
-  const hasFilters = needle.length > 0 || category !== 'todas' || onlyWhatsapp;
+  const active = [
+    state.query.trim() ? `“${state.query.trim()}”` : null,
+    state.category ? categoryLabel(state.category) : null,
+    state.whatsappOnly ? 'con WhatsApp' : null,
+  ].filter(Boolean);
 
-  function chooseCategory(next: CategoryFilter) {
-    setCategory(next);
-    syncUrl(next);
-  }
-
-  function clearFilters() {
-    setQuery('');
-    setOnlyWhatsapp(false);
-    chooseCategory('todas');
-  }
+  const clear = () => setState(emptyFilter);
 
   return (
     <div className="directory">
-      <nav className="category-shortcuts" aria-label="Rubros del directorio">
-        <ul>
-          {counts.map((item) => (
-            <li key={item.id}>
-              <a
-                href={`?rubro=${item.id}#listado`}
-                aria-current={category === item.id ? 'true' : undefined}
-                onClick={(event) => {
-                  event.preventDefault();
-                  chooseCategory(category === item.id ? 'todas' : item.id);
-                  document.getElementById('listado')?.scrollIntoView({ block: 'start' });
-                }}
-              >
-                <CategoryIcon category={item.id} size="sm" />
-                <span className="category-shortcuts__label">{item.label}</span>
-                <span className="category-shortcuts__count">{item.count}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <DirectoryFilters
+        query={state.query}
+        category={state.category}
+        whatsappOnly={state.whatsappOnly}
+        total={providers.length}
+        counts={counts}
+        onQuery={(query) => setState((current) => ({ ...current, query }))}
+        onCategory={(category) => setState((current) => ({ ...current, category }))}
+        onWhatsapp={(whatsappOnly) => setState((current) => ({ ...current, whatsappOnly }))}
+      />
 
-      <section id="listado" className="directory-list" aria-labelledby="directory-results">
-        <form className="directory-filters" role="search" onSubmit={(event) => event.preventDefault()}>
-          <div className="field">
-            <label htmlFor="provider-search">Buscar</label>
-            <input
-              id="provider-search"
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Nombre, barrio o servicio"
-            />
-          </div>
-          <div className="field">
-            <label htmlFor="provider-category">Rubro</label>
-            <select id="provider-category" value={category} onChange={(event) => chooseCategory(event.target.value as CategoryFilter)}>
-              <option value="todas">Todos los rubros ({providers.length})</option>
-              {counts.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label} ({item.count})
-                </option>
-              ))}
-            </select>
-          </div>
-          <label className="check-field">
-            <input type="checkbox" checked={onlyWhatsapp} onChange={(event) => setOnlyWhatsapp(event.target.checked)} />
-            <span>Con WhatsApp</span>
-          </label>
-        </form>
-
-        <div className="directory-list__header">
-          <h2 id="directory-results" aria-live="polite">
-            {filtered.length} {filtered.length === 1 ? 'proveedor' : 'proveedores'} · orden alfabético
-          </h2>
-          {hasFilters ? (
-            <button type="button" className="button-quiet" onClick={clearFilters}>
+      <section className="directory-results" aria-labelledby="directory-results-title">
+        <div className="directory-results__header">
+          <h2 id="directory-results-title">{label}</h2>
+          <span className="directory-results__order">Orden alfabético</span>
+          {filtered ? (
+            <button type="button" className="button-quiet directory-results__clear" onClick={clear}>
               Limpiar filtros
             </button>
           ) : null}
         </div>
+        {active.length > 0 ? <p className="directory-results__active">Filtrando por {active.join(' · ')}</p> : null}
+        <p className="visually-hidden" aria-live="polite">{announcement}</p>
 
-        {filtered.length === 0 ? (
+        {results.length === 0 ? (
           <div className="directory-empty">
-            <p>Ningún proveedor coincide con esos filtros.</p>
-            <button type="button" className="button button-secondary" onClick={clearFilters}>
-              Ver todos los proveedores
+            <p>No encontramos opciones con esos filtros.</p>
+            <button type="button" className="button button-secondary" onClick={clear}>
+              Limpiar filtros
             </button>
           </div>
         ) : (
-          <ol className="provider-rows">
-            {filtered.map((provider) => (
+          <ul className="provider-grid">
+            {results.map((provider) => (
               <li key={provider.id}>
-                <ProviderRow provider={provider} />
+                <ProviderCard provider={provider} />
               </li>
             ))}
-          </ol>
+          </ul>
         )}
       </section>
     </div>

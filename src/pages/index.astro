@@ -5,7 +5,8 @@ import Artwork from '../components/art/Artwork.astro';
 import QuickStart from '../components/planner/QuickStart';
 import { site } from '../config/site';
 import { CategoryIcon } from '../components/directory/CategoryIcon';
-import { categoryLabel, publishedProviders } from '../data/providers/records';
+import { publishedProviders } from '../data/providers/records';
+import { categoryLabel, providerPath } from '../data/providers/selectors';
 
 const title = 'Organizá el cumpleaños infantil | Festejito';
 const description = 'Calculá comida y bebida, ordená el presupuesto y llevá una lista de lo que falta para un cumpleaños infantil en Argentina.';
@@ -139,7 +140,7 @@ const providers = publishedProviders().sort((a, b) => a.name.localeCompare(b.nam
         <ul class="provider-names">
           {providers.map((provider) => (
             <li>
-              <a href={`/cumpleanos-infantiles-cordoba/proveedores/${provider.slug}/`}>
+              <a href={providerPath(provider)}>
                 <CategoryIcon category={provider.categories[0]} size="sm" />
                 <span>{provider.name}</span>
                 <span>{categoryLabel(provider.categories[0])}</span>
