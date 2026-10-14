@@ -1,5 +1,6 @@
 ---
 import { Icon } from '../../icons/Icon';
+import { mapLinkLabel } from '../../../data/providers/selectors';
 import type { ProviderRecord } from '../../../data/providers/records';
 
 interface Props {
@@ -21,7 +22,7 @@ const { provider } = Astro.props;
         {provider.coverage && <p class="profile-hint">{provider.coverage}</p>}
         {provider.mapUrl && (
           <p>
-            <a href={provider.mapUrl} rel="noopener">Cómo llegar<span class="visually-hidden"> a {provider.name} en Google Maps</span></a>
+            <a href={provider.mapUrl} rel="noopener">{mapLinkLabel}<span class="visually-hidden">: {provider.address} en Google Maps</span></a>
           </p>
         )}
       </div>

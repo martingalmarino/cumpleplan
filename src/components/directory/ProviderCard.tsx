@@ -56,7 +56,7 @@ export function ProviderCard({ provider, variant = 'default', headingLevel = 2 }
             data-analytics="provider_contact_clicked"
             data-provider-id={provider.id}
           >
-            <Icon name={contact.type === 'whatsapp' ? 'message' : 'phone'} />
+            <Icon name={contact.type === 'whatsapp' ? 'message' : contact.type === 'phone' ? 'phone' : 'globe'} />
             {contact.label}
             <span className="visually-hidden"> a {provider.name}</span>
           </a>

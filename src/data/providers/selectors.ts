@@ -62,10 +62,29 @@ export function providersByCategory(category: ProviderCategory, list = published
   return sortProviders(list.filter((provider) => provider.categories.includes(category)));
 }
 
+/** Primero las otras sedes de la misma marca; después el resto del rubro en orden alfabético. */
 export function relatedProviders(provider: ProviderRecord, limit = 3, list = publishedProviders()): ProviderRecord[] {
-  return providersByCategory(provider.categories[0], list)
-    .filter((item) => item.id !== provider.id)
-    .slice(0, limit);
+  const others = providersByCategory(provider.categories[0], list).filter((item) => item.id !== provider.id);
+  const sameBrand = (item: ProviderRecord) => Boolean(provider.brandGroup) && item.brandGroup === provider.brandGroup;
+  return [...others.filter(sameBrand), ...others.filter((item) => !sameBrand(item))].slice(0, limit);
+}
+
+const titleMax = 60;
+const descriptionMax = 160;
+
+export function providerTitle(provider: ProviderRecord): string {
+  const kind = categorySingular(provider.categories[0]).toLocaleLowerCase('es');
+  const options = [`${provider.name}: ${kind} en Córdoba Capital`, `${provider.name}: ${kind} en Córdoba`, `${provider.name} · Córdoba`];
+  return options.find((option) => option.length <= titleMax) ?? provider.name;
+}
+
+export function providerDescription(provider: ProviderRecord): string {
+  const options = [
+    `${provider.summary} Contacto y datos publicados por ${provider.name}.`,
+    `${provider.summary} Contacto y datos publicados.`,
+    provider.summary,
+  ];
+  return options.find((option) => option.length <= descriptionMax) ?? provider.summary;
 }
 
 export function normalizeText(text: string): string {
@@ -129,7 +148,15 @@ export function providerFacts(provider: ProviderRecord): ProviderFact[] {
   return facts.filter((fact): fact is ProviderFact => fact !== null);
 }
 
-export type ContactActionType = 'whatsapp' | 'phone' | 'website' | 'social' | 'map';
+export type ContactActionType = 'whatsapp' | 'phone' | 'website' | 'social' | 'email' | 'map';
+
+export function socialLabel(url: string): string {
+  if (url.includes('instagram.com')) return 'Instagram';
+  if (url.includes('facebook.com')) return 'Facebook';
+  return 'Perfil en redes';
+}
+
+export const mapLinkLabel = 'Buscar dirección en el mapa';
 
 export type ContactAction = {
   type: ContactActionType;
@@ -160,19 +187,24 @@ export function contactActions(provider: ProviderRecord): ContactAction[] {
     actions.push({ type: 'website', label: 'Sitio oficial', href: provider.website, external: true });
   }
   if (provider.socialUrl) {
-    const label = provider.socialUrl.includes('instagram.com') ? 'Instagram' : 'Perfil en redes';
-    actions.push({ type: 'social', label, href: provider.socialUrl, external: true });
+    actions.push({ type: 'social', label: socialLabel(provider.socialUrl), href: provider.socialUrl, external: true });
+  }
+  if (provider.email) {
+    actions.push({ type: 'email', label: 'Correo', href: `mailto:${provider.email}`, detail: provider.email, external: false });
   }
   if (provider.mapUrl) {
-    actions.push({ type: 'map', label: 'Cómo llegar', href: provider.mapUrl, external: true });
+    actions.push({ type: 'map', label: mapLinkLabel, href: provider.mapUrl, external: true });
   }
   return actions;
 }
 
-/** WhatsApp si está publicado; si no, el primer teléfono. */
+/** WhatsApp si está publicado; si no, el primer teléfono; si no, la red oficial. */
 export function primaryContact(provider: ProviderRecord): ContactAction | undefined {
   const actions = contactActions(provider);
-  return actions.find((action) => action.type === 'whatsapp') ?? actions.find((action) => action.type === 'phone');
+  const direct = actions.find((action) => action.type === 'whatsapp') ?? actions.find((action) => action.type === 'phone');
+  if (direct) return direct;
+  const social = actions.find((action) => action.type === 'social');
+  return social ? { ...social, label: `Consultar en ${social.label}` } : undefined;
 }
 
 const monthNames = [

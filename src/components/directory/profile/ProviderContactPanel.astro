@@ -1,5 +1,6 @@
 ---
 import { Icon } from '../../icons/Icon';
+import { socialLabel } from '../../../data/providers/selectors';
 import type { ProviderRecord } from '../../../data/providers/records';
 
 interface Props {
@@ -7,9 +8,12 @@ interface Props {
 }
 const { provider } = Astro.props;
 const tracked = { 'data-analytics': 'provider_contact_clicked', 'data-provider-id': provider.id };
+const hasPhone = Boolean(provider.phoneTel && provider.phoneDisplay);
 const whatsappFirst = Boolean(provider.whatsappUrl);
-const socialLabel = provider.socialUrl?.includes('instagram.com') ? 'Instagram' : 'Perfil en redes';
-const hasLinks = Boolean(provider.website || provider.socialUrl || provider.address);
+const social = provider.socialUrl ? socialLabel(provider.socialUrl) : null;
+const socialFirst = Boolean(social) && !whatsappFirst && !hasPhone;
+const socialIcon = social === 'Instagram' ? 'camera' : 'globe';
+const hasLinks = Boolean(provider.website || (social && !socialFirst) || provider.email || provider.address);
 ---
 
 <aside class="contact-panel" aria-labelledby="contact-title">
@@ -22,7 +26,7 @@ const hasLinks = Boolean(provider.website || provider.socialUrl || provider.addr
         <Icon name="message" /> Escribir por WhatsApp
       </a>
     )}
-    {provider.phoneTel && provider.phoneDisplay && (
+    {hasPhone && (
       <a class={`button ${whatsappFirst ? 'button-secondary' : 'button-primary'} contact-panel__phone`} href={`tel:${provider.phoneTel}`} {...tracked}>
         <Icon name="phone" />
         <span>Llamar <span class="contact-panel__number">{provider.phoneDisplay}</span></span>
@@ -34,6 +38,11 @@ const hasLinks = Boolean(provider.website || provider.socialUrl || provider.addr
         <span>Otro teléfono <span class="contact-panel__number">{provider.secondaryPhoneDisplay}</span></span>
       </a>
     )}
+    {socialFirst && (
+      <a class="button button-primary" href={provider.socialUrl} rel="noopener" {...tracked}>
+        <Icon name={socialIcon} /> Consultar en {social}
+      </a>
+    )}
   </div>
 
   {hasLinks && (
@@ -41,8 +50,11 @@ const hasLinks = Boolean(provider.website || provider.socialUrl || provider.addr
       {provider.website && (
         <li><a href={provider.website} rel="noopener" {...tracked}><Icon name="globe" /> Sitio oficial</a></li>
       )}
-      {provider.socialUrl && (
-        <li><a href={provider.socialUrl} rel="noopener" {...tracked}><Icon name="camera" /> {socialLabel}</a></li>
+      {social && !socialFirst && (
+        <li><a href={provider.socialUrl} rel="noopener" {...tracked}><Icon name={socialIcon} /> {social}</a></li>
+      )}
+      {provider.email && (
+        <li><a href={`mailto:${provider.email}`} {...tracked}><Icon name="mail" /> Correo</a></li>
       )}
       {provider.address && (
         <li><a href="#ubicacion"><Icon name="map" /> Ver ubicación</a></li>

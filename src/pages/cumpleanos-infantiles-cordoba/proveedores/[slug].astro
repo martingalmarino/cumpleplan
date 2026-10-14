@@ -9,7 +9,7 @@ import ProviderServices from '../../../components/directory/profile/ProviderServ
 import ProviderSources from '../../../components/directory/profile/ProviderSources.astro';
 import RelatedProviders from '../../../components/directory/profile/RelatedProviders.astro';
 import { publishedProviders, type ProviderRecord } from '../../../data/providers/records';
-import { categorySingular, directoryPath, providerFacts, providerPath } from '../../../data/providers/selectors';
+import { directoryPath, providerDescription, providerFacts, providerPath, providerTitle } from '../../../data/providers/selectors';
 import { absoluteUrl, site } from '../../../config/site';
 
 export function getStaticPaths() {
@@ -26,8 +26,8 @@ interface Props {
 const { provider } = Astro.props;
 const path = providerPath(provider);
 const facts = providerFacts(provider);
-const title = `${provider.name}: ${categorySingular(provider.categories[0]).toLocaleLowerCase('es')} en Córdoba Capital`;
-const description = `${provider.summary} Datos de contacto y servicios publicados por ${provider.name}.`;
+const title = providerTitle(provider);
+const description = providerDescription(provider);
 
 const pageUrl = absoluteUrl(path);
 const crumbs = site.origin
@@ -51,6 +51,7 @@ const business = site.origin
         description: provider.summary,
         url: provider.website,
         telephone: provider.phoneTel,
+        email: provider.email,
         sameAs: provider.socialUrl ? [provider.socialUrl] : undefined,
         areaServed: provider.coverage ? { '@type': 'City', name: 'Córdoba', description: provider.coverage } : undefined,
         address: Object.fromEntries(

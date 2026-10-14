@@ -14,6 +14,12 @@ const website = site.origin
   ? { '@context': 'https://schema.org', '@type': 'WebSite', name: site.brand, url: site.origin, inLanguage: 'es-AR' }
   : null;
 const providers = publishedProviders().sort((a, b) => a.name.localeCompare(b.name, 'es'));
+const firstOfEachCategory = providers.filter(
+  (provider, index) => providers.findIndex((other) => other.categories[0] === provider.categories[0]) === index,
+);
+const bandProviders = [...firstOfEachCategory, ...providers.filter((provider) => !firstOfEachCategory.includes(provider))]
+  .slice(0, 6)
+  .sort((a, b) => a.name.localeCompare(b.name, 'es'));
 ---
 
 <Base title={title} description={description} path="/">
@@ -134,11 +140,11 @@ const providers = publishedProviders().sort((a, b) => a.name.localeCompare(b.nam
       <section class="provider-band">
         <div>
           <h2>Proveedores en Córdoba Capital</h2>
-          <p>Un directorio corto, armado con datos publicados en sitios oficiales. Es la ciudad de Córdoba, no toda la provincia, y no es un ranking.</p>
+          <p>{providers.length} fichas armadas con datos que cada negocio publica en su sitio o en sus redes oficiales. Es la ciudad de Córdoba, no toda la provincia, y no es un ranking.</p>
           <a class="button button-secondary" href="/cumpleanos-infantiles-cordoba/">Ver el directorio</a>
         </div>
         <ul class="provider-names">
-          {providers.map((provider) => (
+          {bandProviders.map((provider) => (
             <li>
               <a href={providerPath(provider)}>
                 <CategoryIcon category={provider.categories[0]} size="sm" />

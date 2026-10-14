@@ -10,7 +10,9 @@ import {
   formatVerifiedDate,
   normalizeText,
   primaryContact,
+  providerDescription,
   providerFacts,
+  providerTitle,
   providersByCategory,
   relatedProviders,
 } from '../src/data/providers/selectors';
@@ -57,6 +59,45 @@ describe('fichas de proveedores', () => {
       expect(image.credit.length).toBeGreaterThan(0);
     }
   });
+
+  it.each(providers.map((provider) => [provider.name, provider] as const))('%s tiene enlaces con formato válido', (_, provider) => {
+    for (const url of [provider.website, provider.socialUrl, ...provider.sources.map((source) => source.url)]) {
+      if (url) expect(() => new URL(url)).not.toThrow();
+      if (url) expect(url).toMatch(/^https:\/\//);
+    }
+    if (provider.mapUrl) expect(provider.mapUrl).toMatch(/^https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=[^&\s]+$/);
+    if (provider.email) expect(provider.email).toMatch(/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/);
+    for (const source of provider.sources) {
+      if (source.reviewedAt) expect(source.reviewedAt <= provider.verifiedAt).toBe(true);
+    }
+  });
+
+  it.each(providers.map((provider) => [provider.name, provider] as const))('%s tiene título y descripción cortos', (_, provider) => {
+    expect(providerTitle(provider).length).toBeLessThanOrEqual(60);
+    expect(providerDescription(provider).length).toBeLessThanOrEqual(160);
+  });
+
+  it('no repite títulos ni sedes', () => {
+    const titles = providers.map(providerTitle);
+    expect(new Set(titles).size).toBe(titles.length);
+    const places = providers.map((provider) => `${normalizeText(provider.name)}|${normalizeText(provider.address ?? provider.id)}`);
+    expect(new Set(places).size).toBe(places.length);
+    const addresses = providers.filter((provider) => provider.address).map((provider) => normalizeText(provider.address!));
+    expect(new Set(addresses).size).toBe(addresses.length);
+  });
+
+  it('no publica candidatos descartados en la investigación', () => {
+    const names = providers.map((provider) => normalizeText(provider.name));
+    for (const excluded of ['candy laser', 'funfestcba', 'kidcity', 'tucan']) {
+      expect(names.some((name) => name.includes(excluded))).toBe(false);
+    }
+  });
+
+  it('Cocoliche ofrece WhatsApp y no un botón de llamada', () => {
+    const cocoliche = providers.find((provider) => provider.slug === 'cocoliche')!;
+    expect(primaryContact(cocoliche)?.type).toBe('whatsapp');
+    expect(contactActions(cocoliche).some((action) => action.type === 'phone')).toBe(false);
+  });
 });
 
 describe('contactActions', () => {
@@ -70,14 +111,27 @@ describe('contactActions', () => {
     mapUrl: 'https://www.google.com/maps/search/?api=1&query=Ejemplo',
   });
 
-  it('ordena WhatsApp, llamar, sitio, perfil y mapa', () => {
-    expect(contactActions(full).map((action) => action.type)).toEqual(['whatsapp', 'phone', 'website', 'social', 'map']);
-    expect(contactActions(full).at(-1)?.label).toBe('Cómo llegar');
+  it('ordena WhatsApp, llamar, sitio, perfil, correo y mapa', () => {
+    const withEmail = { ...full, email: 'hola@ejemplo.com.ar' };
+    expect(contactActions(withEmail).map((action) => action.type)).toEqual(['whatsapp', 'phone', 'website', 'social', 'email', 'map']);
+    expect(contactActions(withEmail).at(-1)?.label).toBe('Buscar dirección en el mapa');
   });
 
   it('omite lo que el proveedor no publica', () => {
-    const minimal = { ...full, whatsappUrl: undefined, socialUrl: undefined, mapUrl: undefined };
+    const minimal = { ...full, whatsappUrl: undefined, socialUrl: undefined, mapUrl: undefined, email: undefined };
     expect(contactActions(minimal).map((action) => action.type)).toEqual(['phone', 'website']);
+  });
+
+  it('si solo hay una red oficial, invita a consultar ahí', () => {
+    const socialOnly = fixture({
+      whatsappUrl: undefined,
+      phoneTel: undefined,
+      phoneDisplay: undefined,
+      secondaryPhoneTel: undefined,
+      secondaryPhoneDisplay: undefined,
+      socialUrl: 'https://www.facebook.com/ejemplo/',
+    });
+    expect(primaryContact(socialOnly)?.label).toBe('Consultar en Facebook');
   });
 
   it('arma el enlace tel con el número internacional', () => {
@@ -88,15 +142,17 @@ describe('contactActions', () => {
     expect(primaryContact(full)?.type).toBe('whatsapp');
     expect(primaryContact({ ...full, whatsappUrl: undefined })?.type).toBe('phone');
     expect(primaryContact({ ...full, phoneTel: undefined, phoneDisplay: undefined })?.type).toBe('whatsapp');
-    expect(primaryContact({ ...full, whatsappUrl: undefined, phoneTel: undefined })).toBeUndefined();
+    expect(primaryContact({ ...full, whatsappUrl: undefined, phoneTel: undefined })?.label).toBe('Consultar en Instagram');
+    expect(primaryContact({ ...full, whatsappUrl: undefined, phoneTel: undefined, socialUrl: undefined })).toBeUndefined();
   });
 });
 
 describe('filtros del directorio', () => {
+  const neutral = { summary: 'Ficha de prueba.', highlights: [], services: undefined, coverage: undefined };
   const list = [
-    fixture({ id: 'a', slug: 'a', name: 'Salón Peñón', categories: ['salones'], neighborhood: 'Barrio Jardín', whatsappUrl: 'https://wa.me/5493510000001' }),
-    fixture({ id: 'b', slug: 'b', name: 'Animaciones Árbol', categories: ['animacion'], neighborhood: undefined, whatsappUrl: undefined }),
-    fixture({ id: 'c', slug: 'c', name: 'Casa Globo', categories: ['salones', 'decoracion'], neighborhood: 'Centro', whatsappUrl: undefined }),
+    fixture({ ...neutral, id: 'a', slug: 'a', name: 'Salón Peñón', categories: ['salones'], neighborhood: 'Barrio Jardín', whatsappUrl: 'https://wa.me/5493510000001' }),
+    fixture({ ...neutral, id: 'b', slug: 'b', name: 'Animaciones Árbol', categories: ['animacion'], neighborhood: undefined, whatsappUrl: undefined }),
+    fixture({ ...neutral, id: 'c', slug: 'c', name: 'Casa Globo', categories: ['salones', 'decoracion'], neighborhood: 'Centro', whatsappUrl: undefined }),
   ];
 
   it('ignora mayúsculas y acentos', () => {
@@ -180,6 +236,13 @@ describe('helpers del directorio', () => {
     const salon = providersByCategory('salones')[0];
     expect(relatedProviders(salon).some((item) => item.id === salon.id)).toBe(false);
     expect(relatedProviders(salon, 3, [salon])).toEqual([]);
+  });
+
+  it('relacionados muestran primero las otras sedes de la misma marca', () => {
+    const vr = providers.find((provider) => provider.slug === 'candy-vr')!;
+    expect(relatedProviders(vr)[0].slug).toBe('candy-jump');
+    const aventura = providers.find((provider) => provider.slug === 'espacio-aventura-pueyrredon')!;
+    expect(relatedProviders(aventura)[0].slug).toBe('espacio-aventura-alta-cordoba');
   });
 
   it('solo publica fichas no destacadas', () => {
