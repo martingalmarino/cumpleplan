@@ -27,7 +27,7 @@ Descartables y comida pueden compartir el día de compra, pero no el precio. Pas
 
 ## Cómo llevarla al súper
 
-Podés imprimir el plan o copiar la lista en texto. Si el navegador no deja copiar, el texto queda visible para seleccionarlo. No es un enlace para que otra persona edite en vivo: si alguien más compra, pasale el archivo o la lista en un mensaje y después actualizá vos lo que ya se compró.
+Podés imprimir el plan o copiar la lista en texto. Si el navegador no deja copiar, el texto queda visible para seleccionarlo. No es un enlace para que otra persona edite en vivo: si alguien más compra, pasale la lista en un mensaje y después actualizá vos lo que ya se compró.
 
 Agrupar por rubro ayuda: comida, bebidas, torta, descartables. El orden del súper no tiene que coincidir con el orden de las semanas de la checklist.
 
@@ -49,6 +49,6 @@ Dejalo en la lista para no olvidarte de que existe y marcalo cubierto en el pres
 
 ### ¿La lista se comparte sola?
 
-No. Vive en tu navegador. Exportá el plan si lo necesitás en otro dispositivo.
+No. Vive en tu navegador. Si la necesitás en el celular o se la querés pasar a alguien, copiala en texto o imprimila.
 
 Abrí la [lista de compras](/lista-compras-cumpleanos/) después de usar la [calculadora](/calculadora-comida-cumpleanos/).

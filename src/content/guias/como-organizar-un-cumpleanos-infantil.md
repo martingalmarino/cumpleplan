@@ -47,6 +47,6 @@ Actualizá el número y volvé a mirar la comida y la lista. Si ya habías compr
 
 ### ¿Dónde dejo el plan?
 
-En este navegador. Si lo querés en el celular, exportá el archivo e importalo allá. Borrar los datos del navegador lo elimina.
+En este navegador. Conviene armarlo siempre desde el mismo dispositivo, porque en otro empezás un plan nuevo. Borrar los datos del navegador lo elimina.
 
 Seguí en la [calculadora de comida](/calculadora-comida-cumpleanos/) o abrí el [plan completo](/organizador/).

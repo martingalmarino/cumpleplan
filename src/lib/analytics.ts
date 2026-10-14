@@ -6,7 +6,6 @@ export const analyticsEvents = [
   'checklist_used',
   'shopping_list_generated',
   'print_clicked',
-  'backup_exported',
   'provider_contact_clicked',
 ] as const;
 

@@ -19,7 +19,7 @@ npm run build
 npm run preview
 ```
 
-`npm run dev` abre el sitio local. `npm run build` genera `dist/` para un hosting estático. `npm test` corre las pruebas de cálculo, presupuesto, compras, fechas y respaldos.
+`npm run dev` abre el sitio local. `npm run build` genera `dist/` para un hosting estático. `npm test` corre las pruebas de cálculo, presupuesto, compras, fechas, validación del plan guardado y proveedores.
 
 ## Dominio e indexación
 
@@ -46,7 +46,7 @@ Si no hay fichas publicadas, el directorio sale del menú, la ruta explica que e
 
 ## Plan en el navegador
 
-La clave es `cumple-en-orden:plan:v1`. No hay cuenta ni sincronización. Borrar los datos del navegador borra el plan. El archivo JSON es la forma de llevarlo a otro dispositivo. Un archivo de una versión futura, uno dañado o uno con campos no permitidos no reemplaza el plan actual.
+La clave es `cumple-en-orden:plan:v1`. No hay cuenta ni sincronización. Borrar los datos del navegador borra el plan. No hay exportación ni importación visible: se sacó porque un archivo JSON no se entiende para el público del sitio. El validador de `src/lib/planner/schema.ts` sigue protegiendo lo que se lee del navegador: un plan guardado de una versión futura, uno dañado o uno con campos no permitidos no se pisa en silencio.
 
 ## Publicidad y analítica
 

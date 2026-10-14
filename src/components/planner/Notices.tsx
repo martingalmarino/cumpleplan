@@ -4,7 +4,7 @@ export function Notices({ snapshot }: { snapshot: PlannerSnapshot }) {
   return (
     <>
       <p className="hint">
-        Exportá tu plan para abrirlo en otro dispositivo. Si borrás los datos del navegador, se pierde.
+        Tu plan se guarda solo en este navegador. Si borrás los datos del navegador, se pierde.
       </p>
       {snapshot.saveState === 'saved' && snapshot.saveMessage ? (
         <p className="save-status" role="status">{snapshot.saveMessage}</p>

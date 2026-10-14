@@ -45,9 +45,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function rejectUnsafe(value: unknown, depth = 0): string | null {
-  if (depth > 8) return 'El archivo tiene demasiados niveles.';
+  if (depth > 8) return 'El plan guardado tiene demasiados niveles.';
   if (Array.isArray(value)) {
-    if (value.length > 500) return 'El archivo tiene demasiados elementos.';
+    if (value.length > 500) return 'El plan guardado tiene demasiados elementos.';
     for (const item of value) {
       const error = rejectUnsafe(item, depth + 1);
       if (error) return error;
@@ -56,7 +56,7 @@ function rejectUnsafe(value: unknown, depth = 0): string | null {
   }
   if (isRecord(value)) {
     for (const key of Object.keys(value)) {
-      if (UNSAFE.has(key)) return 'El archivo incluye campos no permitidos.';
+      if (UNSAFE.has(key)) return 'El plan guardado incluye campos no permitidos.';
       const error = rejectUnsafe(value[key], depth + 1);
       if (error) return error;
     }
@@ -66,10 +66,10 @@ function rejectUnsafe(value: unknown, depth = 0): string | null {
 
 function keysOf(value: Record<string, unknown>, allowed: string[]): string | null {
   for (const key of Object.keys(value)) {
-    if (!allowed.includes(key)) return 'El archivo incluye campos que esta versión no reconoce.';
+    if (!allowed.includes(key)) return 'El plan guardado incluye campos que esta versión no reconoce.';
   }
   for (const key of allowed) {
-    if (!(key in value)) return 'Al archivo le faltan datos del plan.';
+    if (!(key in value)) return 'Al plan guardado le faltan datos.';
   }
   return null;
 }
@@ -390,9 +390,9 @@ function shoppingItem(value: unknown): string | null {
 export function validatePlan(value: unknown): { ok: true; plan: Plan } | { ok: false; error: string; kind: BackupFailureKind } {
   const unsafe = rejectUnsafe(value);
   if (unsafe) return { ok: false, error: unsafe, kind: unsafe.includes('no permitidos') ? 'unsafe' : 'invalid' };
-  if (!isRecord(value)) return { ok: false, error: 'El archivo no tiene un plan.', kind: 'malformed' };
+  if (!isRecord(value)) return { ok: false, error: 'No encontramos un plan en lo guardado.', kind: 'malformed' };
   if (typeof value.schemaVersion === 'number' && value.schemaVersion > SCHEMA_VERSION) {
-    return { ok: false, error: 'Este respaldo es de una versión más nueva. No reemplazamos tu plan.', kind: 'future' };
+    return { ok: false, error: 'El plan guardado es de una versión más nueva del sitio.', kind: 'future' };
   }
   const keyError = keysOf(value, [
     'schemaVersion',
@@ -407,7 +407,7 @@ export function validatePlan(value: unknown): { ok: true; plan: Plan } | { ok: f
   ]);
   if (keyError) return { ok: false, error: keyError, kind: 'invalid' };
   if (value.schemaVersion !== SCHEMA_VERSION) {
-    return { ok: false, error: 'La versión del archivo no es compatible.', kind: 'invalid' };
+    return { ok: false, error: 'La versión del plan guardado no es compatible.', kind: 'invalid' };
   }
   if (id(value.id)) return { ok: false, error: 'El plan no tiene un identificador válido.', kind: 'invalid' };
   if (typeof value.updatedAt !== 'string' || Number.isNaN(Date.parse(value.updatedAt))) {
@@ -464,19 +464,15 @@ export function previewPlan(plan: Plan): BackupPreview {
 
 export function parseBackup(text: string): BackupResult {
   if (text.length > plannerLimits.maxBackupChars) {
-    return { ok: false, error: 'El archivo es demasiado grande.', kind: 'size' };
+    return { ok: false, error: 'El plan guardado es demasiado grande.', kind: 'size' };
   }
   let parsed: unknown;
   try {
     parsed = JSON.parse(text);
   } catch {
-    return { ok: false, error: 'El archivo no es un JSON válido.', kind: 'malformed' };
+    return { ok: false, error: 'El plan guardado está dañado.', kind: 'malformed' };
   }
   const result = validatePlan(parsed);
   if (!result.ok) return result;
   return { ok: true, plan: result.plan, preview: previewPlan(result.plan) };
-}
-
-export function serializePlan(plan: Plan): string {
-  return JSON.stringify(plan, null, 2);
 }

@@ -6,7 +6,7 @@
 - Presupuesto en pesos, comparación de hasta tres alternativas y seña como pago.
 - Checklist con fechas de calendario en Argentina.
 - Lista de compras vinculada al cálculo y al presupuesto.
-- Un plan por navegador, con exportación e importación JSON.
+- Un plan por navegador, sin cuenta ni sincronización. Se puede borrar para empezar de nuevo.
 - Impresión desde el cuadro del navegador.
 - Guías y páginas legales que describen este comportamiento.
 - Directorio con fichas revisadas el 13 de octubre de 2026. No cubre la meta de 20 a 30 proveedores.

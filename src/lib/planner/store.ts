@@ -204,21 +204,6 @@ export function updatePlan(recipe: (plan: Plan) => Plan): void {
   timer = setTimeout(flushSave, 350);
 }
 
-export function replacePlan(plan: Plan): void {
-  emit({
-    ...snapshot,
-    ready: true,
-    plan: { ...plan, updatedAt: new Date().toISOString() },
-    holdWrites: false,
-    conflict: null,
-    externalClear: false,
-    loadIssue: null,
-    saveState: 'pending',
-    saveMessage: null,
-  });
-  flushSave();
-}
-
 export function acceptConflict(): void {
   if (!snapshot.conflict) return;
   emit({
