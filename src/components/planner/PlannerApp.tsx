@@ -6,9 +6,11 @@ import { BudgetPlanner } from './BudgetPlanner';
 import { ChecklistPlanner } from './ChecklistPlanner';
 import { EventForm } from './EventForm';
 import { FoodCalculator } from './FoodCalculator';
+import { ImportSharedPlan } from './ImportSharedPlan';
 import { Notices } from './Notices';
 import { PrintSheet } from './PrintSheet';
 import { ResetPlan } from './ResetPlan';
+import { SharePlan } from './SharePlan';
 import { ShoppingPlanner } from './ShoppingPlanner';
 import { SummaryCard } from './SummaryCard';
 import { usePlanner } from './usePlanner';
@@ -37,6 +39,7 @@ export default function PlannerApp({ view, mode = 'embedded' }: { view: PlannerV
 
   return (
     <>
+      <ImportSharedPlan hasExistingPlan={!snapshot.wasEmpty} />
       <div className="planner no-print">
         <div className={`planner-main tool-${active}`}>
           <nav className="tool-nav" aria-label="Herramientas del plan">
@@ -56,7 +59,10 @@ export default function PlannerApp({ view, mode = 'embedded' }: { view: PlannerV
             <>
               {(active === 'resumen' || active === 'comida' || active === 'presupuesto' || active === 'checklist') && <EventForm plan={plan} />}
               {active === 'resumen' ? (
-                <p>Desde acá corregís los datos del festejo. La comida, el presupuesto, la checklist y las compras usan este mismo plan.</p>
+                <>
+                  <p>Desde acá corregís los datos del festejo. La comida, el presupuesto, la checklist y las compras usan este mismo plan.</p>
+                  <SharePlan plan={plan} />
+                </>
               ) : null}
               {active === 'comida' ? <FoodCalculator plan={plan} /> : null}
               {active === 'presupuesto' ? <BudgetPlanner plan={plan} /> : null}
