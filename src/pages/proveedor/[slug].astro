@@ -7,7 +7,6 @@ import ProviderFacts from '../../components/directory/profile/ProviderFacts.astr
 import ProviderHeader from '../../components/directory/profile/ProviderHeader.astro';
 import ProviderLocation from '../../components/directory/profile/ProviderLocation.astro';
 import ProviderServices from '../../components/directory/profile/ProviderServices.astro';
-import ProviderSources from '../../components/directory/profile/ProviderSources.astro';
 import RelatedProviders from '../../components/directory/profile/RelatedProviders.astro';
 import { publishedProviders, type ProviderRecord, type ProviderCategory } from '../../data/providers/records';
 import { providerDescription, providerFacts, providerPath, providerTitle } from '../../data/providers/selectors';
@@ -142,7 +141,6 @@ const business = site.origin
       </div>
     </section>
 
-    <ProviderSources provider={provider} />
     <RelatedProviders provider={provider} />
   </div>
 
