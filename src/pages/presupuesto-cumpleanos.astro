@@ -2,12 +2,107 @@
 import Base from '../layouts/Base.astro';
 import AdSlot from '../components/AdSlot.astro';
 import PlannerApp from '../components/planner/PlannerApp';
+import { createDefaultPlanForSSR } from '../lib/planner/ssr';
 
-const title = 'Presupuesto de cumpleaños infantil | Festejito';
-const description = 'Anotá tus precios en pesos, compará hasta tres alternativas del mismo servicio y mirá qué falta pagar. Sin precios de mercado inventados.';
+const title = 'Presupuesto de Cumpleaños Infantil | Planificá tus Gastos | Festejito';
+const description = 'Organizá el presupuesto de tu cumpleaños infantil en Argentina. Anotá precios, compará alternativas y controlá pagos. Herramienta gratuita sin precios inventados.';
+
+const ssrPlan = createDefaultPlanForSSR();
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      '@id': 'https://festejito.com/presupuesto-cumpleanos/#webapp',
+      name: 'Presupuesto de Cumpleaños Infantil',
+      url: 'https://festejito.com/presupuesto-cumpleanos/',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'ARS'
+      },
+      description: 'Herramienta gratuita para planificar y controlar el presupuesto de cumpleaños infantiles en Argentina.',
+      featureList: [
+        'Registro de precios en pesos argentinos',
+        'Comparación de hasta 3 alternativas',
+        'Control de pagos y saldos pendientes',
+        'Cálculo automático de costo por persona',
+        'Guardado automático en el navegador'
+      ]
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://festejito.com/presupuesto-cumpleanos/#breadcrumb',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Inicio',
+          item: 'https://festejito.com/'
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Presupuesto',
+          item: 'https://festejito.com/presupuesto-cumpleanos/'
+        }
+      ]
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://festejito.com/presupuesto-cumpleanos/#faq',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: '¿Cuánto sale un cumpleaños infantil en Argentina en 2026?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'El costo varía según provincia, cantidad de invitados y servicios. En Córdoba, un salón puede ir desde $200.000 a $800.000, más comida, torta, decoración y animación. Esta herramienta te ayuda a anotar tus propios precios y ver el total sin inventar valores de mercado.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Cómo comparo dos salones con precios diferentes?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Cargá cada alternativa con su tarifa fija, importe por persona y extras. El presupuesto calcula el total de cada una según tus asistentes y te muestra cuál es más económica. Podés elegir una alternativa para pasarla al presupuesto sin borrar las demás.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿El presupuesto incluye la seña?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Sí. Lo pagado incluye la seña, no la cargues otra vez como gasto nuevo. El saldo pendiente es el importe contratado menos lo que ya pagaste. Si pagaste más de lo contratado, la herramienta te pide que lo corrijas.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Puedo anotar rubros sin precio todavía?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Sí. Agregá líneas aunque no tengas el precio confirmado. El presupuesto suma solo las líneas con importe y te aclara cuántas faltan. Así no olvidás ningún rubro.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Cómo calculo el costo por persona?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'El presupuesto divide el total estimado o contratado por la cantidad de asistentes (chicos + adultos). Si falta gente o precios, te lo indica. No inventa un promedio con datos incompletos.'
+          }
+        }
+      ]
+    }
+  ]
+};
 ---
 
 <Base title={title} description={description} path="/presupuesto-cumpleanos/">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
   <div class="container tool-page">
     <article class="prose no-print">
       <h1>Presupuesto para un cumpleaños infantil</h1>
@@ -22,10 +117,35 @@ const description = 'Anotá tus precios en pesos, compará hasta tres alternativ
       <p>Para no olvidar rubros, leé <a href="/guias/como-armar-un-presupuesto-de-cumpleanos/">cómo armar el presupuesto</a>.</p>
     </article>
     <AdSlot placement="debajo-de-la-explicacion" />
+    <article class="prose">
+      <h2>Preguntas frecuentes</h2>
+      <h3>¿Cuánto sale un cumpleaños infantil en Argentina en 2026?</h3>
+      <p>El costo varía según provincia, cantidad de invitados y servicios. En Córdoba, un salón puede ir desde $200.000 a $800.000, más comida, torta, decoración y animación. Esta herramienta te ayuda a anotar tus propios precios y ver el total sin inventar valores de mercado.</p>
+      
+      <h3>¿Cómo comparo dos salones con precios diferentes?</h3>
+      <p>Cargá cada alternativa con su tarifa fija, importe por persona y extras. El presupuesto calcula el total de cada una según tus asistentes y te muestra cuál es más económica. Podés elegir una alternativa para pasarla al presupuesto sin borrar las demás.</p>
+      
+      <h3>¿El presupuesto incluye la seña?</h3>
+      <p>Sí. Lo pagado incluye la seña, no la cargues otra vez como gasto nuevo. El saldo pendiente es el importe contratado menos lo que ya pagaste. Si pagaste más de lo contratado, la herramienta te pide que lo corrijas.</p>
+      
+      <h3>¿Puedo anotar rubros sin precio todavía?</h3>
+      <p>Sí. Agregá líneas aunque no tengas el precio confirmado. El presupuesto suma solo las líneas con importe y te aclara cuántas faltan. Así no olvidás ningún rubro.</p>
+      
+      <h3>¿Cómo calculo el costo por persona?</h3>
+      <p>El presupuesto divide el total estimado o contratado por la cantidad de asistentes (chicos + adultos). Si falta gente o precios, te lo indica. No inventa un promedio con datos incompletos.</p>
+      
+      <p><strong>Herramientas relacionadas:</strong></p>
+      <ul>
+        <li><a href="/calculadora-comida-cumpleanos/">Calculadora de comida</a> para estimar cantidades</li>
+        <li><a href="/lista-compras-cumpleanos/">Lista de compras</a> vinculada al presupuesto</li>
+        <li><a href="/checklist-cumpleanos/">Checklist</a> para organizar pagos y reservas</li>
+        <li><a href="/directorio/">Proveedores</a> para pedir presupuestos</li>
+      </ul>
+    </article>
     <section>
       <h2 class="no-print">Cargá los precios de tu plan</h2>
       <p class="no-print">Los cambios se guardan en tu plan de este navegador.</p>
-      <PlannerApp client:load view="presupuesto" />
+      <PlannerApp client:load view="presupuesto" ssrPlan={ssrPlan} />
     </section>
   </div>
 </Base>
