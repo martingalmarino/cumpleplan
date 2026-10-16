@@ -879,7 +879,6 @@
 /* Ficha: secciones */
 
 .profile-section h2,
-.profile-sources h2,
 .profile-related h2,
 .planner-callout h2 {
   margin: 0 0 var(--space-3);
@@ -1182,43 +1181,6 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2) var(--space-5);
-}
-
-.profile-sources {
-  margin-top: var(--space-7);
-}
-
-.profile-sources p,
-.profile-sources li {
-  max-width: 68ch;
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.profile-sources > p {
-  margin: 0;
-}
-
-.profile-sources ul {
-  margin: var(--space-2) 0 var(--space-3);
-  padding-left: 1.2rem;
-}
-
-.profile-sources a {
-  color: var(--color-blue-link);
-}
-
-.profile-sources summary {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.profile-sources details p {
-  margin: 0 0 var(--space-2);
-  color: var(--color-muted);
 }
 
 .profile-related {
