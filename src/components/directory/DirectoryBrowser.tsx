@@ -1,22 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ProviderCategory, ProviderRecord } from '../../data/providers/records';
-import { categoryCounts, categoryLabel, filterProviders, isCategory } from '../../data/providers/selectors';
+import { categoryCounts, filterProviders } from '../../data/providers/selectors';
 import { DirectoryFilters } from './DirectoryFilters';
 import { ProviderCard } from './ProviderCard';
 
 /** La página agrega esta clase antes de pintar si la URL trae filtros, para no mostrar resultados que después desaparecen. */
 const filteringClass = 'directory-filtering';
 
-type FilterState = { query: string; category: ProviderCategory | null; whatsappOnly: boolean };
+type FilterState = { query: string; whatsappOnly: boolean };
 
-const emptyFilter: FilterState = { query: '', category: null, whatsappOnly: false };
+const emptyFilter: FilterState = { query: '', whatsappOnly: false };
 
 function readUrl(): FilterState {
   const params = new URLSearchParams(window.location.search);
-  const rubro = params.get('rubro');
   return {
     query: params.get('q') ?? '',
-    category: isCategory(rubro) ? rubro : null,
     whatsappOnly: params.get('whatsapp') === '1',
   };
 }
@@ -25,7 +23,6 @@ function writeUrl(state: FilterState) {
   const url = new URL(window.location.href);
   const set = (key: string, value: string | null) => (value ? url.searchParams.set(key, value) : url.searchParams.delete(key));
   set('q', state.query.trim() || null);
-  set('rubro', state.category);
   set('whatsapp', state.whatsappOnly ? '1' : null);
   if (url.href !== window.location.href) window.history.replaceState(window.history.state, '', url);
 }
@@ -35,7 +32,14 @@ function resultLabel(count: number, filtered: boolean): string {
   return count === 1 ? '1 opción disponible' : `${count} opciones disponibles`;
 }
 
-export default function DirectoryBrowser({ providers }: { providers: ProviderRecord[] }) {
+interface DirectoryBrowserProps {
+  providers: ProviderRecord[];
+  province?: string;
+  city?: string;
+  category?: ProviderCategory;
+}
+
+export default function DirectoryBrowser({ providers, province, city, category: preselectedCategory }: DirectoryBrowserProps) {
   const [state, setState] = useState<FilterState>(emptyFilter);
   const [ready, setReady] = useState(false);
   const [announcement, setAnnouncement] = useState('');
@@ -56,8 +60,8 @@ export default function DirectoryBrowser({ providers }: { providers: ProviderRec
   }, [ready, state]);
 
   const counts = useMemo(() => categoryCounts(providers), [providers]);
-  const results = filterProviders(providers, state);
-  const filtered = state.query.trim() !== '' || state.category !== null || state.whatsappOnly;
+  const results = filterProviders(providers, { ...state, category: preselectedCategory ?? null });
+  const filtered = state.query.trim() !== '' || state.whatsappOnly;
   const label = resultLabel(results.length, filtered);
 
   useEffect(() => {
@@ -70,8 +74,7 @@ export default function DirectoryBrowser({ providers }: { providers: ProviderRec
   }, [label]);
 
   const active = [
-    state.query.trim() ? `“${state.query.trim()}”` : null,
-    state.category ? categoryLabel(state.category) : null,
+    state.query.trim() ? `"${state.query.trim()}"` : null,
     state.whatsappOnly ? 'con WhatsApp' : null,
   ].filter(Boolean);
 
@@ -81,12 +84,13 @@ export default function DirectoryBrowser({ providers }: { providers: ProviderRec
     <div className="directory">
       <DirectoryFilters
         query={state.query}
-        category={state.category}
+        category={preselectedCategory ?? null}
         whatsappOnly={state.whatsappOnly}
         total={providers.length}
         counts={counts}
+        province={province}
+        city={city}
         onQuery={(query) => setState((current) => ({ ...current, query }))}
-        onCategory={(category) => setState((current) => ({ ...current, category }))}
         onWhatsapp={(whatsappOnly) => setState((current) => ({ ...current, whatsappOnly }))}
       />
 

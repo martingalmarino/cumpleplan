@@ -1,0 +1,168 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import JsonLd from '../../../../components/seo/JsonLd.astro';
+import DirectoryPage from '../../../../components/directory/DirectoryPage.astro';
+import { publishedProviders, providerCategories, type ProviderCategory } from '../../../../data/providers/records';
+import { filterByLocation, groupByCategory } from '../../../../data/providers/groups';
+import { provinceSlug, citySlug, categorySlug, isIndexable, directoryProvincePath, directoryProvinceCityPath, directoryProvinceRubroPath, directoryProvinceCityRubroPath } from '../../../../data/providers/routes';
+import { categoryLabel } from '../../../../data/providers/selectors';
+import { absoluteUrl, site } from '../../../../config/site';
+
+type RouteType = 'city' | 'category';
+
+export function getStaticPaths() {
+  const providers = publishedProviders();
+  const routes: Array<{ params: { provincia: string; slug: string }; props: { province: string; city?: string; category?: ProviderCategory; routeType: RouteType } }> = [];
+  
+  // Agrupar por provincia
+  const provinces = [...new Set(providers.map((p) => p.province))];
+  
+  for (const province of provinces) {
+    const provinceProviders = filterByLocation(providers, { province });
+    const pSlug = provinceSlug(province);
+    
+    // Rutas de ciudad
+    const cities = [...new Set(provinceProviders.map((p) => p.city))];
+    for (const city of cities) {
+      const cityProviders = filterByLocation(provinceProviders, { city });
+      const count = cityProviders.length;
+      
+      if (isIndexable(count)) {
+        routes.push({
+          params: { provincia: pSlug, slug: citySlug(city) },
+          props: { province, city, routeType: 'city' },
+        });
+      }
+    }
+    
+    // Rutas de categoría
+    const byCategory = groupByCategory(provinceProviders);
+    for (const [category, categoryProviders] of byCategory) {
+      const count = categoryProviders.length;
+      
+      if (isIndexable(count)) {
+        routes.push({
+          params: { provincia: pSlug, slug: categorySlug(category) },
+          props: { province, category, routeType: 'category' },
+        });
+      }
+    }
+  }
+  
+  return routes;
+}
+
+interface Props {
+  province: string;
+  city?: string;
+  category?: ProviderCategory;
+  routeType: RouteType;
+}
+
+const { province, city, category, routeType } = Astro.props;
+
+const filters = routeType === 'city' 
+  ? { province, city } 
+  : { province, category };
+
+const providers = filterByLocation(publishedProviders(), filters);
+const empty = providers.length === 0;
+const latestReview = empty ? null : providers.map((p) => p.verifiedAt).sort().at(-1)!;
+
+const byCategory = routeType === 'city' ? groupByCategory(providers) : undefined;
+
+const locationLabel = city || categoryLabel(category!);
+const title = city
+  ? `Proveedores para cumpleaños infantiles en ${city}, ${province}`
+  : `${categoryLabel(category!)} para cumpleaños en ${province}`;
+
+const description = empty
+  ? `El directorio todavía no tiene fichas publicadas para esta ubicación.`
+  : city
+  ? `Salones, tortas, animación y decoración en ${city}, ${province}.`
+  : `${categoryLabel(category!)} en ${province}, con datos tomados de sus sitios oficiales.`;
+
+const path = city 
+  ? directoryProvinceCityPath(province, city)
+  : directoryProvinceRubroPath(province, category!);
+  
+const pageUrl = absoluteUrl(path);
+const indexable = isIndexable(providers.length);
+
+const crumbs = site.origin && !empty
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: absoluteUrl('/') },
+        { '@type': 'ListItem', position: 2, name: 'Directorio', item: absoluteUrl('/directorio/') },
+        { '@type': 'ListItem', position: 3, name: province, item: absoluteUrl(directoryProvincePath(province)) },
+        { '@type': 'ListItem', position: 4, name: locationLabel, item: pageUrl },
+      ],
+    }
+  : null;
+
+const itemList = site.origin && !empty && indexable
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: providers.slice(0, 10).map((provider, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: provider.name,
+        url: absoluteUrl(`/proveedor/${provider.slug}/`),
+      })),
+    }
+  : null;
+---
+
+<Base title={title} description={description} path={path} noindex={!indexable || !site.allowIndexing}>
+  {crumbs && <JsonLd slot="head" data={crumbs} />}
+  {itemList && <JsonLd slot="head" data={itemList} />}
+  
+  <div class="container directory-page">
+    <header class="directory-intro">
+      <p class="kicker">Directorio · {province}</p>
+      <h1>{locationLabel}</h1>
+      {empty ? (
+        <p>Todavía no hay fichas publicadas para esta ubicación.</p>
+      ) : city ? (
+        <p>Salones, tortas y servicios para organizar un cumpleaños infantil en {city}.</p>
+      ) : (
+        <p>{categoryLabel(category!)} en {province}.</p>
+      )}
+    </header>
+
+    {!empty && city && byCategory && byCategory.size > 1 && (
+      <section aria-labelledby="categories-title">
+        <h2 id="categories-title">Por rubro</h2>
+        <ul class="location-links">
+          {providerCategories.map((cat) => {
+            const categoryProviders = byCategory.get(cat.id) || [];
+            const categoryIndexable = isIndexable(categoryProviders.length);
+            return categoryIndexable ? (
+              <li>
+                <a href={directoryProvinceCityRubroPath(province, city, cat.id)}>
+                  {cat.label} <span class="count">({categoryProviders.length})</span>
+                </a>
+              </li>
+            ) : null;
+          })}
+        </ul>
+      </section>
+    )}
+
+    {!empty && (
+      <DirectoryPage 
+        providers={providers} 
+        title={city ? "Todas las opciones" : locationLabel} 
+        description={`Mostrando ${providers.length} ${providers.length === 1 ? 'opción' : 'opciones'}.`}
+        latestReview={latestReview!}
+        showMethodology={true}
+        province={province}
+        city={city}
+        category={category}
+      />
+    )}
+  </div>
+</Base>

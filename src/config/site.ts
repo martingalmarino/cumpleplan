@@ -39,8 +39,6 @@ export const site = {
     'Planificá un cumpleaños infantil en Argentina: cantidades orientativas, presupuesto en pesos y una lista de lo que falta. El plan queda en este navegador.',
   locale: 'es-AR',
   storageKey: STORAGE_KEY,
-  cityLabel: 'Córdoba Capital',
-  provinceLabel: 'Córdoba',
   countryLabel: 'Argentina',
   origin,
   allowIndexing: indexingRequested && origin !== null,

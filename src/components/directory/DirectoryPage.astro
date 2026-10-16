@@ -1,0 +1,70 @@
+---
+import type { ProviderRecord, ProviderCategory } from '../../data/providers/records';
+import DirectoryBrowser from './DirectoryBrowser';
+import { formatVerifiedDate } from '../../data/providers/selectors';
+import type { IsoDate } from '../../data/providers/records';
+
+interface Props {
+  providers: ProviderRecord[];
+  title: string;
+  description: string;
+  kicker?: string;
+  latestReview?: IsoDate;
+  showMethodology?: boolean;
+  province?: string;
+  city?: string;
+  category?: ProviderCategory;
+}
+
+const { 
+  providers, 
+  title, 
+  description, 
+  kicker, 
+  latestReview,
+  showMethodology = true,
+  province,
+  city,
+  category,
+} = Astro.props;
+
+const empty = providers.length === 0;
+---
+
+<div class="container directory-page">
+  <header class="directory-intro">
+    {kicker && <p class="kicker">{kicker}</p>}
+    <h1>{title}</h1>
+    <p>{description}</p>
+  </header>
+
+  {!empty && (
+    <>
+      <script is:inline>
+        (function () {
+          var params = new URLSearchParams(window.location.search);
+          if (!params.get('q') && params.get('whatsapp') !== '1') return;
+          var root = document.documentElement;
+          root.classList.add('directory-filtering');
+          window.setTimeout(function () { root.classList.remove('directory-filtering'); }, 2500);
+        })();
+      </script>
+      <DirectoryBrowser client:load providers={providers} province={province} city={city} category={category} />
+      
+      {showMethodology && latestReview && (
+        <aside class="directory-method" aria-label="Sobre las fichas">
+          <p>Información tomada de fuentes públicas de cada proveedor.</p>
+          <details>
+            <summary>Cómo seleccionamos y revisamos las fichas</summary>
+            <div class="directory-method__body">
+              <p>Publicamos solo negocios cuyo nombre, dirección o zona y al menos un canal de contacto pudimos ver en su sitio o en sus redes oficiales. Cada sede tiene su propia ficha. La última revisión fue el {formatVerifiedDate(latestReview)}: esa fecha dice cuándo miramos la información. No llamamos a los negocios, así que no certifica que sigan activos, su habilitación, la calidad, los precios ni la disponibilidad.</p>
+              <p>El orden es alfabético. No hay posiciones pagas en esta versión. Si más adelante hubiera un espacio destacado, va a decir "Destacado · Publicidad" y no va a ordenar el resto como si fuera una evaluación.</p>
+              <p>Los números junto a cada rubro cuentan todas las fichas publicadas de ese rubro en esta ubicación. El total de resultados sí cambia con la búsqueda y con "Con WhatsApp".</p>
+              <p>El directorio no está completo: faltan muchos salones, animaciones y locales que todavía no revisamos. Los íconos de cada rubro son genéricos y no muestran ningún lugar.</p>
+            </div>
+          </details>
+        </aside>
+      )}
+    </>
+  )}
+</div>

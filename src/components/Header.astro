@@ -40,7 +40,7 @@ const tools = [
         </div>
         <a href="/guias/" aria-current={path.startsWith('/guias') ? 'page' : undefined}>Guías</a>
         {showDirectory && (
-          <a href="/cumpleanos-infantiles-cordoba/" aria-current={path.startsWith('/cumpleanos-infantiles-cordoba') ? 'page' : undefined}>Proveedores en Córdoba</a>
+          <a href="/directorio/" aria-current={path.startsWith('/directorio') || path.startsWith('/proveedor') ? 'page' : undefined}>Directorio</a>
         )}
         <a class="button button-primary" href="/organizador/">Organizar mi cumple</a>
       </nav>
@@ -53,7 +53,7 @@ const tools = [
       ))}
       <a href="/guias/" aria-current={path.startsWith('/guias') ? 'page' : undefined}>Guías</a>
       {showDirectory && (
-        <a href="/cumpleanos-infantiles-cordoba/" aria-current={path.startsWith('/cumpleanos-infantiles-cordoba') ? 'page' : undefined}>Proveedores en Córdoba</a>
+        <a href="/directorio/" aria-current={path.startsWith('/directorio') || path.startsWith('/proveedor') ? 'page' : undefined}>Directorio</a>
       )}
       <a class="button button-primary" href="/organizador/">Organizar mi cumple</a>
     </nav>

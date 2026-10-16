@@ -1,0 +1,134 @@
+---
+import Base from '../../../layouts/Base.astro';
+import JsonLd from '../../../components/seo/JsonLd.astro';
+import DirectoryPage from '../../../components/directory/DirectoryPage.astro';
+import { publishedProviders, providerCategories } from '../../../data/providers/records';
+import { filterByLocation, groupByCity, groupByCategory } from '../../../data/providers/groups';
+import { provinceSlug, isIndexable, directoryProvincePath, directoryProvinceCityPath, directoryProvinceRubroPath } from '../../../data/providers/routes';
+import { absoluteUrl, site } from '../../../config/site';
+
+export function getStaticPaths() {
+  const providers = publishedProviders();
+  const provinces = [...new Set(providers.map((p) => p.province))];
+  
+  return provinces.map((province) => ({
+    params: { provincia: provinceSlug(province) },
+    props: { province },
+  }));
+}
+
+interface Props {
+  province: string;
+}
+
+const { province } = Astro.props;
+const providers = filterByLocation(publishedProviders(), { province });
+const empty = providers.length === 0;
+const latestReview = empty ? null : providers.map((p) => p.verifiedAt).sort().at(-1)!;
+
+const byCity = groupByCity(providers, province);
+const byCategory = groupByCategory(providers);
+
+const title = `Proveedores para cumpleaños infantiles en ${province}`;
+const description = empty
+  ? `El directorio de ${province} todavía no tiene fichas publicadas.`
+  : `Salones, tortas, animación y decoración para cumpleaños infantiles en ${province}, con datos tomados de sus sitios oficiales.`;
+
+const path = directoryProvincePath(province);
+const pageUrl = absoluteUrl(path);
+const indexable = isIndexable(providers.length);
+
+const crumbs = site.origin && !empty
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: absoluteUrl('/') },
+        { '@type': 'ListItem', position: 2, name: 'Directorio', item: absoluteUrl('/directorio/') },
+        { '@type': 'ListItem', position: 3, name: province, item: pageUrl },
+      ],
+    }
+  : null;
+
+const itemList = site.origin && !empty && indexable
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: providers.slice(0, 10).map((provider, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: provider.name,
+        url: absoluteUrl(`/proveedor/${provider.slug}/`),
+      })),
+    }
+  : null;
+---
+
+<Base title={title} description={description} path={path} noindex={!indexable || !site.allowIndexing}>
+  {crumbs && <JsonLd slot="head" data={crumbs} />}
+  {itemList && <JsonLd slot="head" data={itemList} />}
+  
+  <div class="container directory-page">
+    <header class="directory-intro">
+      <p class="kicker">Directorio · {province}</p>
+      <h1>Proveedores en {province}</h1>
+      {empty ? (
+        <p>Todavía no hay fichas publicadas para {province}. El planificador de comida, presupuesto y compras sigue disponible.</p>
+      ) : (
+        <p>Salones, tortas y servicios para organizar un cumpleaños infantil.</p>
+      )}
+    </header>
+
+    {!empty && (byCity.size > 1 || byCategory.size > 1) && (
+      <div class="directory-nav">
+        {byCity.size > 1 && (
+          <section aria-labelledby="cities-title">
+            <h2 id="cities-title">Por ciudad</h2>
+            <ul class="location-links">
+              {Array.from(byCity.entries()).sort(([a], [b]) => a.localeCompare(b, 'es')).map(([city, cityProviders]) => {
+                const cityIndexable = isIndexable(cityProviders.length);
+                return cityIndexable ? (
+                  <li>
+                    <a href={directoryProvinceCityPath(province, city)}>
+                      {city} <span class="count">({cityProviders.length})</span>
+                    </a>
+                  </li>
+                ) : null;
+              })}
+            </ul>
+          </section>
+        )}
+        
+        {byCategory.size > 1 && (
+          <section aria-labelledby="categories-title">
+            <h2 id="categories-title">Por rubro</h2>
+            <ul class="location-links">
+              {providerCategories.map((cat) => {
+                const categoryProviders = byCategory.get(cat.id) || [];
+                const categoryIndexable = isIndexable(categoryProviders.length);
+                return categoryIndexable ? (
+                  <li>
+                    <a href={directoryProvinceRubroPath(province, cat.id)}>
+                      {cat.label} <span class="count">({categoryProviders.length})</span>
+                    </a>
+                  </li>
+                ) : null;
+              })}
+            </ul>
+          </section>
+        )}
+      </div>
+    )}
+
+    {!empty && (
+      <DirectoryPage 
+        providers={providers} 
+        title="Todas las opciones" 
+        description={`Mostrando ${providers.length} ${providers.length === 1 ? 'proveedor' : 'proveedores'} en ${province}.`}
+        latestReview={latestReview!}
+        showMethodology={true}
+        province={province}
+      />
+    )}
+  </div>
+</Base>

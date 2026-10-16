@@ -1,0 +1,138 @@
+---
+import Base from '../../layouts/Base.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import ProviderContactPanel from '../../components/directory/profile/ProviderContactPanel.astro';
+import ProviderFacts from '../../components/directory/profile/ProviderFacts.astro';
+import ProviderHeader from '../../components/directory/profile/ProviderHeader.astro';
+import ProviderLocation from '../../components/directory/profile/ProviderLocation.astro';
+import ProviderServices from '../../components/directory/profile/ProviderServices.astro';
+import ProviderSources from '../../components/directory/profile/ProviderSources.astro';
+import RelatedProviders from '../../components/directory/profile/RelatedProviders.astro';
+import { publishedProviders, type ProviderRecord } from '../../data/providers/records';
+import { providerDescription, providerFacts, providerPath, providerTitle } from '../../data/providers/selectors';
+import { directoryIndexPath, directoryProvinceCityPath } from '../../data/providers/routes';
+import { absoluteUrl, site } from '../../config/site';
+
+export function getStaticPaths() {
+  return publishedProviders().map((provider) => ({
+    params: { slug: provider.slug },
+    props: { provider },
+  }));
+}
+
+interface Props {
+  provider: ProviderRecord;
+}
+
+const { provider } = Astro.props;
+const path = providerPath(provider);
+const facts = providerFacts(provider);
+const title = providerTitle(provider);
+const description = providerDescription(provider);
+
+const pageUrl = absoluteUrl(path);
+const locationPath = directoryProvinceCityPath(provider.province, provider.city);
+const locationLabel = provider.locality !== provider.city ? `${provider.locality}, ${provider.province}` : `${provider.city}, ${provider.province}`;
+
+const crumbs = site.origin
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: absoluteUrl('/') },
+        { '@type': 'ListItem', position: 2, name: 'Directorio', item: absoluteUrl(directoryIndexPath) },
+        { '@type': 'ListItem', position: 3, name: locationLabel, item: absoluteUrl(locationPath) },
+        { '@type': 'ListItem', position: 4, name: provider.name, item: pageUrl },
+      ],
+    }
+  : null;
+
+const business = site.origin
+  ? Object.fromEntries(
+      Object.entries({
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        name: provider.name,
+        description: provider.summary,
+        url: provider.website,
+        telephone: provider.phoneTel,
+        email: provider.email,
+        sameAs: provider.socialUrl ? [provider.socialUrl] : undefined,
+        areaServed: provider.coverage
+          ? { '@type': 'City', name: provider.city, description: provider.coverage }
+          : { '@type': 'City', name: provider.city, addressRegion: provider.province, addressCountry: 'AR' },
+        address: Object.fromEntries(
+          Object.entries({
+            '@type': 'PostalAddress',
+            streetAddress: provider.address,
+            addressLocality: provider.city,
+            addressRegion: provider.province,
+            postalCode: provider.postalCode,
+            addressCountry: 'AR',
+          }).filter(([, value]) => value !== undefined),
+        ),
+      }).filter(([, value]) => value !== undefined),
+    )
+  : null;
+---
+
+<Base title={title} description={description} path={path}>
+  <JsonLd slot="head" data={crumbs} />
+  <JsonLd slot="head" data={business} />
+  <div class="container profile-page">
+    <ProviderHeader provider={provider} />
+
+    <div class:list={['profile-layout', { 'profile-layout--no-facts': facts.length === 0 }]}>
+      {facts.length > 0 && (
+        <div class="profile-layout__facts">
+          <ProviderFacts facts={facts} />
+        </div>
+      )}
+      <div class="profile-layout__contact">
+        <ProviderContactPanel provider={provider} />
+      </div>
+      <div class="profile-layout__body">
+        {provider.images && provider.images.length > 0 && (
+          <section class="profile-section profile-gallery" aria-label={`Fotos de ${provider.name}`}>
+            {provider.images.map((image) => (
+              <figure>
+                <img src={image.src} width={image.width} height={image.height} alt={image.alt} loading="lazy" decoding="async" />
+                <figcaption>Foto: {image.credit}</figcaption>
+              </figure>
+            ))}
+          </section>
+        )}
+
+        <section class="profile-section" aria-labelledby="about-title">
+          <h2 id="about-title">Sobre {provider.name}</h2>
+          <p>{provider.description}</p>
+        </section>
+
+        <ProviderServices provider={provider} />
+        <ProviderLocation provider={provider} />
+
+        <details class="profile-questions">
+          <summary>Preguntas útiles antes de contratar</summary>
+          <p class="profile-hint">Son preguntas sugeridas para tu consulta. No describen cómo trabaja {provider.name}.</p>
+          <ul>
+            {provider.quoteQuestions.map((question) => <li>{question}</li>)}
+          </ul>
+        </details>
+      </div>
+    </div>
+
+    <section class="planner-callout" aria-labelledby="planner-title">
+      <div>
+        <h2 id="planner-title">¿Ya te pasaron un presupuesto?</h2>
+        <p>Sumalo a tu plan y compará los gastos del festejo.</p>
+      </div>
+      <div class="planner-callout__actions">
+        <a class="button button-primary" href="/presupuesto-cumpleanos/">Abrir mi presupuesto</a>
+        <a class="planner-callout__link" href="/checklist-cumpleanos/">Ir al checklist</a>
+      </div>
+    </section>
+
+    <ProviderSources provider={provider} />
+    <RelatedProviders provider={provider} />
+  </div>
+</Base>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { providers, publishedProviders, type ProviderRecord } from '../src/data/providers/records';
+import { providers, publishedProviders, type ProviderRecord, type ProviderCategory } from '../src/data/providers/records';
 import {
   areaLine,
   categoryCounts,
@@ -16,6 +16,21 @@ import {
   providersByCategory,
   relatedProviders,
 } from '../src/data/providers/selectors';
+import {
+  slugify,
+  provinceSlug,
+  citySlug,
+  categorySlug,
+  hasSlugCollision,
+  isIndexable,
+  INDEXABLE_THRESHOLD,
+  providerPath,
+  directoryProvincePath,
+  directoryProvinceRubroPath,
+  directoryProvinceCityPath,
+  directoryProvinceCityRubroPath,
+} from '../src/data/providers/routes';
+import { generateDirectoryRoutes } from '../src/data/providers/groups';
 
 const base = providers[0];
 
@@ -180,8 +195,8 @@ describe('filtros del directorio', () => {
     ]);
   });
 
-  it('arma la URL de filtro por rubro', () => {
-    expect(categoryFilterPath('salones')).toBe('/cumpleanos-infantiles-cordoba/?rubro=salones');
+  it('arma la URL deprecated de filtro por rubro', () => {
+    expect(categoryFilterPath('salones')).toBe('/directorio/cordoba/cordoba-capital/salones-infantiles/');
   });
 });
 
@@ -247,5 +262,75 @@ describe('helpers del directorio', () => {
 
   it('solo publica fichas no destacadas', () => {
     expect(publishedProviders().every((provider) => provider.publicationStatus === 'published' && !provider.featured)).toBe(true);
+  });
+});
+
+describe('rutas del directorio', () => {
+  it('genera slugs sin acentos ni mayúsculas', () => {
+    expect(slugify('Córdoba Capital')).toBe('cordoba-capital');
+    expect(slugify('Buenos Aires')).toBe('buenos-aires');
+    expect(slugify('Salones Infantiles')).toBe('salones-infantiles');
+  });
+
+  it('genera rutas de provincia', () => {
+    expect(provinceSlug('Córdoba')).toBe('cordoba');
+    expect(directoryProvincePath('Córdoba')).toBe('/directorio/cordoba/');
+  });
+
+  it('genera rutas de ciudad', () => {
+    expect(citySlug('Córdoba Capital')).toBe('cordoba-capital');
+    expect(directoryProvinceCityPath('Córdoba', 'Córdoba Capital')).toBe('/directorio/cordoba/cordoba-capital/');
+  });
+
+  it('genera rutas de categoría con slug correcto', () => {
+    expect(categorySlug('salones')).toBe('salones-infantiles');
+    expect(categorySlug('tortas-catering')).toBe('tortas-y-catering');
+    expect(directoryProvinceRubroPath('Córdoba', 'salones')).toBe('/directorio/cordoba/salones-infantiles/');
+  });
+
+  it('genera rutas de ciudad + categoría', () => {
+    expect(directoryProvinceCityRubroPath('Córdoba', 'Córdoba Capital', 'tortas-catering')).toBe('/directorio/cordoba/cordoba-capital/tortas-y-catering/');
+  });
+
+  it('genera ruta de proveedor', () => {
+    const provider = publishedProviders()[0];
+    expect(providerPath(provider)).toBe(`/proveedor/${provider.slug}/`);
+  });
+
+  it('detecta colisión entre slug de ciudad y rubro', () => {
+    expect(hasSlugCollision(['Animación'], ['animacion'])).toBe(true);
+    expect(hasSlugCollision(['Córdoba Capital'], ['salones'])).toBe(false);
+  });
+
+  it('aplica threshold de 3 proveedores para páginas indexables', () => {
+    expect(INDEXABLE_THRESHOLD).toBe(3);
+    expect(isIndexable(2)).toBe(false);
+    expect(isIndexable(3)).toBe(true);
+    expect(isIndexable(10)).toBe(true);
+  });
+
+  it('genera solo rutas indexables en el directorio', () => {
+    const routes = generateDirectoryRoutes();
+    expect(routes.length).toBeGreaterThan(0);
+    
+    // Todas las rutas marcadas como indexables deben tener >= 3 proveedores
+    for (const route of routes) {
+      if (route.indexable) {
+        expect(route.count).toBeGreaterThanOrEqual(INDEXABLE_THRESHOLD);
+      } else {
+        expect(route.count).toBeLessThan(INDEXABLE_THRESHOLD);
+      }
+    }
+    
+    // El índice nacional debe estar presente
+    expect(routes.some((r) => r.path === '/directorio/')).toBe(true);
+  });
+
+  it('no genera colisiones de slugs en las rutas reales', () => {
+    const allProviders = publishedProviders();
+    const cities = [...new Set(allProviders.map((p) => p.city))];
+    const categories: ProviderCategory[] = ['salones', 'animacion', 'tortas-catering', 'decoracion'];
+    
+    expect(hasSlugCollision(cities, categories)).toBe(false);
   });
 });

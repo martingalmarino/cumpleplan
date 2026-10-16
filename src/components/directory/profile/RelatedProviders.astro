@@ -1,6 +1,7 @@
 ---
 import { ProviderCard } from '../ProviderCard';
-import { directoryPath, relatedProviders, relatedTitle } from '../../../data/providers/selectors';
+import { relatedTitle, relatedProviders } from '../../../data/providers/selectors';
+import { directoryIndexPath } from '../../../data/providers/routes';
 import type { ProviderRecord } from '../../../data/providers/records';
 
 interface Props {
@@ -21,5 +22,5 @@ const related = relatedProviders(provider);
       </ul>
     </>
   )}
-  <p class="profile-related__all"><a href={directoryPath}>Ver todos los proveedores</a></p>
+  <p class="profile-related__all"><a href={directoryIndexPath}>Ver todos los proveedores</a></p>
 </section>

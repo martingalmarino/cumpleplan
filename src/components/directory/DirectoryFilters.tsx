@@ -1,5 +1,6 @@
 import type { ProviderCategory } from '../../data/providers/records';
 import { CategoryIcon } from './CategoryIcon';
+import { categorySlug, provinceSlug, citySlug } from '../../data/providers/routes';
 
 type Props = {
   query: string;
@@ -7,12 +8,28 @@ type Props = {
   whatsappOnly: boolean;
   total: number;
   counts: { id: ProviderCategory; label: string; count: number }[];
+  province?: string;
+  city?: string;
   onQuery: (value: string) => void;
-  onCategory: (value: ProviderCategory | null) => void;
   onWhatsapp: (value: boolean) => void;
 };
 
-export function DirectoryFilters({ query, category, whatsappOnly, total, counts, onQuery, onCategory, onWhatsapp }: Props) {
+function categoryUrl(category: ProviderCategory | null, province?: string, city?: string): string {
+  if (!province) {
+    return '/directorio/';
+  }
+  
+  const provinceUrl = provinceSlug(province);
+  
+  if (!city) {
+    return category ? `/directorio/${provinceUrl}/${categorySlug(category)}/` : `/directorio/${provinceUrl}/`;
+  }
+  
+  const cityUrl = citySlug(city);
+  return category ? `/directorio/${provinceUrl}/${cityUrl}/${categorySlug(category)}/` : `/directorio/${provinceUrl}/${cityUrl}/`;
+}
+
+export function DirectoryFilters({ query, category, whatsappOnly, total, counts, province, city, onQuery, onWhatsapp }: Props) {
   return (
     <form className="directory-filters" role="search" aria-label="Filtrar proveedores" onSubmit={(event) => event.preventDefault()}>
       <div className="field directory-filters__search">
@@ -21,22 +38,25 @@ export function DirectoryFilters({ query, category, whatsappOnly, total, counts,
       </div>
       <fieldset className="directory-filters__categories">
         <legend className="visually-hidden">Rubro</legend>
-        <button type="button" className="category-chip" aria-pressed={category === null} onClick={() => onCategory(null)}>
+        <a
+          href={categoryUrl(null, province, city)}
+          className="category-chip"
+          aria-current={category === null ? 'true' : undefined}
+        >
           <span>Todos</span>
           <span className="category-chip__count">{total}</span>
-        </button>
+        </a>
         {counts.map((item) => (
-          <button
+          <a
             key={item.id}
-            type="button"
+            href={categoryUrl(item.id, province, city)}
             className="category-chip"
-            aria-pressed={category === item.id}
-            onClick={() => onCategory(category === item.id ? null : item.id)}
+            aria-current={category === item.id ? 'true' : undefined}
           >
             <CategoryIcon category={item.id} size="xs" />
             <span>{item.label}</span>
             <span className="category-chip__count">{item.count}</span>
-          </button>
+          </a>
         ))}
       </fieldset>
       <label className="check-field directory-filters__whatsapp">
