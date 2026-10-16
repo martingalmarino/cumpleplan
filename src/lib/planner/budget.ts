@@ -162,3 +162,26 @@ export function blankBudgetLine(id: string, category: BudgetLine['category'] = '
     exclusionNote: '',
   };
 }
+
+type SuggestedLine = {
+  category: BudgetLine['category'];
+  description: string;
+  unit: string;
+};
+
+/**
+ * Líneas de presupuesto sugeridas para cumpleaños infantiles en Argentina
+ * Con montos vacíos para que el usuario los complete
+ */
+export function suggestedBudgetLines(): SuggestedLine[] {
+  return [
+    { category: 'lugar', description: 'Salón', unit: 'servicio' },
+    { category: 'animacion', description: 'Animación', unit: 'servicio' },
+    { category: 'torta', description: 'Torta', unit: 'kg' },
+    { category: 'comida', description: 'Catering / Comida', unit: 'servicio' },
+    { category: 'decoracion', description: 'Decoración y globos', unit: 'servicio' },
+    { category: 'souvenirs', description: 'Souvenirs / Bolsitas sorpresa', unit: 'bolsita' },
+    { category: 'descartables', description: 'Cotillón (vasos, platos, servilletas)', unit: 'paquete' },
+    { category: 'otros', description: 'Fotos / Video', unit: 'servicio' },
+  ];
+}
