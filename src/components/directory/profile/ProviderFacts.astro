@@ -1,10 +1,29 @@
 ---
+import { Icon } from '../../icons/Icon';
+import type { IconName } from '../../icons/Icon';
 import type { ProviderFact } from '../../../data/providers/selectors';
 
 interface Props {
   facts: ProviderFact[];
 }
 const { facts } = Astro.props;
+
+// Map fact terms to icons
+const iconMap: Record<string, IconName> = {
+  'Capacidad': 'users',
+  'Edades': 'calendar',
+  'Duración': 'clock',
+  'Cobertura': 'map',
+  'Espacios': 'home',
+  'Horarios': 'clock',
+  'Anticipación': 'calendar',
+  'Entrega': 'bag',
+  'default': 'info'
+};
+
+function getIcon(term: string): IconName {
+  return iconMap[term] || iconMap['default'];
+}
 ---
 
 <section class="profile-section profile-facts-section" aria-labelledby="facts-title">
@@ -12,6 +31,9 @@ const { facts } = Astro.props;
   <dl class="profile-facts-list">
     {facts.map((fact) => (
       <div>
+        <div class="profile-facts-list__icon">
+          <Icon name={getIcon(fact.term)} />
+        </div>
         <dt>{fact.term}</dt>
         <dd>{fact.value}</dd>
       </div>

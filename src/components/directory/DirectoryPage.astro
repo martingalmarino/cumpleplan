@@ -1,5 +1,6 @@
 ---
 import type { ProviderRecord, ProviderCategory } from '../../data/providers/records';
+import { Icon } from '../icons/Icon';
 import DirectoryBrowser from './DirectoryBrowser';
 import { formatVerifiedDate } from '../../data/providers/selectors';
 import type { IsoDate } from '../../data/providers/records';
@@ -29,14 +30,49 @@ const {
 } = Astro.props;
 
 const empty = providers.length === 0;
+
+// Calculate stats
+const totalProviders = providers.length;
+const providersWithWhatsApp = providers.filter(p => p.whatsappUrl).length;
+const verifiedRecently = latestReview ? formatVerifiedDate(latestReview) : null;
 ---
 
+{!empty && (
+  <div class="directory-hero">
+    <div class="directory-hero__content">
+      {kicker && <p class="kicker">{kicker}</p>}
+      <h1>{title}</h1>
+      <p class="directory-hero__description">{description}</p>
+      <ul class="directory-hero__stats">
+        <li class="directory-hero__stat">
+          <Icon name="home" />
+          <span><span class="directory-hero__stat-value">{totalProviders}</span> {totalProviders === 1 ? 'proveedor' : 'proveedores'}</span>
+        </li>
+        {providersWithWhatsApp > 0 && (
+          <li class="directory-hero__stat">
+            <Icon name="message" />
+            <span><span class="directory-hero__stat-value">{providersWithWhatsApp}</span> con WhatsApp</span>
+          </li>
+        )}
+        {verifiedRecently && (
+          <li class="directory-hero__stat">
+            <Icon name="check-circle" />
+            <span>Verificado {verifiedRecently}</span>
+          </li>
+        )}
+      </ul>
+    </div>
+  </div>
+)}
+
 <div class="container directory-page">
-  <header class="directory-intro">
-    {kicker && <p class="kicker">{kicker}</p>}
-    <h1>{title}</h1>
-    <p>{description}</p>
-  </header>
+  {empty && (
+    <header class="directory-intro">
+      {kicker && <p class="kicker">{kicker}</p>}
+      <h1>{title}</h1>
+      <p>{description}</p>
+    </header>
+  )}
 
   {!empty && (
     <>

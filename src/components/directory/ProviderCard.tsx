@@ -26,41 +26,43 @@ export function ProviderCard({ provider, variant = 'default', headingLevel = 2 }
         )}
         <p className="provider-card__category">{provider.categories.map(categoryLabel).join(' · ')}</p>
       </div>
-      <Heading className="provider-card__name">
-        <a href={href}>{provider.name}</a>
-      </Heading>
-      <p className="provider-card__area">
-        <Icon name="map" />
-        <span>{areaLine(provider)}</span>
-      </p>
-      <p className="provider-card__summary">{provider.summary}</p>
-      {highlights.length > 0 ? (
-        <ul className="provider-card__facts" aria-label="Datos destacados">
-          {highlights.map((item) => (
-            <li key={item}>
-              <Icon name="check" />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      <div className="provider-card__actions">
-        <a className="button button-primary" href={href}>
-          Ver detalles<span className="visually-hidden"> de {provider.name}</span>
-        </a>
-        {contact ? (
-          <a
-            className="button button-secondary"
-            href={contact.href}
-            {...(contact.external ? { rel: 'noopener' } : {})}
-            data-analytics="provider_contact_clicked"
-            data-provider-id={provider.id}
-          >
-            <Icon name={contact.type === 'whatsapp' ? 'message' : contact.type === 'phone' ? 'phone' : 'globe'} />
-            {contact.label}
-            <span className="visually-hidden"> a {provider.name}</span>
-          </a>
+      <div className="provider-card__content">
+        <Heading className="provider-card__name">
+          <a href={href}>{provider.name}</a>
+        </Heading>
+        <p className="provider-card__area">
+          <Icon name="map" />
+          <span>{areaLine(provider)}</span>
+        </p>
+        <p className="provider-card__summary">{provider.summary}</p>
+        {highlights.length > 0 ? (
+          <ul className="provider-card__facts" aria-label="Datos destacados">
+            {highlights.map((item) => (
+              <li key={item}>
+                <Icon name="check" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
         ) : null}
+        <div className="provider-card__actions">
+          <a className="button button-primary" href={href}>
+            Ver detalles<span className="visually-hidden"> de {provider.name}</span>
+          </a>
+          {contact ? (
+            <a
+              className="button button-secondary"
+              href={contact.href}
+              {...(contact.external ? { rel: 'noopener' } : {})}
+              data-analytics="provider_contact_clicked"
+              data-provider-id={provider.id}
+            >
+              <Icon name={contact.type === 'whatsapp' ? 'message' : contact.type === 'phone' ? 'phone' : 'globe'} />
+              {contact.label}
+              <span className="visually-hidden"> a {provider.name}</span>
+            </a>
+          ) : null}
+        </div>
       </div>
     </article>
   );
