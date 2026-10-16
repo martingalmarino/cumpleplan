@@ -222,3 +222,41 @@ export function shoppingPlainText(items: ShoppingItem[]): string {
   }
   return lines.join('\n');
 }
+
+type SuggestedShoppingItem = {
+  sourceId: string;
+  category: BudgetCategory;
+  name: string;
+  quantityFormula: (guests: number) => number;
+  unit: string;
+};
+
+/**
+ * Items sugeridos de compras no-comida para cumpleaños infantiles
+ * Cantidades escaladas según invitados cuando tiene sentido
+ */
+export function suggestedShoppingItems(guests: number): GeneratedShopping[] {
+  const suggestions: SuggestedShoppingItem[] = [
+    // Descartables escalados por invitados
+    { sourceId: 'suggested:platos', category: 'descartables', name: 'Platos descartables', quantityFormula: (g) => Math.ceil(g * 1.2), unit: 'unidad' },
+    { sourceId: 'suggested:vasos', category: 'descartables', name: 'Vasos descartables', quantityFormula: (g) => Math.ceil(g * 1.5), unit: 'unidad' },
+    { sourceId: 'suggested:servilletas', category: 'descartables', name: 'Servilletas', quantityFormula: (g) => Math.ceil(g * 2), unit: 'unidad' },
+    
+    // Decoración
+    { sourceId: 'suggested:velas', category: 'decoracion', name: 'Velas para la torta', quantityFormula: () => 1, unit: 'paquete' },
+    { sourceId: 'suggested:globos', category: 'decoracion', name: 'Globos', quantityFormula: () => 1, unit: 'paquete' },
+    { sourceId: 'suggested:cotillon', category: 'souvenirs', name: 'Cotillón (gorros, matracas, etc)', quantityFormula: (g) => Math.ceil(g * 0.8), unit: 'unidad' },
+    
+    // Logística
+    { sourceId: 'suggested:hielo', category: 'bebidas', name: 'Hielo', quantityFormula: () => 2, unit: 'bolsa' },
+    { sourceId: 'suggested:bolsas', category: 'descartables', name: 'Bolsas de residuos', quantityFormula: () => 1, unit: 'rollo' },
+  ];
+
+  return suggestions.map((item) => ({
+    sourceId: item.sourceId,
+    category: item.category,
+    name: item.name,
+    quantity: item.quantityFormula(guests),
+    unit: item.unit,
+  }));
+}
