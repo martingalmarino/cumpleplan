@@ -1,13 +1,15 @@
 export const providerCategories = [
   {
     id: 'salones',
+    slug: 'salones-infantiles',
     label: 'Salones',
     singular: 'Salón infantil',
     servicesTitle: 'Instalaciones y servicios',
-    relatedTitle: 'Otros salones en Córdoba',
+    relatedTitle: 'Otros salones',
   },
   {
     id: 'animacion',
+    slug: 'animacion',
     label: 'Animación',
     singular: 'Animación',
     servicesTitle: 'Qué ofrece',
@@ -15,6 +17,7 @@ export const providerCategories = [
   },
   {
     id: 'tortas-catering',
+    slug: 'tortas-y-catering',
     label: 'Tortas y catering',
     singular: 'Tortas y catering',
     servicesTitle: 'Qué ofrece',
@@ -22,6 +25,7 @@ export const providerCategories = [
   },
   {
     id: 'decoracion',
+    slug: 'decoracion',
     label: 'Decoración y alquileres',
     singular: 'Decoración y alquileres',
     servicesTitle: 'Productos y servicios',
@@ -57,10 +61,10 @@ export type ProviderRecord = {
   slug: string;
   name: string;
   categories: ProviderCategory[];
-  city: 'Córdoba';
-  province: 'Córdoba';
+  city: string;
+  province: string;
   country: 'Argentina';
-  locality: 'Córdoba Capital';
+  locality: string;
   neighborhood?: string;
   address?: string;
   postalCode?: string;

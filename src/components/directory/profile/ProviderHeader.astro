@@ -1,7 +1,8 @@
 ---
 import { CategoryIcon } from '../CategoryIcon';
 import { Icon } from '../../icons/Icon';
-import { areaLine, categoryFilterPath, categoryLabel, categorySingular, directoryPath } from '../../../data/providers/selectors';
+import { areaLine, categoryLabel, categorySingular } from '../../../data/providers/selectors';
+import { directoryProvinceCityPath, directoryProvinceCityRubroPath } from '../../../data/providers/routes';
 import type { ProviderRecord } from '../../../data/providers/records';
 
 interface Props {
@@ -9,13 +10,15 @@ interface Props {
 }
 const { provider } = Astro.props;
 const mainCategory = provider.categories[0];
+const cityPath = directoryProvinceCityPath(provider.province, provider.city);
+const categoryPath = directoryProvinceCityRubroPath(provider.province, provider.city, mainCategory);
 ---
 
 <nav aria-label="Migas">
   <ol class="crumbs">
     <li><a href="/">Inicio</a></li>
-    <li><a href={directoryPath}>Proveedores en Córdoba</a></li>
-    <li><a href={categoryFilterPath(mainCategory)}>{categoryLabel(mainCategory)}</a></li>
+    <li><a href={cityPath}>{provider.city}, {provider.province}</a></li>
+    <li><a href={categoryPath}>{categoryLabel(mainCategory)}</a></li>
     <li aria-current="page">{provider.name}</li>
   </ol>
 </nav>

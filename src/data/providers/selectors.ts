@@ -5,15 +5,43 @@ import {
   type ProviderCategory,
   type ProviderRecord,
 } from './records';
+import {
+  directoryIndexPath,
+  directoryProvincePath,
+  directoryProvinceRubroPath,
+  directoryProvinceCityPath,
+  directoryProvinceCityRubroPath,
+  providerPath as getProviderPath,
+  categorySlug,
+} from './routes';
 
-export const directoryPath = '/cumpleanos-infantiles-cordoba/';
+/** @deprecated Usar directoryIndexPath, directoryProvincePath, etc. */
+export const directoryPath = directoryIndexPath;
 
 export function providerPath(provider: ProviderRecord): string {
-  return `${directoryPath}proveedores/${provider.slug}/`;
+  return getProviderPath(provider);
 }
 
+/**
+ * Ruta del directorio para un rubro en una ciudad/provincia específica
+ */
+export function categoryPath(province: string, city: string | null, category: ProviderCategory): string {
+  if (city) {
+    return directoryProvinceCityRubroPath(province, city, category);
+  }
+  return directoryProvinceRubroPath(province, category);
+}
+
+/**
+ * Ruta del directorio para una ciudad específica
+ */
+export function cityPath(province: string, city: string): string {
+  return directoryProvinceCityPath(province, city);
+}
+
+/** @deprecated Usar categoryPath o los helpers de routes.ts */
 export function categoryFilterPath(category: ProviderCategory): string {
-  return `${directoryPath}?rubro=${category}`;
+  return `/directorio/cordoba/cordoba-capital/${categorySlug(category)}/`;
 }
 
 function categoryMeta(category: ProviderCategory) {
@@ -74,7 +102,8 @@ const descriptionMax = 160;
 
 export function providerTitle(provider: ProviderRecord): string {
   const kind = categorySingular(provider.categories[0]).toLocaleLowerCase('es');
-  const options = [`${provider.name}: ${kind} en Córdoba Capital`, `${provider.name}: ${kind} en Córdoba`, `${provider.name} · Córdoba`];
+  const location = provider.locality !== provider.city ? provider.locality : provider.city;
+  const options = [`${provider.name}: ${kind} en ${location}`, `${provider.name}: ${kind} en ${provider.province}`, `${provider.name} · ${provider.province}`];
   return options.find((option) => option.length <= titleMax) ?? provider.name;
 }
 

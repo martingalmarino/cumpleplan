@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { site } from '../config/site';
 import { publishedProviders } from '../data/providers/records';
+import { generateDirectoryRoutes } from '../data/providers/groups';
 
 export const GET: APIRoute = async () => {
   const paths: string[] = [];
@@ -18,15 +19,26 @@ export const GET: APIRoute = async () => {
       '/privacidad/',
       '/terminos/',
     );
+    
     if (publishedProviders().length > 0) {
-      paths.push('/cumpleanos-infantiles-cordoba/');
+      // Agregar rutas del directorio solo si son indexables
+      const directoryRoutes = generateDirectoryRoutes();
+      for (const route of directoryRoutes) {
+        if (route.indexable) {
+          paths.push(route.path);
+        }
+      }
+      
+      // Agregar todas las fichas de proveedores
       for (const provider of publishedProviders()) {
-        paths.push(`/cumpleanos-infantiles-cordoba/proveedores/${provider.slug}/`);
+        paths.push(`/proveedor/${provider.slug}/`);
       }
     }
+    
     const guides = await getCollection('guias');
     for (const guide of guides) paths.push(`/guias/${guide.id}/`);
   }
+  
   const body = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
@@ -34,6 +46,7 @@ export const GET: APIRoute = async () => {
     '</urlset>',
     '',
   ].join('\n');
+  
   return new Response(body, {
     headers: { 'Content-Type': 'application/xml; charset=utf-8' },
   });

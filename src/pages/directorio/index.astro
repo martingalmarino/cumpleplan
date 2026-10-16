@@ -1,0 +1,74 @@
+---
+import Base from '../../layouts/Base.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import DirectoryPage from '../../components/directory/DirectoryPage.astro';
+import { publishedProviders } from '../../data/providers/records';
+import { groupByProvince } from '../../data/providers/groups';
+import { directoryProvincePath } from '../../data/providers/routes';
+import { absoluteUrl, site } from '../../config/site';
+
+const providers = publishedProviders();
+const empty = providers.length === 0;
+const byProvince = groupByProvince(providers);
+const latestReview = empty ? null : providers.map((p) => p.verifiedAt).sort().at(-1)!;
+
+const title = 'Directorio de proveedores para cumpleaños infantiles en Argentina';
+const description = empty
+  ? 'El directorio de proveedores todavía no tiene fichas publicadas.'
+  : 'Salones, tortas, animación y decoración para cumpleaños infantiles en Argentina, con datos tomados de sus sitios oficiales.';
+
+const path = '/directorio/';
+const pageUrl = absoluteUrl(path);
+
+const crumbs = site.origin && !empty
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: absoluteUrl('/') },
+        { '@type': 'ListItem', position: 2, name: 'Directorio', item: pageUrl },
+      ],
+    }
+  : null;
+---
+
+<Base title={title} description={description} path={path} noindex={empty || !site.allowIndexing}>
+  {crumbs && <JsonLd slot="head" data={crumbs} />}
+  
+  <div class="container directory-page">
+    <header class="directory-intro">
+      <p class="kicker">Directorio nacional</p>
+      <h1>Proveedores para cumpleaños infantiles</h1>
+      {empty ? (
+        <p>Todavía no hay fichas publicadas. El planificador de comida, presupuesto y compras sigue disponible.</p>
+      ) : (
+        <p>Salones, tortas y servicios para organizar un cumpleaños infantil en Argentina.</p>
+      )}
+    </header>
+
+    {!empty && byProvince.size > 0 && (
+      <section class="province-list" aria-labelledby="provinces-title">
+        <h2 id="provinces-title">Proveedores por provincia</h2>
+        <ul class="location-links">
+          {Array.from(byProvince.entries()).sort(([a], [b]) => a.localeCompare(b, 'es')).map(([province, provinceProviders]) => (
+            <li>
+              <a href={directoryProvincePath(province)}>
+                {province} <span class="count">({provinceProviders.length})</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {!empty && (
+      <DirectoryPage 
+        providers={providers} 
+        title="Todas las opciones" 
+        description="Mostrando proveedores de todas las provincias."
+        latestReview={latestReview!}
+        showMethodology={true}
+      />
+    )}
+  </div>
+</Base>

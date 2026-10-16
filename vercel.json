@@ -1,0 +1,120 @@
+{
+  "redirects": [
+    {
+      "source": "/cumpleanos-infantiles-cordoba/proveedores/:slug",
+      "destination": "/proveedor/:slug/",
+      "permanent": true
+    },
+    {
+      "source": "/cumpleanos-infantiles-cordoba/proveedores/:slug/",
+      "destination": "/proveedor/:slug/",
+      "permanent": true
+    },
+    {
+      "source": "/cumpleanos-infantiles-cordoba",
+      "has": [
+        {
+          "type": "query",
+          "key": "rubro",
+          "value": "salones"
+        }
+      ],
+      "destination": "/directorio/cordoba/cordoba-capital/salones-infantiles/",
+      "permanent": true
+    },
+    {
+      "source": "/cumpleanos-infantiles-cordoba",
+      "has": [
+        {
+          "type": "query",
+          "key": "rubro",
+          "value": "animacion"
+        }
+      ],
+      "destination": "/directorio/cordoba/cordoba-capital/animacion/",
+      "permanent": true
+    },
+    {
+      "source": "/cumpleanos-infantiles-cordoba",
+      "has": [
+        {
+          "type": "query",
+          "key": "rubro",
+          "value": "tortas-catering"
+        }
+      ],
+      "destination": "/directorio/cordoba/cordoba-capital/tortas-y-catering/",
+      "permanent": true
+    },
+    {
+      "source": "/cumpleanos-infantiles-cordoba",
+      "has": [
+        {
+          "type": "query",
+          "key": "rubro",
+          "value": "decoracion"
+        }
+      ],
+      "destination": "/directorio/cordoba/cordoba-capital/decoracion/",
+      "permanent": true
+    },
+    {
+      "source": "/cumpleanos-infantiles-cordoba/",
+      "has": [
+        {
+          "type": "query",
+          "key": "rubro",
+          "value": "salones"
+        }
+      ],
+      "destination": "/directorio/cordoba/cordoba-capital/salones-infantiles/",
+      "permanent": true
+    },
+    {
+      "source": "/cumpleanos-infantiles-cordoba/",
+      "has": [
+        {
+          "type": "query",
+          "key": "rubro",
+          "value": "animacion"
+        }
+      ],
+      "destination": "/directorio/cordoba/cordoba-capital/animacion/",
+      "permanent": true
+    },
+    {
+      "source": "/cumpleanos-infantiles-cordoba/",
+      "has": [
+        {
+          "type": "query",
+          "key": "rubro",
+          "value": "tortas-catering"
+        }
+      ],
+      "destination": "/directorio/cordoba/cordoba-capital/tortas-y-catering/",
+      "permanent": true
+    },
+    {
+      "source": "/cumpleanos-infantiles-cordoba/",
+      "has": [
+        {
+          "type": "query",
+          "key": "rubro",
+          "value": "decoracion"
+        }
+      ],
+      "destination": "/directorio/cordoba/cordoba-capital/decoracion/",
+      "permanent": true
+    },
+    {
+      "source": "/cumpleanos-infantiles-cordoba",
+      "destination": "/directorio/cordoba/cordoba-capital/",
+      "permanent": true
+    },
+    {
+      "source": "/cumpleanos-infantiles-cordoba/",
+      "destination": "/directorio/cordoba/cordoba-capital/",
+      "permanent": true
+    }
+  ]
+}
