@@ -122,20 +122,17 @@
 .directory-header-band__stats {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  align-items: center;
+  gap: var(--space-4);
   margin: 0;
 }
 
 .directory-stat {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 999px;
+  gap: 8px;
   font-size: 15px;
   font-weight: 600;
-  backdrop-filter: blur(10px);
 }
 
 .directory-stat svg {
