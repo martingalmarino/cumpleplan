@@ -28,12 +28,14 @@ export function ProviderCard({ provider, variant = 'default', headingLevel = 2 }
           )}
         </div>
         <div className="provider-card__content">
-          <div className="provider-card__header">
-            <span className="provider-card__category-badge">{categoryLabel(provider.categories[0])}</span>
+          <div className="provider-card__top">
+            <div className="provider-card__header">
+              <Heading className="provider-card__name">
+                <a href={href}>{provider.name}</a>
+              </Heading>
+              <span className="provider-card__category-badge">{categoryLabel(provider.categories[0])}</span>
+            </div>
           </div>
-          <Heading className="provider-card__name">
-            <a href={href}>{provider.name}</a>
-          </Heading>
           <p className="provider-card__area">
             <Icon name="map" />
             <span>{areaLine(provider)}</span>
