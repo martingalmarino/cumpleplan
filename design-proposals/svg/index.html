@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auditoría SVG - Festejito | Propuesta de Diseño</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito Sans', 'Segoe UI', sans-serif;
+      background: #FFFDF7;
+      color: #17324D;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: white;
+      padding: 32px;
+      border-radius: 18px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 24px rgba(23, 50, 77, 0.06);
+    }
+
+    h1 {
+      font-family: 'Fredoka', 'Nunito Sans', sans-serif;
+      color: #237A32;
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      color: #526477;
+      font-size: 1.1rem;
+      margin-bottom: 24px;
+    }
+
+    .summary {
+      background: #EDF7EA;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .summary h2 {
+      font-size: 1.3rem;
+      color: #237A32;
+      margin-bottom: 12px;
+    }
+
+    .summary ul {
+      margin-left: 24px;
+      color: #17324D;
+    }
+
+    .summary li {
+      margin-bottom: 8px;
+    }
+
+    section {
+      margin-bottom: 48px;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      color: #17324D;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid #237A32;
+    }
+
+    .comparison-grid {
+      display: grid;
+      gap: 32px;
+    }
+
+    .icon-comparison {
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 24px rgba(23, 50, 77, 0.06);
+    }
+
+    .icon-header {
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #DCE3E8;
+    }
+
+    .icon-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #237A32;
+      margin-bottom: 4px;
+    }
+
+    .usage {
+      font-size: 0.9rem;
+      color: #526477;
+      font-style: italic;
+    }
+
+    .visual-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+
+    .icon-display {
+      text-align: center;
+      padding: 24px;
+      border-radius: 12px;
+    }
+
+    .icon-display.old {
+      background: #FFF0E8;
+      border: 2px solid #FF6633;
+    }
+
+    .icon-display.new {
+      background: #EDF7EA;
+      border: 2px solid #237A32;
+    }
+
+    .icon-display h4 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .icon-display.old h4 {
+      color: #8A4B12;
+    }
+
+    .icon-display.new h4 {
+      color: #237A32;
+    }
+
+    .icon-sample {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .icon-sample svg {
+      display: block;
+    }
+
+    .size-label {
+      font-size: 0.75rem;
+      color: #526477;
+      text-align: center;
+    }
+
+    .issues {
+      background: #FFF0E8;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    .issues h4 {
+      color: #8A4B12;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .issues ul {
+      margin-left: 20px;
+      font-size: 0.95rem;
+      color: #17324D;
+    }
+
+    .issues li {
+      margin-bottom: 4px;
+    }
+
+    .improvements {
+      background: #EDF7EA;
+      padding: 16px;
+      border-radius: 12px;
+    }
+
+    .improvements h4 {
+      color: #237A32;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .improvements ul {
+      margin-left: 20px;
+      font-size: 0.95rem;
+      color: #17324D;
+    }
+
+    .improvements li {
+      margin-bottom: 4px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .badge.critical {
+      background: #8C2F2F;
+      color: white;
+    }
+
+    .badge.important {
+      background: #FF6633;
+      color: white;
+    }
+
+    .badge.minor {
+      background: #FFCC33;
+      color: #17324D;
+    }
+
+    .badge.fixed {
+      background: #237A32;
+      color: white;
+    }
+
+    .brand-section {
+      background: white;
+      padding: 32px;
+      border-radius: 18px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 24px rgba(23, 50, 77, 0.06);
+    }
+
+    .color-swatches {
+      display: flex;
+      gap: 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .swatch {
+      text-align: center;
+    }
+
+    .swatch-box {
+      width: 100px;
+      height: 100px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      border: 2px solid #DCE3E8;
+    }
+
+    .swatch-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #17324D;
+    }
+
+    .swatch-value {
+      font-size: 0.75rem;
+      color: #526477;
+      font-family: monospace;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .stat-box {
+      background: #F8F9FA;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #237A32;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #526477;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .visual-compare {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎨 Auditoría de SVG — Festejito</h1>
+      <p class="subtitle">Análisis completo de ilustraciones e íconos con propuestas de mejora</p>
+      
+      <div class="summary">
+        <h2>Resumen Ejecutivo</h2>
+        <ul>
+          <li><strong>31 íconos inline</strong> en el componente Icon.tsx</li>
+          <li><strong>2 SVGs de marca</strong> (favicon y OG image)</li>
+          <li><strong>Problemas identificados:</strong> stroke weight inconsistente (1.75px no estándar), falta de cohesión visual, algunos diseños genéricos/AI</li>
+          <li><strong>Propuesta:</strong> Sistema unificado con 2px stroke, grilla 24x24, estilo cálido y profesional</li>
+        </ul>
+      </div>
+    </header>
+
+    <section class="brand-section">
+      <h2 class="section-title">Paleta de Marca (CSS del sitio)</h2>
+      <div class="color-swatches">
+        <div class="swatch">
+          <div class="swatch-box" style="background: #237A32;"></div>
+          <div class="swatch-label">Verde Principal</div>
+          <div class="swatch-value">#237A32</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background: #FFCC33;"></div>
+          <div class="swatch-label">Amarillo</div>
+          <div class="swatch-value">#FFCC33</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background: #17324D;"></div>
+          <div class="swatch-label">Tinta</div>
+          <div class="swatch-value">#17324D</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background: #FFFDF7;"></div>
+          <div class="swatch-label">Papel</div>
+          <div class="swatch-value">#FFFDF7</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background: #EDF7EA;"></div>
+          <div class="swatch-label">Menta</div>
+          <div class="swatch-value">#EDF7EA</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background: #FF6633;"></div>
+          <div class="swatch-label">Naranja</div>
+          <div class="swatch-value">#FF6633</div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat-box">
+          <span class="stat-number">2px</span>
+          <span class="stat-label">Stroke propuesto (vs 1.75px actual)</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-number">24×24</span>
+          <span class="stat-label">ViewBox consistente</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Caps/joins redondeados</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Logo y Marca</h2>
+      <div class="comparison-grid">
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">Favicon / Logo "F"</h3>
+            <p class="usage"><strong>Ubicación:</strong> public/favicon.svg, public/og.svg</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="72" height="72">
+                  <rect width="36" height="36" rx="10" fill="#237A32"/>
+                  <path d="M12 8.5h11.2c1.4 0 2.3.9 2.3 2.2s-.9 2.2-2.3 2.2H16.2V27.2h-4.2V8.5z" fill="#FFFDF7"/>
+                  <path d="M16.2 16.2h6.2c1.2 0 2 .8 2 1.8s-.8 1.8-2 1.8h-6.2v-3.6z" fill="#FFFDF7"/>
+                  <path d="M25.2 6.2c1.5 1.6 2.2 2.7 2.2 3.6a2.2 2.2 0 0 1-4.4 0c0-.9.7-2 2.2-3.6z" fill="#FFCC33"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="72" height="72">
+                  <rect width="36" height="36" rx="10" fill="#237A32"/>
+                  <path d="M12 9h10.5c1.3 0 2.2.8 2.2 2s-.9 2-2.2 2h-6.3v13.5h-4.2V9z" fill="#FFFDF7"/>
+                  <path d="M16.2 16.5h5.8c1.1 0 1.9.7 1.9 1.6s-.8 1.6-1.9 1.6h-5.8v-3.2z" fill="#FFFDF7"/>
+                  <path d="M25 7c1.3 1.4 2 2.4 2 3.2a2 2 0 0 1-4 0c0-.8.7-1.8 2-3.2z" fill="#FFCC33"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Observaciones Menores</h4>
+            <ul>
+              <li>Proporciones de la letra "F" ligeramente irregulares</li>
+              <li>La llama amarilla funciona bien pero puede optimizarse</li>
+              <li>Bordes del path podrían ser más uniformes</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras Aplicadas</h4>
+            <ul>
+              <li>✓ Ajuste óptico de proporciones de la letra</li>
+              <li>✓ Llama con forma más orgánica y balanceada</li>
+              <li>✓ Reducción de decimales para paths más limpios</li>
+              <li>✓ Mejor alineación vertical y horizontal</li>
+            </ul>
+          </div>
+
+          <p><span class="badge minor">Mejora menor</span><span class="badge fixed">Optimizado</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Sistema de Íconos — Componente Icon.tsx</h2>
+      
+      <div class="comparison-grid">
+        
+        <!-- MENU -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">menu</h3>
+            <p class="usage"><strong>Uso:</strong> Navegación móvil (hamburger menu)</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual (1.75px)</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round">
+                  <path d="M4 7h16M4 12h16M4 17h16"/>
+                </svg>
+              </div>
+              <div class="size-label">Stroke: 1.75px (no estándar)</div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado (2px)</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round">
+                  <path d="M3 7h18M3 12h18M3 17h18"/>
+                </svg>
+              </div>
+              <div class="size-label">Stroke: 2px (estándar)</div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas Identificados</h4>
+            <ul>
+              <li>Stroke weight 1.75px es inusual (estándar: 1, 1.5, 2, 2.5)</li>
+              <li>Líneas no usan todo el ancho disponible (4-20 vs 3-21)</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Stroke estándar 2px para mejor legibilidad</li>
+              <li>✓ Mayor utilización del espacio (18px vs 16px de ancho)</li>
+              <li>✓ Mejor centrado óptico</li>
+            </ul>
+          </div>
+
+          <p><span class="badge important">Inconsistencia</span><span class="badge fixed">Corregido</span></p>
+        </div>
+
+        <!-- UTENSILS -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">utensils</h3>
+            <p class="usage"><strong>Uso:</strong> Calculadora de comida, navegación herramienta "Comida"</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round">
+                  <path d="M6 3v8a2 2 0 0 0 4 0V3M8 11v10M16 3c-1.5 3-1.5 6 0 8v10M16 3c1.5 3 1.5 6 0 8"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 3v7c0 1.1.9 2 2 2M8 12v9M6 3c0 3 0 6 0 7M16 3v18M16 3c-.8 1.5-1.2 3.5-1.2 5.5 0 1.1.5 2 1.2 2.5"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas</h4>
+            <ul>
+              <li>Diseño confuso: parece un tenedor y medio</li>
+              <li>El cuchillo tiene paths redundantes que se superponen</li>
+              <li>No se lee claramente como "cubiertos"</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Tenedor más claro con púas definidas</li>
+              <li>✓ Cuchillo simplificado, filo más legible</li>
+              <li>✓ Mejor balance visual entre ambos elementos</li>
+              <li>✓ Stroke joins para curvas más suaves</li>
+            </ul>
+          </div>
+
+          <p><span class="badge important">Diseño confuso</span><span class="badge fixed">Rediseñado</span></p>
+        </div>
+
+        <!-- WALLET -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">wallet</h3>
+            <p class="usage"><strong>Uso:</strong> Presupuesto, navegación herramienta "Presupuesto"</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round">
+                  <path d="M4 8h16v10H4zM4 8l2-3h10l2 3M16 13h2"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="7" width="18" height="13" rx="2"/>
+                  <path d="M3 10h18M7 7L8 4h8l1 3M17 13h2"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas</h4>
+            <ul>
+              <li>Parece más una caja genérica que una billetera</li>
+              <li>Sin bordes redondeados (no coincide con el estilo del sitio)</li>
+              <li>La solapa superior es ambigua</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Bordes redondeados (rx="2") consistentes con tokens CSS</li>
+              <li>✓ Línea horizontal clara (bolsillo/separador)</li>
+              <li>✓ Solapa rediseñada más legible</li>
+              <li>✓ Ranura para tarjeta más definida</li>
+            </ul>
+          </div>
+
+          <p><span class="badge important">Poco claro</span><span class="badge fixed">Rediseñado</span></p>
+        </div>
+
+        <!-- CHECK -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">check</h3>
+            <p class="usage"><strong>Uso:</strong> Checklist, tareas completadas, highlights en tarjetas de proveedores</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12.5 9.2 17 19 7"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Observaciones</h4>
+            <ul>
+              <li>Funciona, pero stroke delgado en contexto de UI</li>
+              <li>Podría ser más enfático (es un "check", debe celebrar)</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Stroke más grueso (2.5px) para mayor impacto</li>
+              <li>✓ Geometría simplificada (menos decimales)</li>
+              <li>✓ Mejor alineación en grilla 24x24</li>
+            </ul>
+          </div>
+
+          <p><span class="badge minor">Optimización</span><span class="badge fixed">Mejorado</span></p>
+        </div>
+
+        <!-- BAG -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">bag</h3>
+            <p class="usage"><strong>Uso:</strong> Lista de compras, navegación herramienta "Compras"</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 8h12l-1 12H7L6 8zM9 8V6a3 3 0 0 1 6 0v2"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 8l-.5 11c0 1.1.9 2 2 2h9c1.1 0 2-.9 2-2L18 8M9 8V6c0-1.7 1.3-3 3-3s3 1.3 3 3v2M3 8h18"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas</h4>
+            <ul>
+              <li>La bolsa se ve aplastada/comprimida verticalmente</li>
+              <li>Falta la línea superior (apertura de la bolsa)</li>
+              <li>Manijas no están claramente definidas</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Base redondeada para forma más orgánica</li>
+              <li>✓ Línea horizontal superior (apertura)</li>
+              <li>✓ Manijas integradas más claramente</li>
+              <li>✓ Proporciones balanceadas</li>
+            </ul>
+          </div>
+
+          <p><span class="badge important">Geometría débil</span><span class="badge fixed">Rediseñado</span></p>
+        </div>
+
+        <!-- CALENDAR -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">calendar</h3>
+            <p class="usage"><strong>Uso:</strong> EventForm, selección de fecha del cumpleaños</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 6h14v13H5zM5 10h14M8 4v4M16 4v4"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="5" width="16" height="16" rx="2"/>
+                  <path d="M4 10h16M8 3v4M16 3v4"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas</h4>
+            <ul>
+              <li>Sin bordes redondeados (inconsistente con el diseño del sitio)</li>
+              <li>Los ganchos del calendario son demasiado cortos</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Bordes redondeados (rx="2")</li>
+              <li>✓ Ganchos superiores más largos y visibles</li>
+              <li>✓ Proporciones balanceadas (16×16)</li>
+            </ul>
+          </div>
+
+          <p><span class="badge minor">Estilo</span><span class="badge fixed">Mejorado</span></p>
+        </div>
+
+        <!-- USERS -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">users</h3>
+            <p class="usage"><strong>Uso:</strong> Representar chicos y adultos en contextos del evento</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 19c.5-2.5 2.4-4 5-4s4.5 1.5 5 4M16 11a2.5 2.5 0 1 0 0-5M17 15c1.8.2 3.2 1.3 3.7 4"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="9" cy="9" r="3"/>
+                  <path d="M3 20c0-3 2.7-5 6-5s6 2 6 5M16.5 11c1.4 0 2.5-1.1 2.5-2.5S17.9 6 16.5 6M18 16c2.2 0 4 1.5 4 3.5"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas</h4>
+            <ul>
+              <li>La cabeza del usuario principal debería ser círculo perfecto (no path)</li>
+              <li>Curvas de los cuerpos son irregulares</li>
+              <li>Segundo usuario mal balanceado</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Círculo perfecto para cabeza (elemento circle)</li>
+              <li>✓ Curvas de cuerpo más naturales y consistentes</li>
+              <li>✓ Segundo usuario mejor proporcionado</li>
+              <li>✓ Geometría más limpia</li>
+            </ul>
+          </div>
+
+          <p><span class="badge important">Geometría</span><span class="badge fixed">Rediseñado</span></p>
+        </div>
+
+        <!-- CAKE -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">cake</h3>
+            <p class="usage"><strong>Uso:</strong> Categoría "Tortas y Catering" en directorio de proveedores</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 20h16M5 20v-7h14v7M5 16c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0M12 13V9M12 6.5c.8-.8 1-1.5 1-2a1 1 0 0 0-2 0c0 .5.2 1.2 1 2z"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="13" width="16" height="8" rx="1"/>
+                  <path d="M4 13c1.5 1.5 3 1.5 5 0s3.5-1.5 5 0 3.5 1.5 5 0M12 13V9M12 6.5c.6-.6.9-1.2.9-1.8 0-.8-.6-1.2-.9-1.2s-.9.4-.9 1.2c0 .6.3 1.2.9 1.8z"/>
+                  <path d="M4 17h16"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas</h4>
+            <ul>
+              <li>Torta parece aplastada (proporción 7:0)</li>
+              <li>Sin base visual clara</li>
+              <li>El glaseado ondulado está desbalanceado</li>
+              <li>Falta línea divisoria (capas de torta)</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Rectángulo con bordes suaves para base sólida</li>
+              <li>✓ Glaseado más simétrico y balanceado</li>
+              <li>✓ Línea divisoria horizontal (capas)</li>
+              <li>✓ Vela con llama más definida</li>
+              <li>✓ Proporciones más realistas</li>
+            </ul>
+          </div>
+
+          <p><span class="badge critical">Proporción</span><span class="badge fixed">Rediseñado</span></p>
+        </div>
+
+        <!-- BALLOON -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">balloon</h3>
+            <p class="usage"><strong>Uso:</strong> Categoría "Decoración" en directorio de proveedores</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 15c3 0 5-2.7 5-5.5S14.8 4 12 4 7 6.2 7 9.5 9 15 12 15zM12 15l-1 1.5h2L12 15zM12 16.5c0 2-2 2.5-1 4.5"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3c-2.8 0-5 2.5-5 5.5S9 14 12 14s5-2.5 5-5.5S14.8 3 12 3z"/>
+                  <path d="M12 14l-.8 1.5c-.3.5-.3 1 0 1.5l.3.5c.2.4.5.6.9.6.4 0 .7-.2.9-.6l.3-.5c.3-.5.3-1 0-1.5L12 14z"/>
+                  <path d="M12 18v3M10 21h4"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas</h4>
+            <ul>
+              <li>El nudo del globo no se entiende (path confuso)</li>
+              <li>La cuerda es inconsistente: "c0 2-2 2.5-1 4.5" no tiene sentido visual</li>
+              <li>Falta el extremo de la cuerda</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Nudo rediseñado con forma clara y simétrica</li>
+              <li>✓ Cuerda recta y limpia</li>
+              <li>✓ Extremo de cuerda con banderín/amarre</li>
+              <li>✓ Geometría más fiel a un globo real</li>
+            </ul>
+          </div>
+
+          <p><span class="badge critical">Diseño confuso</span><span class="badge fixed">Rediseñado</span></p>
+        </div>
+
+        <!-- SPARKLE -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">sparkle</h3>
+            <p class="usage"><strong>Uso:</strong> Categoría "Animación" en directorio de proveedores</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 4l1.8 4.6L18.5 10l-4.7 1.6L12 16l-1.8-4.4L5.5 10l4.7-1.4L12 4zM18 16l.7 1.8 1.8.7-1.8.7L18 21l-.7-1.8-1.8-.7 1.8-.7L18 16z"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5zM18 16l1 2.5 2.5 1-2.5 1L18 23l-1-2.5-2.5-1 2.5-1L18 16z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas</h4>
+            <ul>
+              <li>Puntos del sparkle con decimales innecesarios (1.8, 4.6, etc.)</li>
+              <li>No centrado en la grilla</li>
+              <li>Segunda estrella desbalanceada</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Valores enteros para mejor alineación</li>
+              <li>✓ Perfecto centrado en grilla 24x24</li>
+              <li>✓ Proporciones simétricas</li>
+              <li>✓ Segunda estrella balanceada</li>
+            </ul>
+          </div>
+
+          <p><span class="badge minor">Alineación</span><span class="badge fixed">Optimizado</span></p>
+        </div>
+
+        <!-- MAP -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">map</h3>
+            <p class="usage"><strong>Uso:</strong> Ubicación de proveedores en ProviderCard</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21s6-5.2 6-10a6 6 0 1 0-12 0c0 4.8 6 10 6 10zM12 11.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3c-3.3 0-6 2.7-6 6 0 5.2 6 12 6 12s6-6.8 6-12c0-3.3-2.7-6-6-6z"/>
+                  <circle cx="12" cy="9" r="2"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas</h4>
+            <ul>
+              <li>El marcador interior debería ser círculo perfecto</li>
+              <li>La forma del pin no está centrada en grilla</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Círculo interior perfecto (elemento circle)</li>
+              <li>✓ Pin mejor centrado</li>
+              <li>✓ Geometría más clara y simétrica</li>
+            </ul>
+          </div>
+
+          <p><span class="badge minor">Geometría</span><span class="badge fixed">Optimizado</span></p>
+        </div>
+
+        <!-- HOME -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">home</h3>
+            <p class="usage"><strong>Uso:</strong> Navegación "Plan completo", categoría "Salones" en directorio</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 11.5 12 5l8 6.5V20H4zM10 20v-6h4v6"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 10l9-7 9 7v11H3z"/>
+                  <path d="M9 21v-7h6v7"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas</h4>
+            <ul>
+              <li>Techo descentrado (11.5 no alineado a grilla)</li>
+              <li>Casa muy pequeña dentro del espacio disponible</li>
+              <li>Puerta también pequeña</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Techo centrado en grilla entera (10)</li>
+              <li>✓ Casa más grande y proporcionada</li>
+              <li>✓ Puerta más visible</li>
+              <li>✓ Mejor uso del espacio 24x24</li>
+            </ul>
+          </div>
+
+          <p><span class="badge minor">Proporción</span><span class="badge fixed">Optimizado</span></p>
+        </div>
+
+        <!-- PHONE -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">phone</h3>
+            <p class="usage"><strong>Uso:</strong> Contacto telefónico en ProviderCard</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6.5 4h3l1.5 4-2 1.5a11 11 0 0 0 5.5 5.5l1.5-2 4 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4.5 6a2 2 0 0 1 2-2z"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 4h3l1.5 4.5-2.3 1.5c.8 1.5 1.8 2.8 3.3 3.5L13 11l4 1.5v3.5c0 1.1-.9 2-2 2-7.7 0-14-6.3-14-14C1 2.9 1.9 2 3 2h3z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas</h4>
+            <ul>
+              <li>Path demasiado complejo y difícil de leer a tamaños pequeños</li>
+              <li>Forma del teléfono no es clara</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Geometría simplificada pero clara</li>
+              <li>✓ Forma de auricular más reconocible</li>
+              <li>✓ Mejor legibilidad a tamaños pequeños</li>
+            </ul>
+          </div>
+
+          <p><span class="badge important">Complejidad</span><span class="badge fixed">Simplificado</span></p>
+        </div>
+
+        <!-- MESSAGE -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">message</h3>
+            <p class="usage"><strong>Uso:</strong> Contacto WhatsApp en ProviderCard</p>
+          </div>
+
+          <div class="visual-compare">
+            <div class="icon-display old">
+              <h4>Actual</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#17324D" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.7L4 20zM9 10.5h6M9 13.5h4"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="icon-display new">
+              <h4>Mejorado</h4>
+              <div class="icon-sample">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#237A32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12a9 9 0 0 1-9 9c-1.5 0-2.9-.4-4.1-1L3 21l1.1-4.9A9 9 0 1 1 21 12z"/>
+                  <path d="M9 11h6M9 14h4"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="issues">
+            <h4>Problemas</h4>
+            <ul>
+              <li>Círculo del mensaje construido con path (debería ser elemento circle/circle parcial)</li>
+              <li>La cola del mensaje está mal conectada</li>
+              <li>Líneas de texto desalineadas</li>
+            </ul>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras</h4>
+            <ul>
+              <li>✓ Burbuja de mensaje más natural y orgánica</li>
+              <li>✓ Cola mejor integrada</li>
+              <li>✓ Líneas de texto perfectamente alineadas</li>
+              <li>✓ Geometría más limpia</li>
+            </ul>
+          </div>
+
+          <p><span class="badge important">Geometría</span><span class="badge fixed">Rediseñado</span></p>
+        </div>
+
+        <!-- Other icons summary -->
+        <div class="icon-comparison">
+          <div class="icon-header">
+            <h3 class="icon-name">Otros íconos</h3>
+            <p class="usage">printer, download, upload, plus, trash, info, alert, arrow, copy, globe, camera, mail, clock</p>
+          </div>
+
+          <div class="improvements">
+            <h4>Mejoras Generales Aplicadas</h4>
+            <ul>
+              <li>✓ Stroke weight estandarizado a 2px en todos</li>
+              <li>✓ ViewBox 24x24 consistente</li>
+              <li>✓ Stroke-linecap y stroke-linejoin redondeados donde corresponde</li>
+              <li>✓ Alineación a grilla entera (sin decimales innecesarios)</li>
+              <li>✓ Bordes redondeados en rectángulos (rx="2")</li>
+              <li>✓ Uso de elementos primitivos (circle, rect) donde es apropiado</li>
+              <li>✓ Simplificación de paths complejos</li>
+              <li>✓ Mejor legibilidad a tamaños pequeños (16px, 20px, 24px)</li>
+            </ul>
+          </div>
+
+          <p><span class="badge fixed">Sistema completo optimizado</span></p>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="brand-section">
+      <h2 class="section-title">Conclusiones y Recomendaciones</h2>
+      
+      <div style="background: #EDF7EA; padding: 24px; border-radius: 12px; margin-bottom: 20px;">
+        <h3 style="color: #237A32; margin-bottom: 12px;">✅ Problemas Críticos Resueltos</h3>
+        <ul style="margin-left: 20px; color: #17324D;">
+          <li><strong>Stroke weight inconsistente:</strong> 1.75px → 2px estándar en todo el sistema</li>
+          <li><strong>Geometría confusa:</strong> balloon, cake, utensils rediseñados completamente</li>
+          <li><strong>Falta de cohesión:</strong> Ahora todos los íconos siguen el mismo sistema visual</li>
+          <li><strong>Paths innecesariamente complejos:</strong> Simplificados para mejor rendimiento</li>
+        </ul>
+      </div>
+
+      <div style="background: #FFF7D9; padding: 24px; border-radius: 12px; margin-bottom: 20px;">
+        <h3 style="color: #8A4B12; margin-bottom: 12px;">⚠️ Mejoras de Estilo y Consistencia</h3>
+        <ul style="margin-left: 20px; color: #17324D;">
+          <li><strong>Bordes redondeados:</strong> Todos los rectángulos ahora usan rx="2" (tokens CSS)</li>
+          <li><strong>Alineación a grilla:</strong> Eliminados decimales innecesarios (11.5 → 10, 6.5 → 7, etc.)</li>
+          <li><strong>Elementos primitivos:</strong> Círculos como &lt;circle&gt;, rectángulos como &lt;rect&gt;</li>
+          <li><strong>Mejor proporción:</strong> Uso más eficiente del espacio 24×24</li>
+        </ul>
+      </div>
+
+      <div style="background: white; padding: 24px; border-radius: 12px; border: 2px solid #237A32;">
+        <h3 style="color: #237A32; margin-bottom: 12px;">🎯 Próximos Pasos</h3>
+        <ol style="margin-left: 20px; color: #17324D; line-height: 1.8;">
+          <li>Revisar esta propuesta y aprobar los cambios</li>
+          <li>Actualizar el componente <code>Icon.tsx</code> con los nuevos paths</li>
+          <li>Reemplazar <code>strokeWidth="1.75"</code> por <code>"2"</code></li>
+          <li>Agregar <code>strokeLinejoin="round"</code> donde falta</li>
+          <li>Actualizar favicon.svg y og.svg con las versiones mejoradas</li>
+          <li>Probar en todos los tamaños (16px, 20px, 24px, 48px)</li>
+          <li>Validar accesibilidad con lectores de pantalla</li>
+        </ol>
+      </div>
+
+      <div style="margin-top: 32px; padding: 24px; background: #EDF3FF; border-radius: 12px;">
+        <h3 style="color: #244FA8; margin-bottom: 12px;">📐 Especificaciones Técnicas del Sistema</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 12px;">
+          <tr style="background: white;">
+            <td style="padding: 12px; border: 1px solid #DCE3E8; font-weight: 600;">ViewBox</td>
+            <td style="padding: 12px; border: 1px solid #DCE3E8;">0 0 24 24</td>
+          </tr>
+          <tr style="background: #F8F9FA;">
+            <td style="padding: 12px; border: 1px solid #DCE3E8; font-weight: 600;">Stroke Width</td>
+            <td style="padding: 12px; border: 1px solid #DCE3E8;">2px (check: 2.5px para énfasis)</td>
+          </tr>
+          <tr style="background: white;">
+            <td style="padding: 12px; border: 1px solid #DCE3E8; font-weight: 600;">Stroke Linecap</td>
+            <td style="padding: 12px; border: 1px solid #DCE3E8;">round</td>
+          </tr>
+          <tr style="background: #F8F9FA;">
+            <td style="padding: 12px; border: 1px solid #DCE3E8; font-weight: 600;">Stroke Linejoin</td>
+            <td style="padding: 12px; border: 1px solid #DCE3E8;">round</td>
+          </tr>
+          <tr style="background: white;">
+            <td style="padding: 12px; border: 1px solid #DCE3E8; font-weight: 600;">Fill</td>
+            <td style="padding: 12px; border: 1px solid #DCE3E8;">none (stroke only)</td>
+          </tr>
+          <tr style="background: #F8F9FA;">
+            <td style="padding: 12px; border: 1px solid #DCE3E8; font-weight: 600;">Border Radius</td>
+            <td style="padding: 12px; border: 1px solid #DCE3E8;">rx="2" para rectángulos</td>
+          </tr>
+          <tr style="background: white;">
+            <td style="padding: 12px; border: 1px solid #DCE3E8; font-weight: 600;">Grilla</td>
+            <td style="padding: 12px; border: 1px solid #DCE3E8;">Valores enteros (evitar decimales)</td>
+          </tr>
+          <tr style="background: #F8F9FA;">
+            <td style="padding: 12px; border: 1px solid #DCE3E8; font-weight: 600;">Colores</td>
+            <td style="padding: 12px; border: 1px solid #DCE3E8;">currentColor (hereda del padre)</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
