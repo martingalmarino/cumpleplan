@@ -2,12 +2,108 @@
 import Base from '../layouts/Base.astro';
 import AdSlot from '../components/AdSlot.astro';
 import PlannerApp from '../components/planner/PlannerApp';
+import { createDefaultPlanForSSR } from '../lib/planner/ssr';
 
-const title = 'Lista de compras para el cumpleaños | Festejito';
-const description = 'Armá la lista con las cantidades de la calculadora, sumá lo que falte y pasá cada ítem al presupuesto una sola vez.';
+const title = 'Lista de Compras para Cumpleaños Infantil | Festejito';
+const description = 'Lista de compras inteligente para tu cumpleaños infantil. Sincronizada con la calculadora de comida y vinculada al presupuesto. Organizá tus compras sin duplicar.';
+
+const ssrPlan = createDefaultPlanForSSR();
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      '@id': 'https://festejito.com/lista-compras-cumpleanos/#webapp',
+      name: 'Lista de Compras para Cumpleaños',
+      url: 'https://festejito.com/lista-compras-cumpleanos/',
+      applicationCategory: 'ProductivityApplication',
+      operatingSystem: 'Web',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'ARS'
+      },
+      description: 'Lista de compras gratuita vinculada a la calculadora de comida y al presupuesto de cumpleaños.',
+      featureList: [
+        'Sincronización con cantidades calculadas',
+        'Marcado de items comprados',
+        'Vinculación directa al presupuesto',
+        'Notas por item',
+        'Actualización sin duplicados',
+        'Guardado automático en el navegador'
+      ]
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://festejito.com/lista-compras-cumpleanos/#breadcrumb',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Inicio',
+          item: 'https://festejito.com/'
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Lista de Compras',
+          item: 'https://festejito.com/lista-compras-cumpleanos/'
+        }
+      ]
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://festejito.com/lista-compras-cumpleanos/#faq',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: '¿La lista se actualiza automáticamente si cambio las cantidades?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Sí. Cuando modificás los asistentes o el menú en la calculadora, podés aplicar los cambios a la lista. Ves qué se agrega, qué cantidad cambia y qué sale del menú antes de confirmar. No se crean items duplicados.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Qué pasa si actualizo una cantidad que ya compré?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Si un item estaba marcado como comprado y la cantidad necesaria sube, la lista avisa "Revisar: cambió la cantidad" y deja de darlo por completo. Lo que compraste queda anotado, pero sabés que falta más.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Puedo pasar un item al presupuesto?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Sí. Cada item tiene un botón para crear o actualizar una línea vinculada en el presupuesto. No se duplican líneas: si el item ya tiene presupuesto, lo actualiza.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Puedo agregar items que no están en la calculadora?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Sí. Agregá items a mano con cantidad, unidad y categoría. La lista incluye tanto lo calculado como lo que agregaste manualmente.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Cómo comparto la lista con otra persona?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Podés copiar la lista en texto plano (botón "Copiar texto") o compartirla por WhatsApp (botón "Compartir por WhatsApp"). También podés filtrar para ver solo lo pendiente.'
+          }
+        }
+      ]
+    }
+  ]
+};
 ---
 
 <Base title={title} description={description} path="/lista-compras-cumpleanos/">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
   <div class="container tool-page">
     <article class="prose no-print">
       <h1>Lista de compras para un cumpleaños</h1>
@@ -20,10 +116,35 @@ const description = 'Armá la lista con las cantidades de la calculadora, sumá 
       <p>Más contexto en <a href="/guias/lista-de-compras-para-un-cumpleanos/">la guía de la lista de compras</a>.</p>
     </article>
     <AdSlot placement="debajo-de-la-explicacion" />
+    <article class="prose">
+      <h2>Preguntas frecuentes</h2>
+      <h3>¿La lista se actualiza automáticamente si cambio las cantidades?</h3>
+      <p>Sí. Cuando modificás los asistentes o el menú en la calculadora, podés aplicar los cambios a la lista. Ves qué se agrega, qué cantidad cambia y qué sale del menú antes de confirmar. No se crean items duplicados.</p>
+      
+      <h3>¿Qué pasa si actualizo una cantidad que ya compré?</h3>
+      <p>Si un item estaba marcado como comprado y la cantidad necesaria sube, la lista avisa "Revisar: cambió la cantidad" y deja de darlo por completo. Lo que compraste queda anotado, pero sabés que falta más.</p>
+      
+      <h3>¿Puedo pasar un item al presupuesto?</h3>
+      <p>Sí. Cada item tiene un botón para crear o actualizar una línea vinculada en el presupuesto. No se duplican líneas: si el item ya tiene presupuesto, lo actualiza.</p>
+      
+      <h3>¿Puedo agregar items que no están en la calculadora?</h3>
+      <p>Sí. Agregá items a mano con cantidad, unidad y categoría. La lista incluye tanto lo calculado como lo que agregaste manualmente.</p>
+      
+      <h3>¿Cómo comparto la lista con otra persona?</h3>
+      <p>Podés copiar la lista en texto plano (botón "Copiar texto") o compartirla por WhatsApp (botón "Compartir por WhatsApp"). También podés filtrar para ver solo lo pendiente.</p>
+      
+      <p><strong>Herramientas relacionadas:</strong></p>
+      <ul>
+        <li><a href="/calculadora-comida-cumpleanos/">Calculadora de comida</a> para definir cantidades</li>
+        <li><a href="/presupuesto-cumpleanos/">Presupuesto</a> para anotar precios de las compras</li>
+        <li><a href="/checklist-cumpleanos/">Checklist</a> para organizar el momento de comprar</li>
+        <li><a href="/directorio/">Proveedores</a> para encontrar donde comprar</li>
+      </ul>
+    </article>
     <section>
       <h2 class="no-print">La lista de tu plan</h2>
       <p class="no-print">Los cambios se guardan en tu plan de este navegador.</p>
-      <PlannerApp client:load view="compras" />
+      <PlannerApp client:load view="compras" ssrPlan={ssrPlan} />
     </section>
   </div>
 </Base>

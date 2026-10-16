@@ -2,12 +2,107 @@
 import Base from '../layouts/Base.astro';
 import AdSlot from '../components/AdSlot.astro';
 import PlannerApp from '../components/planner/PlannerApp';
+import { createDefaultPlanForSSR } from '../lib/planner/ssr';
 
-const title = 'Checklist para un cumpleaños infantil | Festejito';
-const description = 'Tareas desde cuatro semanas antes hasta el día del cumple. Si cambiás la fecha, se mueven las relativas y se conservan las que ya marcaste.';
+const title = 'Checklist de Cumpleaños Infantil | Organizá las Tareas | Festejito';
+const description = 'Checklist completo para organizar tu cumpleaños infantil en Argentina. Tareas desde 8 semanas antes hasta el día del festejo. Fechas automáticas y recordatorios.';
+
+const ssrPlan = createDefaultPlanForSSR();
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      '@id': 'https://festejito.com/checklist-cumpleanos/#webapp',
+      name: 'Checklist de Cumpleaños Infantil',
+      url: 'https://festejito.com/checklist-cumpleanos/',
+      applicationCategory: 'ProductivityApplication',
+      operatingSystem: 'Web',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'ARS'
+      },
+      description: 'Checklist gratuito para organizar cumpleaños infantiles con tareas distribuidas en el tiempo.',
+      featureList: [
+        'Tareas predefinidas por semana',
+        'Fechas automáticas desde el día del festejo',
+        'Tareas personalizables',
+        'Estado de avance visible',
+        'Guardado automático en el navegador'
+      ]
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://festejito.com/checklist-cumpleanos/#breadcrumb',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Inicio',
+          item: 'https://festejito.com/'
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Checklist',
+          item: 'https://festejito.com/checklist-cumpleanos/'
+        }
+      ]
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://festejito.com/checklist-cumpleanos/#faq',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: '¿Cuánto antes empiezo a organizar el cumpleaños?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Lo ideal es empezar 8 a 12 semanas antes. Eso te da tiempo para cerrar presupuesto, reservar salón o contratar servicios, encargar torta y confirmar asistentes sin apuros. El checklist distribuye las tareas en ese período.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Las fechas se actualizan si cambio el día del cumple?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Sí. Las tareas relativas (por ejemplo, "2 semanas antes") se mueven automáticamente. Las fechas que pusiste a mano no se tocan. Lo que ya marcaste como hecho tampoco se borra.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Qué pasa con las tareas atrasadas?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Se mantienen en la lista con estado "Vencida". No desaparecen. Podés marcarlas como hechas o borrarlas si ya no aplican.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Puedo agregar tareas propias?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Sí. Agregá, editá o borrá tareas según tu caso. El checklist inicial es una guía, no una lista cerrada.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Qué tareas son las más importantes?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Reservar el lugar, definir asistentes, cerrar el menú y encargar la torta son tareas críticas. Dejá para la última semana lo que requiere confirmaciones o compras no perecederas.'
+          }
+        }
+      ]
+    }
+  ]
+};
 ---
 
 <Base title={title} description={description} path="/checklist-cumpleanos/">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
   <div class="container tool-page">
     <article class="prose no-print">
       <h1>Checklist de un cumpleaños infantil</h1>
@@ -20,10 +115,35 @@ const description = 'Tareas desde cuatro semanas antes hasta el día del cumple.
       <p>El recorrido completo está en <a href="/guias/como-organizar-un-cumpleanos-infantil/">cómo organizar el cumpleaños paso a paso</a>.</p>
     </article>
     <AdSlot placement="debajo-de-la-explicacion" />
+    <article class="prose">
+      <h2>Preguntas frecuentes</h2>
+      <h3>¿Cuánto antes empiezo a organizar el cumpleaños?</h3>
+      <p>Lo ideal es empezar 8 a 12 semanas antes. Eso te da tiempo para cerrar presupuesto, reservar salón o contratar servicios, encargar torta y confirmar asistentes sin apuros. El checklist distribuye las tareas en ese período.</p>
+      
+      <h3>¿Las fechas se actualizan si cambio el día del cumple?</h3>
+      <p>Sí. Las tareas relativas (por ejemplo, "2 semanas antes") se mueven automáticamente. Las fechas que pusiste a mano no se tocan. Lo que ya marcaste como hecho tampoco se borra.</p>
+      
+      <h3>¿Qué pasa con las tareas atrasadas?</h3>
+      <p>Se mantienen en la lista con estado "Vencida". No desaparecen. Podés marcarlas como hechas o borrarlas si ya no aplican.</p>
+      
+      <h3>¿Puedo agregar tareas propias?</h3>
+      <p>Sí. Agregá, editá o borrá tareas según tu caso. El checklist inicial es una guía, no una lista cerrada.</p>
+      
+      <h3>¿Qué tareas son las más importantes?</h3>
+      <p>Reservar el lugar, definir asistentes, cerrar el menú y encargar la torta son tareas críticas. Dejá para la última semana lo que requiere confirmaciones o compras no perecederas.</p>
+      
+      <p><strong>Herramientas relacionadas:</strong></p>
+      <ul>
+        <li><a href="/calculadora-comida-cumpleanos/">Calculadora de comida</a> para definir el menú</li>
+        <li><a href="/presupuesto-cumpleanos/">Presupuesto</a> para controlar gastos</li>
+        <li><a href="/lista-compras-cumpleanos/">Lista de compras</a> para preparar las compras</li>
+        <li><a href="/directorio/">Proveedores</a> para reservar servicios</li>
+      </ul>
+    </article>
     <section>
       <h2 class="no-print">Seguí las tareas de tu plan</h2>
       <p class="no-print">Los cambios se guardan en tu plan de este navegador.</p>
-      <PlannerApp client:load view="checklist" />
+      <PlannerApp client:load view="checklist" ssrPlan={ssrPlan} />
     </section>
   </div>
 </Base>

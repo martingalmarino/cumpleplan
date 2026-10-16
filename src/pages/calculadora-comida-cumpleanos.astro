@@ -4,17 +4,112 @@ import AdSlot from '../components/AdSlot.astro';
 import PlannerApp from '../components/planner/PlannerApp';
 import { calculateFood, lineByKey, workedExampleInput } from '../lib/planner/calculations';
 import { formatQty } from '../lib/planner/money';
+import { createDefaultPlanForSSR } from '../lib/planner/ssr';
 
 const example = calculateFood(workedExampleInput());
 const sandwiches = lineByKey(example, 'sandwich');
 const cake = lineByKey(example, 'cake');
 const water = lineByKey(example, 'water');
 const other = lineByKey(example, 'otherDrink');
-const title = 'Calculadora de comida para cumpleaños | Festejito';
-const description = 'Estimá sándwiches, pizza, panchos, torta y bebidas para un cumpleaños infantil. Los supuestos se pueden editar y el plan queda en este navegador.';
+const title = 'Calculadora de Comida para Cumpleaños Infantil | Festejito';
+const description = 'Calculá cuántos sándwiches, pizzas, panchos, torta y bebidas necesitás para tu cumpleaños infantil. Herramienta gratuita con valores típicos de Argentina. Los cálculos se guardan en tu navegador.';
+
+const ssrPlan = createDefaultPlanForSSR();
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      '@id': 'https://festejito.com/calculadora-comida-cumpleanos/#webapp',
+      name: 'Calculadora de Comida para Cumpleaños',
+      url: 'https://festejito.com/calculadora-comida-cumpleanos/',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Web',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'ARS'
+      },
+      description: 'Calculadora gratuita para estimar cantidades de comida y bebidas para cumpleaños infantiles en Argentina.',
+      featureList: [
+        'Cálculo de sándwiches, pizzas y panchos',
+        'Estimación de torta por persona',
+        'Cálculo de bebidas por hora',
+        'Ajuste de margen de seguridad',
+        'Guardado automático en el navegador'
+      ]
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://festejito.com/calculadora-comida-cumpleanos/#breadcrumb',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Inicio',
+          item: 'https://festejito.com/'
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Calculadora de Comida',
+          item: 'https://festejito.com/calculadora-comida-cumpleanos/'
+        }
+      ]
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://festejito.com/calculadora-comida-cumpleanos/#faq',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: '¿Cuántos sándwiches necesito para 20 chicos?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Para una merienda típica con 20 chicos, el cálculo parte de 1 sándwich chico por porción. Con 20 chicos (factor 0,6) y 10 adultos, tenés 22 porciones equivalentes, que da aproximadamente 22 sándwiches. Si querés agregar un 10% de margen, subís a 24-25 unidades.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Cuánta bebida compro por chico en un cumpleaños de 3 horas?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'El cálculo usa 0,150 litros por chico por hora. En 3 horas, cada chico toma alrededor de 0,45 litros. Con 20 chicos y 10 adultos (0,200 L/h), el total es aproximadamente 15 litros. El redondeo final depende del tamaño de los envases (por ejemplo, 2 litros).'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Puedo cambiar los coeficientes de la calculadora?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Sí. Todos los coeficientes (factor por chico, distribución de pizza/sándwich/pancho, margen) se pueden editar. Si ajustás una cantidad de compra a mano, queda marcada como "Ajustado por vos" y se conserva aunque cambies los asistentes.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿La calculadora incluye comida salada y torta?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Sí. Calculá pizza, sándwiches o panchos para la comida salada, más torta (kg) y bebidas (litros). La duración no multiplica la comida salada ni la torta, solo afecta las bebidas.'
+          }
+        },
+        {
+          '@type': 'Question',
+          name: '¿Se guardan mis datos en algún servidor?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'No. El plan se guarda únicamente en el localStorage de tu navegador. No hay cuenta, no hay servidor. Si usás otro dispositivo o borras los datos del navegador, perdés el plan guardado. Podés exportarlo como respaldo.'
+          }
+        }
+      ]
+    }
+  ]
+};
 ---
 
 <Base title={title} description={description} path="/calculadora-comida-cumpleanos/">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
   <div class="container tool-page">
     <article class="prose no-print">
       <h1>Calculadora de comida para un cumpleaños</h1>
@@ -32,10 +127,35 @@ const description = 'Estimá sándwiches, pizza, panchos, torta y bebidas para u
     <div class="container no-print">
       <AdSlot placement="debajo-de-la-explicacion" />
     </div>
+    <article class="prose">
+      <h2>Preguntas frecuentes</h2>
+      <h3>¿Cuántos sándwiches necesito para 20 chicos?</h3>
+      <p>Para una merienda típica con 20 chicos, el cálculo parte de 1 sándwich chico por porción. Con 20 chicos (factor 0,6) y 10 adultos, tenés 22 porciones equivalentes, que da aproximadamente 22 sándwiches. Si querés agregar un 10% de margen, subís a 24-25 unidades.</p>
+      
+      <h3>¿Cuánta bebida compro por chico en un cumpleaños de 3 horas?</h3>
+      <p>El cálculo usa 0,150 litros por chico por hora. En 3 horas, cada chico toma alrededor de 0,45 litros. Con 20 chicos y 10 adultos (0,200 L/h), el total es aproximadamente 15 litros. El redondeo final depende del tamaño de los envases (por ejemplo, 2 litros).</p>
+      
+      <h3>¿Puedo cambiar los coeficientes de la calculadora?</h3>
+      <p>Sí. Todos los coeficientes (factor por chico, distribución de pizza/sándwich/pancho, margen) se pueden editar. Si ajustás una cantidad de compra a mano, queda marcada como "Ajustado por vos" y se conserva aunque cambies los asistentes.</p>
+      
+      <h3>¿La calculadora incluye comida salada y torta?</h3>
+      <p>Sí. Calculá pizza, sándwiches o panchos para la comida salada, más torta (kg) y bebidas (litros). La duración no multiplica la comida salada ni la torta, solo afecta las bebidas.</p>
+      
+      <h3>¿Se guardan mis datos en algún servidor?</h3>
+      <p>No. El plan se guarda únicamente en el localStorage de tu navegador. No hay cuenta, no hay servidor. Si usás otro dispositivo o borras los datos del navegador, perdés el plan guardado. Podés exportarlo como respaldo.</p>
+      
+      <p><strong>Herramientas relacionadas:</strong></p>
+      <ul>
+        <li><a href="/presupuesto-cumpleanos/">Presupuesto de cumpleaños</a> para anotar precios</li>
+        <li><a href="/lista-compras-cumpleanos/">Lista de compras</a> con las cantidades calculadas</li>
+        <li><a href="/checklist-cumpleanos/">Checklist</a> para organizar las tareas</li>
+        <li><a href="/directorio/">Proveedores</a> de salones, catering y animación</li>
+      </ul>
+    </article>
     <section class="no-print">
       <h2>Calculá con tu plan</h2>
       <p>Los cambios se guardan en tu plan de este navegador.</p>
-      <PlannerApp client:load view="comida" />
+      <PlannerApp client:load view="comida" ssrPlan={ssrPlan} />
     </section>
   </div>
 </Base>

@@ -15,6 +15,8 @@ import { ShoppingPlanner } from './ShoppingPlanner';
 import { SummaryCard } from './SummaryCard';
 import { usePlanner } from './usePlanner';
 
+import type { Plan } from '../../lib/planner/types';
+
 export type PlannerView = 'resumen' | 'comida' | 'presupuesto' | 'checklist' | 'compras';
 
 const toolIcons: Record<PlannerView, IconName> = {
@@ -25,23 +27,34 @@ const toolIcons: Record<PlannerView, IconName> = {
   compras: 'bag',
 };
 
-export default function PlannerApp({ view, mode = 'embedded' }: { view: PlannerView; mode?: 'dashboard' | 'embedded' }) {
+type Props = {
+  view: PlannerView;
+  mode?: 'dashboard' | 'embedded';
+  /** Plan inicial para SSR (usado solo en el servidor para crawlers) */
+  ssrPlan?: Plan;
+};
+
+export default function PlannerApp({ view, mode = 'embedded', ssrPlan }: Props) {
   const snapshot = usePlanner();
   const [dashboardView, setDashboardView] = useState<PlannerView>(view);
   const active = mode === 'dashboard' ? dashboardView : view;
 
-  if (!snapshot.ready) {
+  // En SSR, usar el plan provisto. En el cliente, esperar hasta que se cargue.
+  const isSSR = typeof window === 'undefined';
+  const plan = isSSR && ssrPlan ? ssrPlan : snapshot.plan;
+  const ready = isSSR ? true : snapshot.ready;
+  
+  if (!ready) {
     return <div className="planner-main loading-block" role="status">Cargando tu plan de este navegador…</div>;
   }
 
-  const plan = snapshot.plan;
-  const blocked = snapshot.loadIssue?.kind === 'future';
+  const blocked = !isSSR && snapshot.loadIssue?.kind === 'future';
 
   return (
     <>
-      <ImportSharedPlan hasExistingPlan={!snapshot.wasEmpty} />
-      <div className="planner no-print">
-        <div className={`planner-main tool-${active}`}>
+      {!isSSR && <ImportSharedPlan hasExistingPlan={!snapshot.wasEmpty} />}
+      <div className="planner no-print" suppressHydrationWarning>
+        <div className={`planner-main tool-${active}`} suppressHydrationWarning>
           <nav className="tool-nav" aria-label="Herramientas del plan">
             {toolLinks.map((link) =>
               mode === 'dashboard' ? (
