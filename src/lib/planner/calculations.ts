@@ -1,12 +1,13 @@
 import { defaultAssumptions } from '../../config/calculator';
 import { formatQty } from './money';
-import type { Assumptions, CalculatorState, FoodKey, FoodLine, MenuShares, ServingStyle } from './types';
+import type { Assumptions, CalculatorState, FoodKey, FoodLine, MenuShares, Season, ServingStyle } from './types';
 
 export type CalcInput = {
   children: number;
   adults: number;
   hours: number;
   servingStyle: ServingStyle;
+  season: Season;
   contingencyPercent: number;
   shares: MenuShares;
   assumptions: Assumptions;
@@ -48,7 +49,7 @@ function roundUpToStep(value: number, step: number): number {
   return round(steps * step, 4);
 }
 
-const foodKeys: FoodKey[] = ['pizza', 'sandwich', 'hotdog'];
+const foodKeys: FoodKey[] = ['pizza', 'sandwichMiga', 'sandwichGrande', 'hotdog'];
 
 export function shareSum(shares: MenuShares): number {
   return foodKeys.reduce((total, key) => total + shares[key], 0);
@@ -122,17 +123,29 @@ export function calculateFood(input: CalcInput): FoodComputation {
           purchaseUnit: 'pizza',
           detail: `${formatQty(rawUnits)} porciones, en pizzas de ${formatQty(a.pizzaSlicesPerPizza)}.`,
         });
-      } else if (key === 'sandwich') {
+      } else if (key === 'sandwichMiga') {
         lines.push({
           key,
-          sourceId: 'calc:sandwich',
-          label: 'Sándwiches',
+          sourceId: 'calc:sandwich-miga',
+          label: 'Sándwiches de miga',
           category: 'comida',
           consumption: rawUnits,
           consumptionUnit: 'unidad',
           purchase: ceilCount(rawUnits),
           purchaseUnit: 'unidad',
-          detail: 'Unidades chicas, redondeadas hacia arriba.',
+          detail: 'Sándwiches de miga triangulares chicos.',
+        });
+      } else if (key === 'sandwichGrande') {
+        lines.push({
+          key,
+          sourceId: 'calc:sandwich-grande',
+          label: 'Sándwiches grandes / Pebetes',
+          category: 'comida',
+          consumption: rawUnits,
+          consumptionUnit: 'unidad',
+          purchase: ceilCount(rawUnits),
+          purchaseUnit: 'unidad',
+          detail: 'Sándwiches grandes, tipo pebete.',
         });
       } else {
         lines.push({
@@ -144,7 +157,7 @@ export function calculateFood(input: CalcInput): FoodComputation {
           consumptionUnit: 'unidad',
           purchase: ceilCount(rawUnits),
           purchaseUnit: 'unidad',
-          detail: 'Unidades chicas, redondeadas hacia arriba.',
+          detail: 'Panchos chicos.',
         });
       }
     }
@@ -167,17 +180,21 @@ export function calculateFood(input: CalcInput): FoodComputation {
     detail: `Redondeo de compra en pasos de ${formatQty(a.cakeIncrementKg)} kg.`,
   });
 
+  const seasonMultiplier = a.seasonalDrinkMultiplier[input.season];
   const drinkRaw = round(
     (input.children * a.drinkLitersPerChildPerHour + input.adults * a.drinkLitersPerAdultPerHour) *
       input.hours *
+      seasonMultiplier *
       contingency,
     4,
   );
   const waterLiters = round(drinkRaw * (a.waterPercent / 100), 4);
-  const otherLiters = round(drinkRaw - waterLiters, 4);
+  const sodaLiters = round(drinkRaw * (a.sodaPercent / 100), 4);
+  const juiceLiters = round(drinkRaw * (a.juicePercent / 100), 4);
   const waterContainers = ceilDiv(waterLiters, a.packageLiters);
-  const otherContainers = ceilDiv(otherLiters, a.packageLiters);
-  const purchaseLiters = round((waterContainers + otherContainers) * a.packageLiters, 4);
+  const sodaContainers = ceilDiv(sodaLiters, a.packageLiters);
+  const juiceContainers = ceilDiv(juiceLiters, a.packageLiters);
+  const purchaseLiters = round((waterContainers + sodaContainers + juiceContainers) * a.packageLiters, 4);
 
   lines.push({
     key: 'water',
@@ -191,37 +208,93 @@ export function calculateFood(input: CalcInput): FoodComputation {
     detail: `${formatQty(waterLiters)} L de consumo, en envases de ${formatQty(a.packageLiters)} L.`,
   });
   lines.push({
-    key: 'otherDrink',
-    sourceId: 'calc:other-drink',
-    label: 'Otras bebidas',
+    key: 'soda',
+    sourceId: 'calc:soda',
+    label: 'Gaseosa',
     category: 'bebidas',
-    consumption: otherLiters,
+    consumption: sodaLiters,
     consumptionUnit: 'L',
-    purchase: otherContainers,
+    purchase: sodaContainers,
     purchaseUnit: 'envase',
-    detail: `${formatQty(otherLiters)} L de consumo. El agua y el resto salen de un solo total, no de dos totales completos.`,
+    detail: `${formatQty(sodaLiters)} L de consumo, en envases de ${formatQty(a.packageLiters)} L.`,
+  });
+  lines.push({
+    key: 'juice',
+    sourceId: 'calc:juice',
+    label: 'Jugo',
+    category: 'bebidas',
+    consumption: juiceLiters,
+    consumptionUnit: 'L',
+    purchase: juiceContainers,
+    purchaseUnit: 'envase',
+    detail: `${formatQty(juiceLiters)} L de consumo, en envases de ${formatQty(a.packageLiters)} L.`,
   });
 
-  if (a.snacksEnabled) {
-    const snacks = round(servings * a.snackUnitsPerServing * contingency, 4);
+  if (a.snackSaltyUnitsPerChild > 0) {
+    const snacksSalty = round(input.children * a.snackSaltyUnitsPerChild * contingency, 4);
     lines.push({
-      key: 'snack',
-      sourceId: 'calc:snack',
-      label: 'Snacks',
+      key: 'snackSalty',
+      sourceId: 'calc:snack-salty',
+      label: 'Snacks salados (papas, chizitos)',
       category: 'comida',
-      consumption: snacks,
-      consumptionUnit: 'unidad',
-      purchase: ceilCount(snacks),
-      purchaseUnit: 'unidad',
-      detail: 'Extra aparte de la comida salada. No reemplaza sándwiches, pizza ni panchos.',
+      consumption: snacksSalty,
+      consumptionUnit: 'paquete',
+      purchase: ceilCount(snacksSalty),
+      purchaseUnit: 'paquete',
+      detail: 'Paquetes individuales por chico. Extra aparte de la comida salada.',
     });
-    notes.push('Los snacks están activados como adicional. No forman parte de la comida salada.');
+  }
+
+  if (a.snackSweetUnitsPerChild > 0) {
+    const snacksSweet = round(input.children * a.snackSweetUnitsPerChild * contingency, 4);
+    lines.push({
+      key: 'snackSweet',
+      sourceId: 'calc:snack-sweet',
+      label: 'Golosinas / Bolsitas sorpresa',
+      category: 'souvenirs',
+      consumption: snacksSweet,
+      consumptionUnit: 'bolsita',
+      purchase: ceilCount(snacksSweet),
+      purchaseUnit: 'bolsita',
+      detail: 'Bolsitas sorpresa o golosinas por chico.',
+    });
+  }
+
+  if (a.empanadaUnitsPerAdult > 0 && input.adults > 0) {
+    const empanadas = round(input.adults * a.empanadaUnitsPerAdult * contingency, 4);
+    lines.push({
+      key: 'empanada',
+      sourceId: 'calc:empanada',
+      label: 'Empanadas / Picada para adultos',
+      category: 'comida',
+      consumption: empanadas,
+      consumptionUnit: 'unidad',
+      purchase: ceilCount(empanadas),
+      purchaseUnit: 'unidad',
+      detail: 'Empanadas o picada para adultos. Opcional según el evento.',
+    });
+  }
+
+  if (a.coffeeEnabled && input.adults > 0) {
+    const coffee = round(input.adults * a.coffeeCupsPerAdult * contingency, 4);
+    lines.push({
+      key: 'coffee',
+      sourceId: 'calc:coffee',
+      label: 'Café / Mate para adultos',
+      category: 'bebidas',
+      consumption: coffee,
+      consumptionUnit: 'porción',
+      purchase: ceilCount(coffee),
+      purchaseUnit: 'porción',
+      detail: 'Café o mate para adultos.',
+    });
   }
 
   notes.push(
-    `Bebidas: ${formatQty(drinkRaw)} L de consumo estimado y ${formatQty(purchaseLiters)} L si comprás los envases completos.`,
+    `Bebidas: ${formatQty(drinkRaw)} L de consumo estimado (ajustado por temporada ${input.season}) y ${formatQty(purchaseLiters)} L si comprás los envases completos.`,
   );
   notes.push('No hay bebidas con alcohol en este cálculo inicial.');
+  notes.push('Snacks salados, golosinas, empanadas y café son extras opcionales según tu evento.');
   notes.push('Estimación orientativa. El apetito, las edades, el clima, el menú y la duración cambian lo que se consume.');
 
   return {
@@ -268,8 +341,9 @@ export function workedExampleInput(): CalcInput {
     adults: 10,
     hours: 3,
     servingStyle: 'merienda',
+    season: 'verano',
     contingencyPercent: 10,
-    shares: { pizza: 0, sandwich: 100, hotdog: 0 },
+    shares: { pizza: 0, sandwichMiga: 100, sandwichGrande: 0, hotdog: 0 },
     assumptions: defaultAssumptions(),
   };
 }

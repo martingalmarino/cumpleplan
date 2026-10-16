@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { plannerLimits } from '../../config/calculator';
 import { track } from '../../lib/analytics';
 import { applyPurchaseOverrides, calculateFood } from '../../lib/planner/calculations';
-import { foodLabels, servingLabels } from '../../lib/planner/labels';
+import { foodLabels, seasonLabels, servingLabels } from '../../lib/planner/labels';
 import { formatQty } from '../../lib/planner/money';
 import { loadFoodExample } from '../../lib/planner/mutate';
 import { updatePlan } from '../../lib/planner/store';
-import type { FoodKey, Plan, ServingStyle } from '../../lib/planner/types';
+import type { FoodKey, Plan, Season, ServingStyle } from '../../lib/planner/types';
 import { DecimalField, IntegerField } from './fields';
 
-const foods: FoodKey[] = ['pizza', 'sandwich', 'hotdog'];
+const foods: FoodKey[] = ['pizza', 'sandwichMiga', 'sandwichGrande', 'hotdog'];
 
 export function FoodCalculator({ plan }: { plan: Plan }) {
   const [confirmExample, setConfirmExample] = useState(false);
@@ -19,6 +19,7 @@ export function FoodCalculator({ plan }: { plan: Plan }) {
     adults: plan.event.adultsCount,
     hours: plan.event.durationHours,
     servingStyle: calculator.servingStyle,
+    season: calculator.season,
     contingencyPercent: calculator.contingencyPercent,
     shares: calculator.shares,
     assumptions: calculator.assumptions,
@@ -82,6 +83,24 @@ export function FoodCalculator({ plan }: { plan: Plan }) {
             ))}
           </select>
           <p className="hint">Pizza, sándwiches o panchos son alternativas del mismo pedido, no tres comidas juntas.</p>
+        </div>
+        <div className="field">
+          <label htmlFor="season">Temporada</label>
+          <select
+            id="season"
+            value={calculator.season}
+            onChange={(input) =>
+              updatePlan((current) => ({
+                ...current,
+                calculator: { ...current.calculator, season: input.target.value as Season },
+              }))
+            }
+          >
+            {(Object.keys(seasonLabels) as Season[]).map((season) => (
+              <option key={season} value={season}>{seasonLabels[season]}</option>
+            ))}
+          </select>
+          <p className="hint">En verano se aumentan las bebidas automáticamente.</p>
         </div>
         <IntegerField
           label="Margen extra"
@@ -151,38 +170,43 @@ export function FoodCalculator({ plan }: { plan: Plan }) {
           <DecimalField label="Kg de torta por adulto" value={calculator.assumptions.cakeKgPerAdult} min={0} max={1} onCommit={(cakeKgPerAdult) => updatePlan((current) => ({ ...current, calculator: { ...current.calculator, assumptions: { ...current.calculator.assumptions, cakeKgPerAdult } } }))} />
           <DecimalField label="Litros por chico por hora" value={calculator.assumptions.drinkLitersPerChildPerHour} min={0} max={1} onCommit={(drinkLitersPerChildPerHour) => updatePlan((current) => ({ ...current, calculator: { ...current.calculator, assumptions: { ...current.calculator.assumptions, drinkLitersPerChildPerHour } } }))} />
           <DecimalField label="Litros por adulto por hora" value={calculator.assumptions.drinkLitersPerAdultPerHour} min={0} max={1} onCommit={(drinkLitersPerAdultPerHour) => updatePlan((current) => ({ ...current, calculator: { ...current.calculator, assumptions: { ...current.calculator.assumptions, drinkLitersPerAdultPerHour } } }))} />
-          <IntegerField label="Porcentaje de agua" hint="El resto del mismo total va a otras bebidas. No son dos totales completos." value={calculator.assumptions.waterPercent} min={0} max={100} onCommit={(waterPercent) => updatePlan((current) => ({ ...current, calculator: { ...current.calculator, assumptions: { ...current.calculator.assumptions, waterPercent } } }))} />
+          <IntegerField label="% Agua" value={calculator.assumptions.waterPercent} min={0} max={100} onCommit={(waterPercent) => updatePlan((current) => ({ ...current, calculator: { ...current.calculator, assumptions: { ...current.calculator.assumptions, waterPercent } } }))} />
+          <IntegerField label="% Gaseosa" value={calculator.assumptions.sodaPercent} min={0} max={100} onCommit={(sodaPercent) => updatePlan((current) => ({ ...current, calculator: { ...current.calculator, assumptions: { ...current.calculator.assumptions, sodaPercent } } }))} />
+          <IntegerField label="% Jugo" value={calculator.assumptions.juicePercent} min={0} max={100} onCommit={(juicePercent) => updatePlan((current) => ({ ...current, calculator: { ...current.calculator, assumptions: { ...current.calculator.assumptions, juicePercent } } }))} />
           <DecimalField label="Litros por envase" value={calculator.assumptions.packageLiters} min={0.25} max={10} onCommit={(packageLiters) => updatePlan((current) => ({ ...current, calculator: { ...current.calculator, assumptions: { ...current.calculator.assumptions, packageLiters } } }))} />
+          <DecimalField label="Snacks salados por chico" hint="Paquetes individuales (papas, chizitos)" value={calculator.assumptions.snackSaltyUnitsPerChild} min={0} max={5} onCommit={(snackSaltyUnitsPerChild) => updatePlan((current) => ({ ...current, calculator: { ...current.calculator, assumptions: { ...current.calculator.assumptions, snackSaltyUnitsPerChild } } }))} />
+          <DecimalField label="Golosinas por chico" hint="Bolsitas sorpresa" value={calculator.assumptions.snackSweetUnitsPerChild} min={0} max={5} onCommit={(snackSweetUnitsPerChild) => updatePlan((current) => ({ ...current, calculator: { ...current.calculator, assumptions: { ...current.calculator.assumptions, snackSweetUnitsPerChild } } }))} />
+          <DecimalField label="Empanadas por adulto" hint="Comida para adultos" value={calculator.assumptions.empanadaUnitsPerAdult} min={0} max={10} onCommit={(empanadaUnitsPerAdult) => updatePlan((current) => ({ ...current, calculator: { ...current.calculator, assumptions: { ...current.calculator.assumptions, empanadaUnitsPerAdult } } }))} />
         </div>
         <label>
           <input
             type="checkbox"
-            checked={calculator.assumptions.snacksEnabled}
+            checked={calculator.assumptions.coffeeEnabled}
             onChange={(input) =>
               updatePlan((current) => ({
                 ...current,
                 calculator: {
                   ...current.calculator,
-                  assumptions: { ...current.calculator.assumptions, snacksEnabled: input.target.checked },
+                  assumptions: { ...current.calculator.assumptions, coffeeEnabled: input.target.checked },
                 },
               }))
             }
           />{' '}
-          Sumar snacks como extra
+          Incluir café/mate para adultos
         </label>
-        {calculator.assumptions.snacksEnabled ? (
+        {calculator.assumptions.coffeeEnabled ? (
           <DecimalField
-            label="Snacks por porción equivalente"
-            hint="Se suman aparte. No reemplazan la comida salada."
-            value={calculator.assumptions.snackUnitsPerServing}
+            label="Tazas por adulto"
+            hint="Café o mate"
+            value={calculator.assumptions.coffeeCupsPerAdult}
             min={0}
             max={5}
-            onCommit={(snackUnitsPerServing) =>
+            onCommit={(coffeeCupsPerAdult) =>
               updatePlan((current) => ({
                 ...current,
                 calculator: {
                   ...current.calculator,
-                  assumptions: { ...current.calculator.assumptions, snackUnitsPerServing },
+                  assumptions: { ...current.calculator.assumptions, coffeeCupsPerAdult },
                 },
               }))
             }

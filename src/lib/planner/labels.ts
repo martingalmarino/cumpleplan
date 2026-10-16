@@ -1,4 +1,4 @@
-import type { BudgetCategory, FoodKey, Setting, ServingStyle } from './types';
+import type { BudgetCategory, FoodKey, Season, Setting, ServingStyle } from './types';
 
 export const categoryLabels: Record<BudgetCategory, string> = {
   lugar: 'Lugar',
@@ -35,9 +35,15 @@ export const servingLabels: Record<ServingStyle, string> = {
   'comida-principal': 'Comida principal',
 };
 
+export const seasonLabels: Record<Season, string> = {
+  verano: 'Verano',
+  invierno: 'Invierno',
+};
+
 export const foodLabels: Record<FoodKey, string> = {
   pizza: 'Pizza',
-  sandwich: 'Sándwiches',
+  sandwichMiga: 'Sándwiches de miga',
+  sandwichGrande: 'Sándwiches grandes / Pebetes',
   hotdog: 'Panchos',
 };
 

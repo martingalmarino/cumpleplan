@@ -20,8 +20,9 @@ export function createPlan(now = new Date().toISOString()): Plan {
     },
     calculator: {
       servingStyle: 'merienda',
+      season: 'verano',
       contingencyPercent: 0,
-      shares: { pizza: 0, sandwich: 100, hotdog: 0 },
+      shares: { pizza: 0, sandwichMiga: 100, sandwichGrande: 0, hotdog: 0 },
       assumptions: defaultAssumptions(),
       overrides: {},
     },
