@@ -84,77 +84,71 @@
   color: var(--color-green-action);
 }
 
-/* Directorio: encabezado con hero */
+/* Directory header band */
 
-.directory-hero {
-  background: linear-gradient(135deg, var(--color-mint) 0%, #d4f1d0 100%);
-  padding: var(--space-5) 0;
-  margin: 0 calc(-1 * var(--space-4)) var(--space-5);
-  border-radius: 0;
+.directory-header-band {
+  background: linear-gradient(135deg, #237A32 0%, #2A9742 100%);
+  padding: var(--space-6) 0;
+  margin-bottom: var(--space-5);
+  color: #FFFFFF;
 }
 
-@media (min-width: 760px) {
-  .directory-hero {
-    margin: 0 0 var(--space-5);
-    border-radius: 20px;
-    padding: var(--space-6) var(--space-5);
-  }
+.directory-header-band__kicker {
+  margin: 0 0 var(--space-2);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
 }
 
-.directory-hero__content {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 0 var(--space-4);
-}
-
-.directory-hero h1 {
-  margin: 0 0 var(--space-3);
+.directory-header-band__title {
+  margin: 0 0 var(--space-2);
   font-family: var(--font-text);
-  font-weight: 800;
-  line-height: 1.12;
-  letter-spacing: -0.03em;
   font-size: clamp(2rem, 4vw, 2.75rem);
-  color: var(--color-ink);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
 }
 
-.directory-hero__description {
+.directory-header-band__subtitle {
   margin: 0 0 var(--space-4);
-  max-width: 64ch;
   font-size: 1.125rem;
-  line-height: 1.55;
-  color: var(--color-muted);
+  line-height: 1.5;
+  max-width: 64ch;
+  opacity: 0.95;
 }
 
-.directory-hero__stats {
+.directory-header-band__stats {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
+  gap: var(--space-3);
   margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
-.directory-hero__stat {
+.directory-stat {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 12px 20px;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 12px;
-  font-weight: 700;
-  color: var(--color-ink);
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
 }
 
-.directory-hero__stat svg {
-  width: 20px;
-  height: 20px;
-  color: var(--color-green-action);
+.directory-stat svg {
+  width: 18px;
+  height: 18px;
+  opacity: 0.9;
 }
 
-.directory-hero__stat-value {
-  font-size: 1.25rem;
-  margin-right: 4px;
+.directory-stat strong {
+  font-weight: 800;
 }
+
+/* Directorio: encabezado */
 
 .directory-intro {
   margin-bottom: var(--space-5);
