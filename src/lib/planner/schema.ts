@@ -1,12 +1,13 @@
 import { plannerLimits } from '../../config/calculator';
 import { isValidCalendarDate } from './dates';
 import { paymentError } from './budget';
-import { SCHEMA_VERSION, type BudgetCategory, type FoodKey, type Plan, type Quote, type ServingStyle } from './types';
+import { SCHEMA_VERSION, type BudgetCategory, type FoodKey, type Plan, type Quote, type Season, type ServingStyle } from './types';
 
 const UNSAFE = new Set(['__proto__', 'prototype', 'constructor']);
 const settings = new Set(['casa', 'salon', 'aire-libre']);
 const styles = new Set<ServingStyle>(['merienda', 'comida-principal']);
-const foods: FoodKey[] = ['pizza', 'sandwich', 'hotdog'];
+const seasons = new Set<Season>(['verano', 'invierno']);
+const foods: FoodKey[] = ['pizza', 'sandwichMiga', 'sandwichGrande', 'hotdog'];
 const categories = new Set<BudgetCategory>([
   'lugar',
   'comida',
@@ -19,7 +20,7 @@ const categories = new Set<BudgetCategory>([
   'otros',
 ]);
 const applies = new Set(['children', 'adults', 'both']);
-const overrideKeys = new Set(['pizza', 'sandwich', 'hotdog', 'cake', 'water', 'otherDrink', 'snack']);
+const overrideKeys = new Set(['pizza', 'sandwichMiga', 'sandwichGrande', 'hotdog', 'cake', 'water', 'soda', 'juice', 'snackSalty', 'snackSweet', 'empanada', 'coffee']);
 
 export type BackupPreview = {
   label: string;
@@ -122,9 +123,15 @@ function assumptions(value: unknown): string | null {
     'drinkLitersPerChildPerHour',
     'drinkLitersPerAdultPerHour',
     'waterPercent',
+    'sodaPercent',
+    'juicePercent',
     'packageLiters',
-    'snacksEnabled',
-    'snackUnitsPerServing',
+    'snackSaltyUnitsPerChild',
+    'snackSweetUnitsPerChild',
+    'empanadaUnitsPerAdult',
+    'coffeeEnabled',
+    'coffeeCupsPerAdult',
+    'seasonalDrinkMultiplier',
   ]);
   if (error) return error;
   const checks = [
@@ -136,19 +143,29 @@ function assumptions(value: unknown): string | null {
     finite(value.drinkLitersPerChildPerHour, 0, 1, 'La bebida por chico'),
     finite(value.drinkLitersPerAdultPerHour, 0, 1, 'La bebida por adulto'),
     integer(value.waterPercent, 0, 100, 'El reparto de agua'),
+    integer(value.sodaPercent, 0, 100, 'El reparto de gaseosa'),
+    integer(value.juicePercent, 0, 100, 'El reparto de jugo'),
     finite(value.packageLiters, 0.25, 10, 'El envase'),
-    finite(value.snackUnitsPerServing, 0, 5, 'Los snacks'),
+    finite(value.snackSaltyUnitsPerChild, 0, 10, 'Los snacks salados'),
+    finite(value.snackSweetUnitsPerChild, 0, 10, 'Las golosinas'),
+    finite(value.empanadaUnitsPerAdult, 0, 10, 'Las empanadas'),
+    finite(value.coffeeCupsPerAdult, 0, 5, 'El café'),
   ];
-  if (typeof value.snacksEnabled !== 'boolean') return 'El adicional de snacks es inválido.';
+  if (typeof value.coffeeEnabled !== 'boolean') return 'El adicional de café es inválido.';
   for (const check of checks) if (check) return check;
   if (!isRecord(value.savoryPerServing)) return 'Las porciones saladas no son válidas.';
   for (const style of styles) {
     const row = value.savoryPerServing[style];
     if (!isRecord(row)) return 'Las porciones saladas no son válidas.';
     for (const food of foods) {
-      const portion = finite(row[food], 0, 8, 'Una porción salada');
+      const portion = finite(row[food], 0, 20, 'Una porción salada');
       if (portion) return portion;
     }
+  }
+  if (!isRecord(value.seasonalDrinkMultiplier)) return 'Los multiplicadores de temporada no son válidos.';
+  for (const season of seasons) {
+    const multiplier = finite(value.seasonalDrinkMultiplier[season], 0.5, 2, 'Un multiplicador de temporada');
+    if (multiplier) return multiplier;
   }
   return null;
 }
@@ -196,10 +213,13 @@ function event(value: unknown): string | null {
 
 function calculator(value: unknown): string | null {
   if (!isRecord(value)) return 'La calculadora no es válida.';
-  const error = keysOf(value, ['servingStyle', 'contingencyPercent', 'shares', 'assumptions', 'overrides']);
+  const error = keysOf(value, ['servingStyle', 'season', 'contingencyPercent', 'shares', 'assumptions', 'overrides']);
   if (error) return error;
   if (typeof value.servingStyle !== 'string' || !styles.has(value.servingStyle as ServingStyle)) {
     return 'El estilo de comida no es válido.';
+  }
+  if (typeof value.season !== 'string' || !seasons.has(value.season as Season)) {
+    return 'La temporada no es válida.';
   }
   const contingency = integer(value.contingencyPercent, 0, plannerLimits.maxContingency, 'El margen');
   if (contingency) return contingency;

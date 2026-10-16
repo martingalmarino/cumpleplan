@@ -2,7 +2,8 @@ export const SCHEMA_VERSION = 1 as const;
 
 export type Setting = 'casa' | 'salon' | 'aire-libre';
 export type ServingStyle = 'merienda' | 'comida-principal';
-export type FoodKey = 'pizza' | 'sandwich' | 'hotdog';
+export type Season = 'verano' | 'invierno';
+export type FoodKey = 'pizza' | 'sandwichMiga' | 'sandwichGrande' | 'hotdog';
 export type BudgetCategory =
   | 'lugar'
   | 'comida'
@@ -14,7 +15,7 @@ export type BudgetCategory =
   | 'descartables'
   | 'otros';
 
-export type OverrideKey = FoodKey | 'cake' | 'water' | 'otherDrink' | 'snack';
+export type OverrideKey = FoodKey | 'cake' | 'water' | 'soda' | 'juice' | 'snackSalty' | 'snackSweet' | 'empanada' | 'coffee';
 
 export type EventDetails = {
   label: string;
@@ -39,9 +40,15 @@ export type Assumptions = {
   drinkLitersPerChildPerHour: number;
   drinkLitersPerAdultPerHour: number;
   waterPercent: number;
+  sodaPercent: number;
+  juicePercent: number;
   packageLiters: number;
-  snacksEnabled: boolean;
-  snackUnitsPerServing: number;
+  snackSaltyUnitsPerChild: number;
+  snackSweetUnitsPerChild: number;
+  empanadaUnitsPerAdult: number;
+  coffeeEnabled: boolean;
+  coffeeCupsPerAdult: number;
+  seasonalDrinkMultiplier: Record<Season, number>;
 };
 
 export type PurchaseOverride = {
@@ -51,6 +58,7 @@ export type PurchaseOverride = {
 
 export type CalculatorState = {
   servingStyle: ServingStyle;
+  season: Season;
   contingencyPercent: number;
   shares: MenuShares;
   assumptions: Assumptions;

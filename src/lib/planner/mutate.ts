@@ -17,6 +17,7 @@ export function loadFoodExample(plan: Plan): Plan {
     calculator: {
       ...plan.calculator,
       servingStyle: example.servingStyle,
+      season: example.season,
       contingencyPercent: example.contingencyPercent,
       shares: { ...example.shares },
       assumptions: defaultAssumptions(),
