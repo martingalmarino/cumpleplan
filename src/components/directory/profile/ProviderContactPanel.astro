@@ -18,8 +18,7 @@ const hasLinks = Boolean(provider.website || (social && !socialFirst) || provide
 
 <aside class="contact-panel" aria-labelledby="contact-title">
   <h2 id="contact-title">Consultá por tu festejo</h2>
-  <p class="contact-panel__help">Consultá disponibilidad, servicios y presupuesto directamente con el proveedor.</p>
-
+  
   <div class="contact-panel__actions">
     {provider.whatsappUrl && (
       <a class="button button-primary" href={provider.whatsappUrl} rel="noopener" {...tracked}>
@@ -46,21 +45,48 @@ const hasLinks = Boolean(provider.website || (social && !socialFirst) || provide
   </div>
 
   {hasLinks && (
-    <ul class="contact-panel__links">
-      {provider.website && (
-        <li><a href={provider.website} rel="noopener" {...tracked}><Icon name="globe" /> Sitio oficial</a></li>
-      )}
-      {social && !socialFirst && (
-        <li><a href={provider.socialUrl} rel="noopener" {...tracked}><Icon name={socialIcon} /> {social}</a></li>
-      )}
-      {provider.email && (
-        <li><a href={`mailto:${provider.email}`} {...tracked}><Icon name="mail" /> Correo</a></li>
-      )}
-      {provider.address && (
-        <li><a href="#ubicacion"><Icon name="map" /> Ver ubicación</a></li>
-      )}
-    </ul>
+    <>
+      <hr class="contact-panel__divider" />
+      <div class="contact-panel__links">
+        {provider.website && (
+          <a href={provider.website} rel="noopener" {...tracked}>
+            <Icon name="globe" />
+            <div>
+              <div class="contact-panel__link-label">Sitio web</div>
+              <div class="contact-panel__link-value">Visitar sitio oficial</div>
+            </div>
+          </a>
+        )}
+        {social && !socialFirst && (
+          <a href={provider.socialUrl} rel="noopener" {...tracked}>
+            <Icon name={socialIcon} />
+            <div>
+              <div class="contact-panel__link-label">Redes sociales</div>
+              <div class="contact-panel__link-value">{social}</div>
+            </div>
+          </a>
+        )}
+        {provider.email && (
+          <a href={`mailto:${provider.email}`} {...tracked}>
+            <Icon name="mail" />
+            <div>
+              <div class="contact-panel__link-label">Email</div>
+              <div class="contact-panel__link-value">{provider.email}</div>
+            </div>
+          </a>
+        )}
+        {provider.phoneTel && provider.phoneDisplay && (
+          <div style="display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 12px; background: #F8F9FA;">
+            <Icon name="phone" />
+            <div>
+              <div class="contact-panel__link-label">Teléfono</div>
+              <div class="contact-panel__link-value">{provider.phoneDisplay}</div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   )}
 
-  <p class="contact-panel__note">Contacto directo con {provider.name}.</p>
+  <p class="contact-panel__note">Contacto directo con {provider.name}. No intermediamos reservas.</p>
 </aside>

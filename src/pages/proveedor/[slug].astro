@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import JsonLd from '../../components/seo/JsonLd.astro';
+import { Icon } from '../../components/icons/Icon';
 import ProviderContactPanel from '../../components/directory/profile/ProviderContactPanel.astro';
 import ProviderFacts from '../../components/directory/profile/ProviderFacts.astro';
 import ProviderHeader from '../../components/directory/profile/ProviderHeader.astro';
@@ -8,10 +9,18 @@ import ProviderLocation from '../../components/directory/profile/ProviderLocatio
 import ProviderServices from '../../components/directory/profile/ProviderServices.astro';
 import ProviderSources from '../../components/directory/profile/ProviderSources.astro';
 import RelatedProviders from '../../components/directory/profile/RelatedProviders.astro';
-import { publishedProviders, type ProviderRecord } from '../../data/providers/records';
+import { publishedProviders, type ProviderRecord, type ProviderCategory } from '../../data/providers/records';
 import { providerDescription, providerFacts, providerPath, providerTitle } from '../../data/providers/selectors';
 import { directoryIndexPath, directoryProvinceCityPath } from '../../data/providers/routes';
 import { absoluteUrl, site } from '../../config/site';
+import type { IconName } from '../../components/icons/Icon';
+
+const icons: Record<ProviderCategory, IconName> = {
+  salones: 'home',
+  animacion: 'sparkle',
+  'tortas-catering': 'cake',
+  decoracion: 'balloon',
+};
 
 export function getStaticPaths() {
   return publishedProviders().map((provider) => ({
@@ -79,6 +88,26 @@ const business = site.origin
 <Base title={title} description={description} path={path}>
   <JsonLd slot="head" data={crumbs} />
   <JsonLd slot="head" data={business} />
+  
+  <!-- Gallery Hero -->
+  {provider.images && provider.images.length > 0 ? (
+    <div class="profile-hero">
+      <div class="profile-hero__gallery">
+        {provider.images.slice(0, 4).map((image, index) => (
+          <div class="profile-hero__image" key={index}>
+            <img src={image.src} width={image.width} height={image.height} alt={image.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+          </div>
+        ))}
+      </div>
+    </div>
+  ) : (
+    <div class="profile-hero">
+      <div class="profile-hero__placeholder">
+        <Icon name={icons[provider.categories[0]]} />
+      </div>
+    </div>
+  )}
+
   <div class="container profile-page">
     <ProviderHeader provider={provider} />
 
@@ -134,5 +163,29 @@ const business = site.origin
 
     <ProviderSources provider={provider} />
     <RelatedProviders provider={provider} />
+  </div>
+
+  <!-- Mobile sticky CTA bar -->
+  <div class="mobile-cta-bar">
+    {provider.whatsappUrl ? (
+      <a href={provider.whatsappUrl} class="button button-primary" rel="noopener">
+        <Icon name="message" />
+        WhatsApp
+      </a>
+    ) : provider.phoneTel ? (
+      <a href={`tel:${provider.phoneTel}`} class="button button-primary">
+        <Icon name="phone" />
+        Llamar
+      </a>
+    ) : null}
+    {provider.phoneTel && provider.whatsappUrl ? (
+      <a href={`tel:${provider.phoneTel}`} class="button button-secondary">
+        <Icon name="phone" />
+      </a>
+    ) : provider.website ? (
+      <a href={provider.website} class="button button-secondary" target="_blank" rel="noopener">
+        <Icon name="globe" />
+      </a>
+    ) : null}
   </div>
 </Base>
