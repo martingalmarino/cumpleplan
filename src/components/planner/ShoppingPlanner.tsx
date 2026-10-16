@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { directoryIndexPath } from '../../data/providers/routes';
 import { track } from '../../lib/analytics';
 import { applyPurchaseOverrides, calculateFood } from '../../lib/planner/calculations';
 import { createId } from '../../lib/planner/ids';
@@ -24,6 +25,7 @@ export function ShoppingPlanner({ plan }: { plan: Plan }) {
       adults: plan.event.adultsCount,
       hours: plan.event.durationHours,
       servingStyle: plan.calculator.servingStyle,
+      season: plan.calculator.season,
       contingencyPercent: plan.calculator.contingencyPercent,
       shares: plan.calculator.shares,
       assumptions: plan.calculator.assumptions,
@@ -251,6 +253,19 @@ export function ShoppingPlanner({ plan }: { plan: Plan }) {
         {error ? <p className="field-error">{error}</p> : null}
         <button type="submit" className="button button-secondary">Agregar ítem</button>
       </form>
+
+      {visible.length > 0 ? (
+        <div className="inline-actions">
+          <a 
+            href={directoryIndexPath} 
+            className="button-quiet"
+            data-directory-cta="general"
+            data-action="shopping-list"
+          >
+            Ver proveedores
+          </a>
+        </div>
+      ) : null}
     </div>
   );
 }

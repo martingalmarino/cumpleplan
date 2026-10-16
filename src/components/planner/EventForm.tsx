@@ -1,4 +1,5 @@
 import { plannerLimits } from '../../config/calculator';
+import { provinces } from '../../lib/directory';
 import { settingLabels } from '../../lib/planner/labels';
 import { updatePlan } from '../../lib/planner/store';
 import type { Plan, Setting } from '../../lib/planner/types';
@@ -76,6 +77,24 @@ export function EventForm({ plan }: { plan: Plan }) {
               <option key={setting} value={setting}>{settingLabels[setting]}</option>
             ))}
           </select>
+        </div>
+        <div className="field">
+          <label htmlFor="event-province">Provincia</label>
+          <select
+            id="event-province"
+            value={event.province}
+            onChange={(input) =>
+              updatePlan((current) => ({
+                ...current,
+                event: { ...current.event, province: input.target.value },
+              }))
+            }
+          >
+            {provinces.map((province) => (
+              <option key={province} value={province}>{province}</option>
+            ))}
+          </select>
+          <p className="hint">Para mostrarte proveedores de tu zona.</p>
         </div>
         <IntegerField
           label="Duración en horas"

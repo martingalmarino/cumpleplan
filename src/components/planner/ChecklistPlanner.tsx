@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { taskTitleToRubro } from '../../lib/directory';
 import { track } from '../../lib/analytics';
 import { checklistProgress } from '../../lib/planner/checklist';
 import { presentTask, relativeTiming } from '../../lib/planner/dates';
 import { createId } from '../../lib/planner/ids';
 import { updatePlan } from '../../lib/planner/store';
 import type { Plan, Task } from '../../lib/planner/types';
+import { DirectoryCTA } from './DirectoryCTA';
 
 export function ChecklistPlanner({ plan }: { plan: Plan }) {
   const [title, setTitle] = useState('');
@@ -81,17 +83,26 @@ export function ChecklistPlanner({ plan }: { plan: Plan }) {
                       }
                     />
                   </div>
-                  <button
-                    type="button"
-                    className="button-danger"
-                    onClick={() => {
-                      if (window.confirm('¿Querés borrar esta tarea?')) {
-                        updatePlan((current) => ({ ...current, tasks: current.tasks.filter((item) => item.id !== task.id) }));
-                      }
-                    }}
-                  >
-                    Borrar tarea
-                  </button>
+                  <div className="inline-actions">
+                    {taskTitleToRubro(task.title) ? (
+                      <DirectoryCTA 
+                        rubro={taskTitleToRubro(task.title)!}
+                        province={plan.event.province}
+                        dataAction={`checklist-${task.id}`}
+                      />
+                    ) : null}
+                    <button
+                      type="button"
+                      className="button-danger"
+                      onClick={() => {
+                        if (window.confirm('¿Querés borrar esta tarea?')) {
+                          updatePlan((current) => ({ ...current, tasks: current.tasks.filter((item) => item.id !== task.id) }));
+                        }
+                      }}
+                    >
+                      Borrar tarea
+                    </button>
+                  </div>
                 </div>
               </article>
             );

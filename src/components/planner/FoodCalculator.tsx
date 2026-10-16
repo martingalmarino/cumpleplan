@@ -7,6 +7,7 @@ import { formatQty } from '../../lib/planner/money';
 import { loadFoodExample } from '../../lib/planner/mutate';
 import { updatePlan } from '../../lib/planner/store';
 import type { FoodKey, Plan, Season, ServingStyle } from '../../lib/planner/types';
+import { DirectoryCTA } from './DirectoryCTA';
 import { DecimalField, IntegerField } from './fields';
 
 const foods: FoodKey[] = ['pizza', 'sandwichMiga', 'sandwichGrande', 'hotdog'];
@@ -273,6 +274,15 @@ export function FoodCalculator({ plan }: { plan: Plan }) {
         <ul>
           {computation.notes.map((note) => <li key={note}>{note}</li>)}
         </ul>
+        {!computation.zeroAttendees ? (
+          <div className="inline-actions">
+            <DirectoryCTA 
+              rubro="tortas-catering" 
+              province={plan.event.province}
+              dataAction="food-calculator"
+            />
+          </div>
+        ) : null}
       </div>
     </div>
   );
