@@ -121,18 +121,6 @@ const itemList = site.origin && !empty && indexable
   {itemList && <JsonLd slot="head" data={itemList} />}
   
   <div class="container directory-page">
-    <header class="directory-intro">
-      <p class="kicker">Directorio · {province}</p>
-      <h1>{locationLabel}</h1>
-      {empty ? (
-        <p>Todavía no hay fichas publicadas para esta ubicación.</p>
-      ) : city ? (
-        <p>Salones, tortas y servicios para organizar un cumpleaños infantil en {city}.</p>
-      ) : (
-        <p>{categoryLabel(category!)} en {province}.</p>
-      )}
-    </header>
-
     {!empty && city && byCategory && byCategory.size > 1 && (
       <section aria-labelledby="categories-title">
         <h2 id="categories-title">Por rubro</h2>
@@ -151,18 +139,17 @@ const itemList = site.origin && !empty && indexable
         </ul>
       </section>
     )}
-
-    {!empty && (
-      <DirectoryPage 
-        providers={providers} 
-        title={city ? "Todas las opciones" : locationLabel} 
-        description={`Mostrando ${providers.length} ${providers.length === 1 ? 'opción' : 'opciones'}.`}
-        latestReview={latestReview!}
-        showMethodology={true}
-        province={province}
-        city={city}
-        category={category}
-      />
-    )}
   </div>
+
+  <DirectoryPage 
+    providers={providers} 
+    title={city ? `Proveedores en ${city}` : locationLabel}
+    description={city ? `Salones, tortas y servicios para organizar un cumpleaños infantil en ${city}.` : `${categoryLabel(category!)} en ${province}.`}
+    kicker={`Directorio · ${province}`}
+    latestReview={latestReview!}
+    showMethodology={true}
+    province={province}
+    city={city}
+    category={category}
+  />
 </Base>
