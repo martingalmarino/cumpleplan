@@ -177,6 +177,7 @@ function event(value: unknown): string | null {
     'date',
     'age',
     'setting',
+    'province',
     'durationHours',
     'childrenCount',
     'adultsCount',
@@ -191,6 +192,9 @@ function event(value: unknown): string | null {
   const age = nullableInt(value.age, plannerLimits.minAge, plannerLimits.maxAge, 'La edad');
   if (age) return age;
   if (typeof value.setting !== 'string' || !settings.has(value.setting)) return 'El lugar del cumple no es válido.';
+  const provinceText = text(value.province, 100, 'La provincia');
+  if (provinceText) return provinceText;
+  if (typeof value.province !== 'string' || value.province.trim().length === 0) return 'La provincia no puede estar vacía.';
   const duration = integer(value.durationHours, plannerLimits.minDuration, plannerLimits.maxDuration, 'La duración');
   if (duration) return duration;
   const children = integer(value.childrenCount, 0, plannerLimits.maxPerGroup, 'Los chicos');

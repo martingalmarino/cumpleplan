@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { budgetCategoryToRubro } from '../../lib/directory';
 import { track } from '../../lib/analytics';
 import {
   applicablePeople,
@@ -17,6 +18,7 @@ import { formatArs } from '../../lib/planner/money';
 import { applyQuoteSelection, restoreBudgetLine } from '../../lib/planner/mutate';
 import { updatePlan } from '../../lib/planner/store';
 import type { BudgetCategory, BudgetLine, Plan, Quote, QuoteAppliesTo } from '../../lib/planner/types';
+import { DirectoryCTA } from './DirectoryCTA';
 import { MoneyField, TextField } from './fields';
 
 function moneyText(value: number | null, empty = '—'): string {
@@ -130,9 +132,18 @@ export function BudgetPlanner({ plan }: { plan: Plan }) {
             </div>
             {payError ? <p className="field-error">{payError}</p> : null}
             <p className="hint">Estimado de la línea: {moneyText(lineEstimateCentavos(line), 'Ingresá tu precio')}. Comprometido: {moneyText(lineCommittedCentavos(line))}. Pendiente: {moneyText(linePendingCentavos(line))}.</p>
-            <button type="button" className="button-danger" onClick={() => updatePlan((current) => ({ ...current, budgetLines: current.budgetLines.filter((item) => item.id !== line.id) }))}>
-              Borrar línea
-            </button>
+            <div className="inline-actions">
+              {budgetCategoryToRubro(line.category) ? (
+                <DirectoryCTA 
+                  rubro={budgetCategoryToRubro(line.category)!}
+                  province={plan.event.province}
+                  dataAction={`budget-${line.category}`}
+                />
+              ) : null}
+              <button type="button" className="button-danger" onClick={() => updatePlan((current) => ({ ...current, budgetLines: current.budgetLines.filter((item) => item.id !== line.id) }))}>
+                Borrar línea
+              </button>
+            </div>
           </article>
         );
       })}

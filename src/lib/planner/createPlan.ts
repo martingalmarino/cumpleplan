@@ -13,6 +13,7 @@ export function createPlan(now = new Date().toISOString()): Plan {
       date: null,
       age: null,
       setting: 'casa',
+      province: 'Córdoba',
       durationHours: 3,
       childrenCount: 0,
       adultsCount: 0,

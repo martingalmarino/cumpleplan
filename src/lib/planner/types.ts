@@ -22,6 +22,7 @@ export type EventDetails = {
   date: string | null;
   age: number | null;
   setting: Setting;
+  province: string;
   durationHours: number;
   childrenCount: number;
   adultsCount: number;
