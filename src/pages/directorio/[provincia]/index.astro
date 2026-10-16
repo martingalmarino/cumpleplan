@@ -69,16 +69,6 @@ const itemList = site.origin && !empty && indexable
   {itemList && <JsonLd slot="head" data={itemList} />}
   
   <div class="container directory-page">
-    <header class="directory-intro">
-      <p class="kicker">Directorio · {province}</p>
-      <h1>Proveedores en {province}</h1>
-      {empty ? (
-        <p>Todavía no hay fichas publicadas para {province}. El planificador de comida, presupuesto y compras sigue disponible.</p>
-      ) : (
-        <p>Salones, tortas y servicios para organizar un cumpleaños infantil.</p>
-      )}
-    </header>
-
     {!empty && (byCity.size > 1 || byCategory.size > 1) && (
       <div class="directory-nav">
         {byCity.size > 1 && (
@@ -119,16 +109,15 @@ const itemList = site.origin && !empty && indexable
         )}
       </div>
     )}
-
-    {!empty && (
-      <DirectoryPage 
-        providers={providers} 
-        title="Todas las opciones" 
-        description={`Mostrando ${providers.length} ${providers.length === 1 ? 'proveedor' : 'proveedores'} en ${province}.`}
-        latestReview={latestReview!}
-        showMethodology={true}
-        province={province}
-      />
-    )}
   </div>
+
+  <DirectoryPage 
+    providers={providers} 
+    title={`Proveedores en ${province}`}
+    description="Salones, tortas y servicios para organizar un cumpleaños infantil."
+    kicker={`Directorio · ${province}`}
+    latestReview={latestReview!}
+    showMethodology={true}
+    province={province}
+  />
 </Base>
