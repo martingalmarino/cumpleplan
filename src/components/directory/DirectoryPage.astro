@@ -30,37 +30,35 @@ const {
 } = Astro.props;
 
 const empty = providers.length === 0;
-
-// Calculate stats
 const totalProviders = providers.length;
 const providersWithWhatsApp = providers.filter(p => p.whatsappUrl).length;
-const verifiedRecently = latestReview ? formatVerifiedDate(latestReview) : null;
+const verifiedText = latestReview ? formatVerifiedDate(latestReview) : null;
 ---
 
 {!empty && (
-  <div class="directory-hero">
-    <div class="directory-hero__content">
-      {kicker && <p class="kicker">{kicker}</p>}
-      <h1>{title}</h1>
-      <p class="directory-hero__description">{description}</p>
-      <ul class="directory-hero__stats">
-        <li class="directory-hero__stat">
+  <div class="directory-hero-band">
+    <div class="container">
+      {kicker && <p class="directory-hero-band__kicker">{kicker}</p>}
+      <h1 class="directory-hero-band__title">{title}</h1>
+      <p class="directory-hero-band__subtitle">{description}</p>
+      <div class="directory-hero-band__stats">
+        <div class="directory-stat">
           <Icon name="home" />
-          <span><span class="directory-hero__stat-value">{totalProviders}</span> {totalProviders === 1 ? 'proveedor' : 'proveedores'}</span>
-        </li>
-        {providersWithWhatsApp > 0 && (
-          <li class="directory-hero__stat">
-            <Icon name="message" />
-            <span><span class="directory-hero__stat-value">{providersWithWhatsApp}</span> con WhatsApp</span>
-          </li>
+          <span><strong>{totalProviders}</strong> {totalProviders === 1 ? 'salón' : 'salones'}</span>
+        </div>
+        {city && (
+          <div class="directory-stat">
+            <Icon name="map" />
+            <span>{city}</span>
+          </div>
         )}
-        {verifiedRecently && (
-          <li class="directory-hero__stat">
+        {verifiedText && (
+          <div class="directory-stat">
             <Icon name="check-circle" />
-            <span>Verificado {verifiedRecently}</span>
-          </li>
+            <span>Verificados {verifiedText}</span>
+          </div>
         )}
-      </ul>
+      </div>
     </div>
   </div>
 )}
@@ -94,13 +92,17 @@ const verifiedRecently = latestReview ? formatVerifiedDate(latestReview) : null;
             <summary>Cómo seleccionamos y revisamos las fichas</summary>
             <div class="directory-method__body">
               <p>Publicamos solo negocios cuyo nombre, dirección o zona y al menos un canal de contacto pudimos ver en su sitio o en sus redes oficiales. Cada sede tiene su propia ficha. La última revisión fue el {formatVerifiedDate(latestReview)}: esa fecha dice cuándo miramos la información. No llamamos a los negocios, así que no certifica que sigan activos, su habilitación, la calidad, los precios ni la disponibilidad.</p>
-              <p>El orden es alfabético. No hay posiciones pagas en esta versión. Si más adelante hubiera un espacio destacado, va a decir "Destacado · Publicidad" y no va a ordenar el resto como si fuera una evaluación.</p>
-              <p>Los números junto a cada rubro cuentan todas las fichas publicadas de ese rubro en esta ubicación. El total de resultados sí cambia con la búsqueda y con "Con WhatsApp".</p>
-              <p>El directorio no está completo: faltan muchos salones, animaciones y locales que todavía no revisamos. Los íconos de cada rubro son genéricos y no muestran ningún lugar.</p>
             </div>
           </details>
         </aside>
       )}
     </>
+  )}
+
+  {empty && (
+    <div class="directory-empty">
+      <p><strong>No encontramos salones en esta ubicación todavía.</strong></p>
+      <p>Estamos agregando salones de diferentes ciudades de Argentina. Volvé pronto para ver las novedades.</p>
+    </div>
   )}
 </div>
