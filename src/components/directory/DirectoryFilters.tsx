@@ -85,7 +85,6 @@ export function DirectoryFilters({
             className="category-chip"
             aria-current={category === item.id ? 'true' : undefined}
           >
-            <CategoryIcon category={item.id} size="xs" />
             <span>{item.label}</span>
             <span className="category-chip__count">{item.count}</span>
           </a>
