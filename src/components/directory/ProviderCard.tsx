@@ -15,18 +15,20 @@ export function ProviderCard({ provider, variant = 'default', headingLevel = 2 }
   const contact = primaryContact(provider);
   const image = provider.images?.[0];
   const highlights = provider.highlights.slice(0, variant === 'compact' ? 2 : 3);
+  const hasImage = Boolean(image);
 
   return (
-    <article className={`provider-card provider-card--${variant}`} data-categories={provider.categories.join(' ')}>
-      <div className="provider-card__top">
-        {image ? (
+    <article className={`provider-card provider-card--${variant} ${hasImage ? 'provider-card--has-image' : ''}`} data-categories={provider.categories.join(' ')}>
+      {hasImage && (
+        <div className="provider-card__image">
           <img className="provider-card__thumb" src={image.src} width={image.width} height={image.height} alt={image.alt} loading="lazy" decoding="async" />
-        ) : (
-          <CategoryIcon category={provider.categories[0]} size={variant === 'compact' ? 'sm' : 'md'} />
-        )}
-        <p className="provider-card__category">{provider.categories.map(categoryLabel).join(' · ')}</p>
-      </div>
+        </div>
+      )}
       <div className="provider-card__content">
+        <div className="provider-card__header">
+          <CategoryIcon category={provider.categories[0]} size="xs" />
+          <p className="provider-card__category">{provider.categories.map(categoryLabel).join(' · ')}</p>
+        </div>
         <Heading className="provider-card__name">
           <a href={href}>{provider.name}</a>
         </Heading>

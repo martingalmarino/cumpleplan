@@ -89,8 +89,8 @@ const business = site.origin
   <JsonLd slot="head" data={crumbs} />
   <JsonLd slot="head" data={business} />
   
-  <!-- Gallery Hero -->
-  {provider.images && provider.images.length > 0 ? (
+  <!-- Gallery Hero - only show if provider has images -->
+  {provider.images && provider.images.length > 0 && (
     <div class="profile-hero">
       <div class="profile-hero__gallery">
         {provider.images.slice(0, 4).map((image, index) => (
@@ -98,12 +98,6 @@ const business = site.origin
             <img src={image.src} width={image.width} height={image.height} alt={image.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
           </div>
         ))}
-      </div>
-    </div>
-  ) : (
-    <div class="profile-hero">
-      <div class="profile-hero__placeholder">
-        <Icon name={icons[provider.categories[0]]} />
       </div>
     </div>
   )}
