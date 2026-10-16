@@ -1,6 +1,21 @@
 import type { ProviderCategory } from '../data/providers/records';
+import { generateDirectoryRoutes } from '../data/providers/groups';
 import { directoryIndexPath, directoryProvinceRubroPath, directoryProvincePath } from '../data/providers/routes';
 import type { BudgetCategory } from './planner/types';
+
+/**
+ * Cache de rutas válidas del directorio
+ * Se inicializa bajo demanda y se mantiene durante la ejecución
+ */
+let cachedValidPaths: Set<string> | null = null;
+
+function getValidDirectoryPaths(): Set<string> {
+  if (!cachedValidPaths) {
+    const routes = generateDirectoryRoutes();
+    cachedValidPaths = new Set(routes.map((route) => route.path));
+  }
+  return cachedValidPaths;
+}
 
 /**
  * Mapea categorías de presupuesto a rubros del directorio
@@ -20,21 +35,24 @@ export function budgetCategoryToRubro(category: BudgetCategory): ProviderCategor
 /**
  * Mapea títulos de tareas a rubros del directorio
  * Detecta palabras clave en el título para sugerir el rubro apropiado
+ * Las verificaciones más específicas van primero
  */
 export function taskTitleToRubro(title: string): ProviderCategory | null {
   const lower = title.toLowerCase();
   
+  // Palabras específicas primero
   if (lower.includes('salón') || lower.includes('salon') || lower.includes('lugar') || lower.includes('reservar')) {
     return 'salones';
   }
   if (lower.includes('animación') || lower.includes('animacion') || lower.includes('animador')) {
     return 'animacion';
   }
-  if (lower.includes('torta') || lower.includes('catering') || lower.includes('comida') || lower.includes('encargar')) {
-    return 'tortas-catering';
-  }
   if (lower.includes('decoración') || lower.includes('decoracion') || lower.includes('globos')) {
     return 'decoracion';
+  }
+  // Tortas y catering al final porque "encargar" es genérico
+  if (lower.includes('torta') || lower.includes('catering') || lower.includes('comida') || lower.includes('encargar')) {
+    return 'tortas-catering';
   }
   
   return null;
@@ -54,18 +72,29 @@ export function getRubroLabel(rubro: ProviderCategory): string {
 }
 
 /**
- * Genera la URL del directorio para un rubro, considerando la provincia del usuario
+ * Genera la URL del directorio para un rubro, verificando que exista la página
+ * Fallback: /directorio/{provincia}/{rubro}/ → /directorio/{provincia}/ → /directorio/
  */
 export function getDirectoryUrl(rubro: ProviderCategory | null, province?: string): string {
   if (!rubro) return directoryIndexPath;
   
-  // Si tenemos provincia, ir a /directorio/{provincia}/{rubro}/
+  const validPaths = getValidDirectoryPaths();
+  
+  // Intentar /directorio/{provincia}/{rubro}/
   if (province) {
-    return directoryProvinceRubroPath(province, rubro);
+    const provinceCategoryPath = directoryProvinceRubroPath(province, rubro);
+    if (validPaths.has(provinceCategoryPath)) {
+      return provinceCategoryPath;
+    }
+    
+    // Fallback a /directorio/{provincia}/
+    const provinceOnlyPath = directoryProvincePath(province);
+    if (validPaths.has(provinceOnlyPath)) {
+      return provinceOnlyPath;
+    }
   }
   
-  // Si no hay provincia, ir al índice nacional
-  // TODO: cuando haya más provincias, se podría ir a /directorio/?rubro={rubro}
+  // Fallback final al índice nacional
   return directoryIndexPath;
 }
 
