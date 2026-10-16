@@ -36,12 +36,12 @@ const verifiedText = latestReview ? formatVerifiedDate(latestReview) : null;
 ---
 
 {!empty && (
-  <div class="directory-hero-band">
+  <div class="directory-header-band">
     <div class="container">
-      {kicker && <p class="directory-hero-band__kicker">{kicker}</p>}
-      <h1 class="directory-hero-band__title">{title}</h1>
-      <p class="directory-hero-band__subtitle">{description}</p>
-      <div class="directory-hero-band__stats">
+      {kicker && <p class="directory-header-band__kicker">{kicker}</p>}
+      <h1 class="directory-header-band__title">{title}</h1>
+      <p class="directory-header-band__subtitle">{description}</p>
+      <div class="directory-header-band__stats">
         <div class="directory-stat">
           <Icon name="home" />
           <span><strong>{totalProviders}</strong> {totalProviders === 1 ? 'salón' : 'salones'}</span>

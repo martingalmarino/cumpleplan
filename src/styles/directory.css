@@ -1262,8 +1262,8 @@
 
 @media (min-width: 900px) {
   .directory-layout {
-    grid-template-columns: 280px minmax(0, 1fr);
-    gap: var(--space-6);
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: var(--space-5);
   }
   
   .directory-filters-toggle {
@@ -1285,11 +1285,20 @@
   }
 }
 
+.directory-filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
 .directory-filters__section {
   margin: 0;
   padding: 0;
   border: 0;
-  margin-top: var(--space-4);
 }
 
 .directory-filters__section legend {
@@ -1300,46 +1309,84 @@
   color: var(--color-ink);
 }
 
-.directory-filters__zona-list {
+.directory-filters__search {
+  margin: 0;
+}
+
+.directory-filters__search label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.directory-filters__search input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.directory-filters__whatsapp {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.directory-filters__whatsapp input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--color-green-action);
+}
+
+.directory-filters__zona-list,
+.directory-filters__edad-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .directory-filters__zona-chip {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: var(--color-paper);
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
   font-size: 14px;
   font-weight: 600;
   color: var(--color-ink);
   cursor: pointer;
-  transition: all 0.2s;
+  text-align: left;
+  transition: background 0.2s;
 }
 
 .directory-filters__zona-chip:hover {
-  border-color: #b9c6d0;
+  background: #F0F4F8;
 }
 
 .directory-filters__zona-chip.active {
   background: var(--color-mint);
-  border-color: var(--color-green-action);
   color: var(--color-green-action);
   font-weight: 700;
 }
 
 .directory-filters__zona-chip .count {
-  font-size: 12px;
+  font-size: 13px;
   opacity: 0.7;
+  margin-left: auto;
+  padding-left: 8px;
 }
 
 .directory-filters__select {
   width: 100%;
-  padding: 10px 14px;
+  padding: 10px 12px;
   background: var(--color-paper);
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -1349,15 +1396,28 @@
   cursor: pointer;
 }
 
-.directory-filters__edad-options {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
 .directory-filters__edad-options .check-field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 8px 12px;
+  margin: 0;
   font-weight: 600;
   font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.directory-filters__edad-options .check-field:hover {
+  background: #F0F4F8;
+}
+
+.directory-filters__edad-options input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--color-green-action);
 }
 
 .directory-results__controls {
