@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>María Membrillo - Mobile | Festejito</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: #FFFDF7;
+      color: #17324D;
+      line-height: 1.5;
+      max-width: 430px;
+      margin: 0 auto;
+    }
+    /* Mobile Header */
+    .mobile-header {
+      position: sticky;
+      top: 0;
+      background: white;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #DCE3E8;
+      z-index: 100;
+    }
+    .back-button {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: none;
+      background: #F8F9FA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+    /* Hero */
+    .hero-mobile {
+      position: relative;
+      height: 280px;
+      background: #17324D;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 64px;
+    }
+    .hero-indicator {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+    }
+    .indicator-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+    }
+    .indicator-dot.active {
+      background: white;
+      width: 16px;
+      border-radius: 3px;
+    }
+    /* Content */
+    .mobile-content {
+      padding: 16px;
+    }
+    .title-section {
+      margin-bottom: 16px;
+    }
+    .category-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      background: #EDF7EA;
+      color: #237A32;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .rating-mobile {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      background: #FFF7D9;
+      border-radius: 10px;
+      border: 2px dashed #FFCC33;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+    }
+    .stars { color: #FFCC33; }
+    .badge-new { 
+      background: #FFCC33;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .location {
+      display: flex;
+      gap: 8px;
+      color: #526477;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+    .summary {
+      font-size: 1rem;
+      color: #17324D;
+      margin-bottom: 16px;
+    }
+    /* CTAs */
+    .cta-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 600;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.95rem;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: #237A32;
+      color: white;
+    }
+    .btn-secondary {
+      background: white;
+      color: #237A32;
+      border: 2px solid #237A32;
+    }
+    /* Facts */
+    .facts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .fact {
+      background: white;
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid #DCE3E8;
+    }
+    .fact-label {
+      font-size: 0.75rem;
+      color: #526477;
+      margin-bottom: 4px;
+    }
+    .fact-value {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    /* Section */
+    .section {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .service {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      background: #F8F9FA;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    /* Bottom CTA */
+    .bottom-cta {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 12px 16px;
+      border-top: 1px solid #DCE3E8;
+      display: flex;
+      gap: 8px;
+      max-width: 430px;
+      margin: 0 auto;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky Header -->
+  <div class="mobile-header">
+    <button class="back-button">←</button>
+    <div class="header-actions">
+      <button class="back-button">💾</button>
+      <button class="back-button">⋯</button>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero-mobile">
+    📷
+    <div class="hero-indicator">
+      <div class="indicator-dot active"></div>
+      <div class="indicator-dot"></div>
+      <div class="indicator-dot"></div>
+      <div class="indicator-dot"></div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="mobile-content">
+    <!-- Title -->
+    <div class="title-section">
+      <div class="category-tag">
+        🏠 Salón infantil
+      </div>
+      <h1 class="title">María Membrillo</h1>
+      
+      <!-- Rating NEW -->
+      <div class="rating-mobile">
+        <span class="stars">★★★★★</span>
+        <span><strong>4.8</strong> (24)</span>
+        <span class="badge-new">NUEVA DATA</span>
+      </div>
+
+      <div class="location">
+        📍 Viracocha 6078, Zona Norte · Córdoba
+      </div>
+      
+      <p class="summary">
+        Salón de juego libre con inspiración Montessori, en Zona Norte. También arma festejos a domicilio.
+      </p>
+    </div>
+
+    <!-- CTAs -->
+    <div class="cta-buttons">
+      <a href="#" class="btn btn-primary">💬 WhatsApp</a>
+      <a href="#" class="btn btn-secondary">📞 Llamar</a>
+    </div>
+
+    <!-- Facts -->
+    <div class="facts">
+      <div class="fact">
+        <div class="fact-label">Capacidad</div>
+        <div class="fact-value">Hasta 60 personas</div>
+      </div>
+      <div class="fact">
+        <div class="fact-label">Edades</div>
+        <div class="fact-value">1 a 12 años</div>
+      </div>
+      <div class="fact">
+        <div class="fact-label">Duración</div>
+        <div class="fact-value">Desde 2h 30min</div>
+      </div>
+      <div class="fact">
+        <div class="fact-label">Cobertura</div>
+        <div class="fact-value">+ a domicilio</div>
+      </div>
+    </div>
+
+    <!-- About -->
+    <div class="section">
+      <h2 class="section-title">📝 Sobre María Membrillo</h2>
+      <p style="font-size: 0.95rem; line-height: 1.6;">
+        Ofrece un espacio pensado para que los chicos jueguen, exploren e imaginen, con instalaciones para chicos y para adultos. Tiene varias propuestas de cumpleaños en el salón y también lleva ambientación, mesas temáticas e inflables a domicilio.
+      </p>
+    </div>
+
+    <!-- Services -->
+    <div class="section">
+      <h2 class="section-title">✓ Servicios</h2>
+      <div class="service">✓ Cumpleaños en el salón</div>
+      <div class="service">✓ Jardín con mangrullo</div>
+      <div class="service">✓ Sala de disfraces y boliche</div>
+      <div class="service">✓ Celebraciones de 1 y 2 años</div>
+      <div class="service">✓ Festejos a domicilio</div>
+      <div class="service">✓ Juegos inflables</div>
+    </div>
+
+    <!-- Map -->
+    <div class="section">
+      <h2 class="section-title">📍 Ubicación</h2>
+      <div style="height: 200px; background: #EDF7EA; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #237A32; font-size: 2rem; margin-bottom: 12px;">
+        🗺️
+      </div>
+      <div style="font-size: 0.9rem;">
+        <p style="margin-bottom: 8px;"><strong>Dirección:</strong> Viracocha 6078, casi esquina Recta Martinoli</p>
+        <p style="margin-bottom: 8px;"><strong>Barrio:</strong> Zona Norte</p>
+        <p style="margin-bottom: 8px;"><strong>Horarios:</strong> Lun-Vie desde 16h. Sáb-Dom turnos 11h, 14:30h, 18h</p>
+        <p><strong>Reserva:</strong> Solo con cita previa</p>
+      </div>
+    </div>
+
+    <!-- Questions -->
+    <div style="background: #EDF3FF; border-radius: 14px; padding: 16px; margin-bottom: 16px;">
+      <h3 style="font-size: 1.1rem; margin-bottom: 8px;">❓ Preguntas útiles</h3>
+      <p style="font-size: 0.85rem; color: #526477; margin-bottom: 12px;">Sugeridas para tu consulta</p>
+      <div style="font-size: 0.9rem; line-height: 1.8;">
+        • Qué incluye cada propuesta<br>
+        • Cuántos chicos y adultos<br>
+        • Seña y cambio de fecha<br>
+        • Si podés llevar comida/torta<br>
+        • Costo del tiempo extra
+      </div>
+    </div>
+
+    <!-- Trust -->
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+      <div style="background: white; border: 1px solid #DCE3E8; border-radius: 10px; padding: 8px 12px; font-size: 0.85rem;">
+        ✓ Verificado: 14 oct 2026
+      </div>
+      <div style="background: white; border: 1px solid #DCE3E8; border-radius: 10px; padding: 8px 12px; font-size: 0.85rem;">
+        📄 3 fuentes oficiales
+      </div>
+    </div>
+
+    <!-- Related -->
+    <div class="section">
+      <h2 class="section-title">🏠 Otros salones</h2>
+      <div style="display: flex; overflow-x: auto; gap: 12px; margin: 0 -20px; padding: 0 20px;">
+        <div style="min-width: 200px; background: white; border: 1px solid #DCE3E8; border-radius: 12px; padding: 14px;">
+          <div style="font-size: 2rem; margin-bottom: 8px;">🎮</div>
+          <h4 style="font-weight: 700; margin-bottom: 6px;">Diverworld</h4>
+          <p style="font-size: 0.85rem; color: #526477;">Tres salas según edad</p>
+        </div>
+        <div style="min-width: 200px; background: white; border: 1px solid #DCE3E8; border-radius: 12px; padding: 14px;">
+          <div style="font-size: 2rem; margin-bottom: 8px;">🎪</div>
+          <h4 style="font-weight: 700; margin-bottom: 6px;">Candy VR</h4>
+          <p style="font-size: 0.85rem; color: #526477;">Realidad virtual y PS</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="height: 80px;"></div>
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="bottom-cta">
+    <a href="#" class="btn btn-primary" style="flex: 2;">💬 Consultar por WhatsApp</a>
+    <button class="btn btn-secondary" style="flex: 1;">📞</button>
+  </div>
+</body>
+</html>

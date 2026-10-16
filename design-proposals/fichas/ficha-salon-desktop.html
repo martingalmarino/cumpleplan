@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>María Membrillo - Salón infantil | Festejito</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito Sans', 'Segoe UI', sans-serif;
+      background: #FFFDF7;
+      color: #17324D;
+      line-height: 1.6;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 420px;
+      background: #17324D;
+      overflow: hidden;
+    }
+
+    .hero__gallery {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 4px;
+      height: 100%;
+    }
+
+    .hero__image {
+      position: relative;
+      overflow: hidden;
+      background: #526477;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .hero__image:first-child {
+      grid-row: 1 / 3;
+    }
+
+    .hero__image:hover {
+      transform: scale(1.02);
+    }
+
+    .hero__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero__image--placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFDF7;
+      font-size: 48px;
+    }
+
+    .hero__view-all {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      color: #17324D;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(23, 50, 77, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero__view-all:hover {
+      background: #FFFDF7;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      padding: 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: #526477;
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb a {
+      color: #237A32;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    /* Header */
+    .header {
+      padding: 24px 0;
+      border-bottom: 1px solid #DCE3E8;
+    }
+
+    .header__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+
+    .header__title-group {
+      flex: 1;
+    }
+
+    .header__title {
+      font-family: 'Fredoka', 'Nunito Sans', sans-serif;
+      font-size: 2.5rem;
+      color: #17324D;
+      margin-bottom: 8px;
+    }
+
+    .header__categories {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .category-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: #EDF7EA;
+      color: #237A32;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .category-badge svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* NUEVO: Rating placeholder */
+    .header__rating {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 12px 16px;
+      background: #FFF7D9;
+      border-radius: 12px;
+      border: 2px dashed #FFCC33;
+    }
+
+    .rating-stars {
+      display: flex;
+      gap: 4px;
+      font-size: 1.3rem;
+      color: #FFCC33;
+    }
+
+    .rating-text {
+      font-weight: 600;
+      color: #17324D;
+    }
+
+    .rating-count {
+      color: #526477;
+      font-size: 0.9rem;
+    }
+
+    .badge-new-data {
+      background: #FFCC33;
+      color: #17324D;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .header__location {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #526477;
+      font-size: 1rem;
+    }
+
+    .header__location svg {
+      color: #237A32;
+      width: 20px;
+      height: 20px;
+    }
+
+    .header__actions {
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1rem;
+    }
+
+    .button svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .button-primary {
+      background: #237A32;
+      color: white;
+    }
+
+    .button-primary:hover {
+      background: #195D26;
+    }
+
+    .button-secondary {
+      background: white;
+      color: #237A32;
+      border: 2px solid #237A32;
+    }
+
+    .button-secondary:hover {
+      background: #EDF7EA;
+    }
+
+    .button-icon {
+      background: white;
+      color: #526477;
+      border: 2px solid #DCE3E8;
+      padding: 12px;
+    }
+
+    .button-icon:hover {
+      border-color: #237A32;
+      color: #237A32;
+    }
+
+    /* Summary */
+    .summary {
+      padding: 20px 0;
+      font-size: 1.1rem;
+      color: #17324D;
+      border-bottom: 1px solid #DCE3E8;
+    }
+
+    /* Layout */
+    .content-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 32px;
+      padding: 32px 0;
+    }
+
+    .main-content {
+      min-width: 0;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 20px;
+      height: fit-content;
+    }
+
+    /* Contact Panel */
+    .contact-panel {
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 24px rgba(23, 50, 77, 0.06);
+      border: 2px solid #DCE3E8;
+    }
+
+    .contact-panel__title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #17324D;
+      margin-bottom: 16px;
+    }
+
+    .contact-panel__cta {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .contact-panel__divider {
+      border: 0;
+      border-top: 1px solid #DCE3E8;
+      margin: 20px 0;
+    }
+
+    .contact-panel__links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #F8F9FA;
+      text-decoration: none;
+      color: #17324D;
+      transition: all 0.2s;
+    }
+
+    .contact-link:hover {
+      background: #EDF7EA;
+    }
+
+    .contact-link svg {
+      color: #237A32;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .contact-link__label {
+      font-size: 0.85rem;
+      color: #526477;
+    }
+
+    .contact-link__value {
+      font-weight: 600;
+      color: #17324D;
+    }
+
+    /* NUEVO: Response time */
+    .response-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      background: #EDF7EA;
+      border-radius: 12px;
+      margin-top: 12px;
+    }
+
+    .response-badge svg {
+      width: 20px;
+      height: 20px;
+      color: #237A32;
+    }
+
+    .response-badge__text {
+      font-size: 0.9rem;
+      color: #237A32;
+      font-weight: 600;
+    }
+
+    /* Facts Grid */
+    .facts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .fact-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(23, 50, 77, 0.04);
+      border: 1px solid #DCE3E8;
+    }
+
+    .fact-card__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      background: #EDF7EA;
+      color: #237A32;
+    }
+
+    .fact-card__icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .fact-card__label {
+      font-size: 0.85rem;
+      color: #526477;
+      margin-bottom: 4px;
+    }
+
+    .fact-card__value {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #17324D;
+    }
+
+    /* Section */
+    .section {
+      background: white;
+      border-radius: 18px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(23, 50, 77, 0.04);
+    }
+
+    .section__title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #17324D;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section__title svg {
+      color: #237A32;
+      width: 28px;
+      height: 28px;
+    }
+
+    .section__text {
+      color: #17324D;
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+
+    /* Services List */
+    .services-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 12px;
+    }
+
+    .service-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: #F8F9FA;
+      border-radius: 12px;
+    }
+
+    .service-item svg {
+      color: #237A32;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .service-item__text {
+      color: #17324D;
+      font-size: 0.95rem;
+    }
+
+    /* Map */
+    .map-container {
+      width: 100%;
+      height: 320px;
+      border-radius: 16px;
+      background: #EDF7EA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #237A32;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .location-details {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .location-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .location-detail svg {
+      color: #237A32;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .location-detail__text {
+      flex: 1;
+    }
+
+    .location-detail__label {
+      font-size: 0.85rem;
+      color: #526477;
+      margin-bottom: 2px;
+    }
+
+    .location-detail__value {
+      color: #17324D;
+      font-weight: 600;
+    }
+
+    /* Questions */
+    .questions {
+      background: #EDF3FF;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .questions__title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #17324D;
+      margin-bottom: 8px;
+    }
+
+    .questions__hint {
+      font-size: 0.9rem;
+      color: #526477;
+      margin-bottom: 16px;
+    }
+
+    .questions__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .questions__list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: white;
+      border-radius: 12px;
+    }
+
+    .questions__list li svg {
+      color: #244FA8;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Trust */
+    .trust-section {
+      background: #FFFDF7;
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid #DCE3E8;
+    }
+
+    .trust-badges {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #DCE3E8;
+    }
+
+    .trust-badge svg {
+      color: #237A32;
+      width: 20px;
+      height: 20px;
+    }
+
+    .trust-badge__text {
+      font-size: 0.9rem;
+      color: #17324D;
+      font-weight: 600;
+    }
+
+    /* Related */
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .related-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(23, 50, 77, 0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s;
+    }
+
+    .related-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(23, 50, 77, 0.12);
+    }
+
+    .related-card__image {
+      width: 100%;
+      height: 160px;
+      background: #EDF7EA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #237A32;
+      font-size: 48px;
+    }
+
+    .related-card__content {
+      padding: 16px;
+    }
+
+    .related-card__name {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #17324D;
+      margin-bottom: 8px;
+    }
+
+    .related-card__summary {
+      font-size: 0.9rem;
+      color: #526477;
+      line-height: 1.5;
+    }
+
+    /* New Data Warning */
+    .new-data-warning {
+      background: #FFF7D9;
+      border: 2px dashed #FFCC33;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .new-data-warning svg {
+      color: #8A4B12;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .new-data-warning__content h3 {
+      color: #8A4B12;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .new-data-warning__content p {
+      color: #17324D;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Gallery -->
+  <div class="hero">
+    <div class="hero__gallery">
+      <div class="hero__image hero__image--placeholder">
+        <svg viewBox="0 0 24 24" width="80" height="80" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 6h20v14H2zM12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM7 6l1-2h8l1 2"/>
+        </svg>
+      </div>
+      <div class="hero__image hero__image--placeholder">
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 10l9-7 9 7v11H3zM9 21v-7h6v7"/>
+        </svg>
+      </div>
+      <div class="hero__image hero__image--placeholder">
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 3c-2.8 0-5 2.5-5 5.5S9 14 12 14s5-2.5 5-5.5S14.8 3 12 3z"/>
+        </svg>
+      </div>
+      <div class="hero__image hero__image--placeholder">
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 13h16v8H4z"/>
+        </svg>
+      </div>
+    </div>
+    <button class="hero__view-all">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M2 6h20v14H2zM12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+      </svg>
+      Ver todas las fotos
+    </button>
+  </div>
+
+  <div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Inicio</a>
+      <span>›</span>
+      <a href="/directorio/">Directorio</a>
+      <span>›</span>
+      <a href="/directorio/cordoba/">Córdoba</a>
+      <span>›</span>
+      <a href="/directorio/cordoba/cordoba/salones/">Salones</a>
+      <span>›</span>
+      <span>María Membrillo</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header__top">
+        <div class="header__title-group">
+          <div class="header__categories">
+            <span class="category-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 10l9-7 9 7v11H3zM9 21v-7h6v7"/>
+              </svg>
+              Salón infantil
+            </span>
+          </div>
+
+          <h1 class="header__title">María Membrillo</h1>
+
+          <!-- NUEVO: Rating (requiere nueva data) -->
+          <div class="new-data-warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 11v6M12 8h.01M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/>
+            </svg>
+            <div class="new-data-warning__content">
+              <h3>📊 Datos nuevos requeridos</h3>
+              <p>Rating, reseñas, rango de precio y tiempo de respuesta son datos que enriquecerían esta ficha pero requieren nuevo sistema de reseñas + investigación de mercado.</p>
+            </div>
+          </div>
+
+          <div class="header__rating">
+            <div class="rating-stars">★★★★★</div>
+            <span class="rating-text">4.8</span>
+            <span class="rating-count">(24 reseñas)</span>
+            <span class="badge-new-data">Requiere nueva data</span>
+          </div>
+
+          <div class="header__location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3c-3.3 0-6 2.7-6 6 0 5.2 6 12 6 12s6-6.8 6-12c0-3.3-2.7-6-6-6z"/>
+              <circle cx="12" cy="9" r="2"/>
+            </svg>
+            <span>Viracocha 6078, Zona Norte · Córdoba, Córdoba</span>
+          </div>
+        </div>
+
+        <div class="header__actions">
+          <button class="button-icon" title="Guardar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <path d="M7 3v5h8"/>
+              <path d="M17 21v-8H7v8"/>
+            </svg>
+          </button>
+          <button class="button-icon" title="Compartir">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zM6 12a3 3 0 1 1 0-6 3 3 0 0 1 0 6zM6 20a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+              <path d="M8.7 10.7l6.6 3.6M8.7 17.3l6.6-3.6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <p class="summary">
+        Salón de juego libre con inspiración Montessori, en Zona Norte. También arma festejos a domicilio.
+      </p>
+    </header>
+
+    <!-- Content Layout -->
+    <div class="content-layout">
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Facts Grid -->
+        <div class="facts-grid">
+          <div class="fact-card">
+            <div class="fact-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 20c0-3 2.7-5 6-5s6 2 6 5"/>
+              </svg>
+            </div>
+            <div class="fact-card__label">Capacidad</div>
+            <div class="fact-card__value">Hasta 60 personas</div>
+          </div>
+
+          <div class="fact-card">
+            <div class="fact-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 5h16v16H4zM4 10h16M8 3v4M16 3v4"/>
+              </svg>
+            </div>
+            <div class="fact-card__label">Edades</div>
+            <div class="fact-card__value">De 1 a 12 años</div>
+          </div>
+
+          <div class="fact-card">
+            <div class="fact-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 6v6l3.5 2"/>
+              </svg>
+            </div>
+            <div class="fact-card__label">Duración</div>
+            <div class="fact-card__value">Desde 2h 30min</div>
+          </div>
+
+          <div class="fact-card">
+            <div class="fact-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3c-3.3 0-6 2.7-6 6 0 5.2 6 12 6 12s6-6.8 6-12c0-3.3-2.7-6-6-6z"/>
+              </svg>
+            </div>
+            <div class="fact-card__label">Cobertura</div>
+            <div class="fact-card__value">+ festejos a domicilio</div>
+          </div>
+        </div>
+
+        <!-- About Section -->
+        <section class="section">
+          <h2 class="section__title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 11v6M12 8h.01M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/>
+            </svg>
+            Sobre María Membrillo
+          </h2>
+          <p class="section__text">
+            Ofrece un espacio pensado para que los chicos jueguen, exploren e imaginen, con instalaciones para chicos y para adultos. Tiene varias propuestas de cumpleaños en el salón y también lleva ambientación, mesas temáticas e inflables a domicilio.
+          </p>
+        </section>
+
+        <!-- Services Section -->
+        <section class="section">
+          <h2 class="section__title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 13l4 4L19 7"/>
+            </svg>
+            Instalaciones y servicios
+          </h2>
+          <div class="services-list">
+            <div class="service-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="service-item__text">Cumpleaños en el salón, con varias propuestas</span>
+            </div>
+            <div class="service-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="service-item__text">Jardín con mangrullo</span>
+            </div>
+            <div class="service-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="service-item__text">Sala de disfraces, boliche y sala de talleres</span>
+            </div>
+            <div class="service-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="service-item__text">Celebraciones de 1 y 2 años, baby showers y bautismos</span>
+            </div>
+            <div class="service-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="service-item__text">Ambientación y mesas temáticas a domicilio</span>
+            </div>
+            <div class="service-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="service-item__text">Juegos inflables para eventos</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Location Section -->
+        <section class="section">
+          <h2 class="section__title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3c-3.3 0-6 2.7-6 6 0 5.2 6 12 6 12s6-6.8 6-12c0-3.3-2.7-6-6-6z"/>
+              <circle cx="12" cy="9" r="2"/>
+            </svg>
+            Ubicación y horarios
+          </h2>
+          <div class="map-container">
+            🗺️ Mapa interactivo aquí
+          </div>
+          <div class="location-details">
+            <div class="location-detail">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3c-3.3 0-6 2.7-6 6 0 5.2 6 12 6 12s6-6.8 6-12c0-3.3-2.7-6-6-6z"/>
+                <circle cx="12" cy="9" r="2"/>
+              </svg>
+              <div class="location-detail__text">
+                <div class="location-detail__label">Dirección</div>
+                <div class="location-detail__value">Viracocha 6078, casi esquina Recta Martinoli · Zona Norte</div>
+              </div>
+            </div>
+            <div class="location-detail">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 6v6l3.5 2"/>
+              </svg>
+              <div class="location-detail__text">
+                <div class="location-detail__label">Horarios</div>
+                <div class="location-detail__value">Lunes a viernes desde las 16 h. Sábados, domingos y feriados, en turnos que empiezan a las 11, 14:30 o 18 h.</div>
+              </div>
+            </div>
+            <div class="location-detail">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 5h16v16H4zM4 10h16M8 3v4M16 3v4"/>
+              </svg>
+              <div class="location-detail__text">
+                <div class="location-detail__label">Reserva</div>
+                <div class="location-detail__value">Solo con cita previa, por teléfono o WhatsApp</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Questions Section -->
+        <div class="questions">
+          <h3 class="questions__title">Preguntas útiles antes de contratar</h3>
+          <p class="questions__hint">Son preguntas sugeridas para tu consulta. No describen cómo trabaja María Membrillo.</p>
+          <ul class="questions__list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+              </svg>
+              <span>Qué incluye cada propuesta y qué se cobra aparte, sobre todo comida, torta y animación.</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+              </svg>
+              <span>Cuántos chicos y cuántos adultos entran en la propuesta que te pasan.</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+              </svg>
+              <span>Si piden seña, cuánto es y qué pasa si tenés que cambiar la fecha.</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+              </svg>
+              <span>Si podés llevar comida o torta de afuera.</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+              </svg>
+              <span>Cuánto cuesta el tiempo extra si el festejo se estira.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Trust Section -->
+        <div class="trust-section">
+          <div class="trust-badges">
+            <div class="trust-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="trust-badge__text">Verificado: 14 oct 2026</span>
+            </div>
+            <div class="trust-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 11v6M12 8h.01M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/>
+              </svg>
+              <span class="trust-badge__text">3 fuentes oficiales</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="contact-panel">
+          <h3 class="contact-panel__title">Contactar</h3>
+          
+          <div class="contact-panel__cta">
+            <a href="https://wa.me/5493517684331" class="button button-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12a9 9 0 0 1-9 9c-1.5 0-2.9-.4-4.1-1L3 21l1.1-4.9A9 9 0 1 1 21 12z"/>
+                <path d="M9 11h6M9 14h4"/>
+              </svg>
+              Enviar WhatsApp
+            </a>
+            <a href="tel:+5493517684331" class="button button-secondary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 4h3l1.5 4.5-2.3 1.5c.8 1.5 1.8 2.8 3.3 3.5L13 11l4 1.5v3.5c0 1.1-.9 2-2 2-7.7 0-14-6.3-14-14C1 2.9 1.9 2 3 2h3z"/>
+              </svg>
+              Llamar ahora
+            </a>
+          </div>
+
+          <!-- NUEVO: Response badge -->
+          <div class="response-badge" style="border: 2px dashed #FFCC33; background: #FFF7D9;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 6v6l3.5 2"/>
+            </svg>
+            <div>
+              <div class="response-badge__text" style="color: #8A4B12;">Responde en menos de 1 hora</div>
+              <div style="font-size: 0.75rem; color: #526477; margin-top: 2px;">
+                <span class="badge-new-data" style="font-size: 0.7rem;">Requiere tracking</span>
+              </div>
+            </div>
+          </div>
+
+          <hr class="contact-panel__divider">
+
+          <div class="contact-panel__links">
+            <a href="https://www.mariamembrillo.com/" class="contact-link" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.2 2.2 3.2 5.2 3.2 9s-1 6.8-3.2 9c-2.2-2.2-3.2-5.2-3.2-9s1-6.8 3.2-9z"/>
+              </svg>
+              <div>
+                <div class="contact-link__label">Sitio web</div>
+                <div class="contact-link__value">mariamembrillo.com</div>
+              </div>
+            </a>
+
+            <div class="contact-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 4h3l1.5 4.5-2.3 1.5c.8 1.5 1.8 2.8 3.3 3.5L13 11l4 1.5v3.5c0 1.1-.9 2-2 2-7.7 0-14-6.3-14-14C1 2.9 1.9 2 3 2h3z"/>
+              </svg>
+              <div>
+                <div class="contact-link__label">Teléfono</div>
+                <div class="contact-link__value">(0351) 157 684331</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Related Providers -->
+    <section class="section">
+      <h2 class="section__title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 10l9-7 9 7v11H3zM9 21v-7h6v7"/>
+        </svg>
+        Otros salones en Córdoba
+      </h2>
+      <div class="related-grid">
+        <a href="#" class="related-card">
+          <div class="related-card__image">🏠</div>
+          <div class="related-card__content">
+            <h3 class="related-card__name">Diverworld</h3>
+            <p class="related-card__summary">Tres salas según la edad, con coordinadores, inflables y camas elásticas.</p>
+          </div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card__image">🎮</div>
+          <div class="related-card__content">
+            <h3 class="related-card__name">Candy VR</h3>
+            <p class="related-card__summary">Festejos con realidad virtual, videojuegos y pista de baile.</p>
+          </div>
+        </a>
+        <a href="#" class="related-card">
+          <div class="related-card__image">🎪</div>
+          <div class="related-card__content">
+            <h3 class="related-card__name">Piedra Libre</h3>
+            <p class="related-card__summary">Espacio de juegos y festejos infantiles en Alta Córdoba, cerca de Plaza Rivadavia.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
