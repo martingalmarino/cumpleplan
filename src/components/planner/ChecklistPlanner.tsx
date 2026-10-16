@@ -7,11 +7,13 @@ import { createId } from '../../lib/planner/ids';
 import { updatePlan } from '../../lib/planner/store';
 import type { Plan, Task } from '../../lib/planner/types';
 import { DirectoryCTA } from './DirectoryCTA';
+import { formatChecklistForWhatsApp, getWhatsAppUrl } from '../../lib/sharing';
 
 export function ChecklistPlanner({ plan }: { plan: Plan }) {
   const [title, setTitle] = useState('');
   const [offset, setOffset] = useState('-7');
   const [error, setError] = useState<string | null>(null);
+  const [pendingOnly, setPendingOnly] = useState(false);
   const progress = checklistProgress(plan.tasks);
   const groups = new Map<number, Task[]>();
   for (const task of [...plan.tasks].sort((a, b) => a.offsetDays - b.offsetDays)) {
@@ -29,6 +31,21 @@ export function ChecklistPlanner({ plan }: { plan: Plan }) {
       </p>
       <div className="progress" role="progressbar" aria-valuemin={0} aria-valuemax={progress.total} aria-valuenow={progress.done} aria-label="Tareas hechas">
         <span style={{ width: `${progress.ratio * 100}%` }} />
+      </div>
+      <div className="inline-actions">
+        <a
+          href={getWhatsAppUrl(formatChecklistForWhatsApp(plan.tasks, plan.event.date, pendingOnly))}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="button-quiet"
+          data-share-action="whatsapp-checklist"
+          data-pending-only={pendingOnly}
+        >
+          Compartir por WhatsApp
+        </a>
+        <label>
+          <input type="checkbox" checked={pendingOnly} onChange={(input) => setPendingOnly(input.target.checked)} /> Solo pendientes
+        </label>
       </div>
       {[...groups.entries()].map(([offsetDays, tasks]) => (
         <section key={offsetDays}>

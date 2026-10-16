@@ -8,6 +8,7 @@ import { formatQty } from '../../lib/planner/money';
 import { applyShoppingSync, generatedFromLines, previewShoppingSync, shoppingPlainText, upsertBudgetFromShopping } from '../../lib/planner/shopping';
 import { updatePlan } from '../../lib/planner/store';
 import type { BudgetCategory, Plan } from '../../lib/planner/types';
+import { formatShoppingForWhatsApp, getWhatsAppUrl } from '../../lib/sharing';
 
 export function ShoppingPlanner({ plan }: { plan: Plan }) {
   const [previewing, setPreviewing] = useState(false);
@@ -52,6 +53,16 @@ export function ShoppingPlanner({ plan }: { plan: Plan }) {
       <div className="inline-actions">
         <button type="button" className="button button-primary" onClick={() => setPreviewing(true)}>Ver cambios del cálculo</button>
         <button type="button" className="button-quiet" onClick={() => void copyList()}>Copiar texto</button>
+        <a
+          href={getWhatsAppUrl(formatShoppingForWhatsApp(plan.shoppingItems, onlyPending))}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="button-quiet"
+          data-share-action="whatsapp-shopping"
+          data-pending-only={onlyPending}
+        >
+          Compartir por WhatsApp
+        </a>
         <label>
           <input type="checkbox" checked={onlyPending} onChange={(input) => setOnlyPending(input.target.checked)} /> Solo pendientes
         </label>

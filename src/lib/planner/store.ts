@@ -20,6 +20,7 @@ export type PlannerSnapshot = {
   externalClear: boolean;
   loadIssue: LoadIssue | null;
   holdWrites: boolean;
+  wasEmpty: boolean;
 };
 
 const loadingPlan = createPlan('1970-01-01T00:00:00.000Z');
@@ -33,6 +34,7 @@ export const loadingSnapshot: PlannerSnapshot = {
   externalClear: false,
   loadIssue: null,
   holdWrites: true,
+  wasEmpty: true,
 };
 
 let snapshot: PlannerSnapshot = loadingSnapshot;
@@ -134,6 +136,7 @@ export function hydrate(): void {
       saveMessage: unavailable,
       holdWrites: true,
       loadIssue: { kind: 'unavailable', message: unavailable },
+      wasEmpty: true,
     });
     return;
   }
@@ -149,6 +152,7 @@ export function hydrate(): void {
       saveMessage: unavailable,
       holdWrites: true,
       loadIssue: { kind: 'unavailable', message: unavailable },
+      wasEmpty: true,
     });
     return;
   }
@@ -161,6 +165,7 @@ export function hydrate(): void {
       saveState: 'idle',
       saveMessage: null,
       loadIssue: null,
+      wasEmpty: false,
     });
     return;
   }
@@ -173,6 +178,7 @@ export function hydrate(): void {
       saveState: 'idle',
       saveMessage: null,
       loadIssue: null,
+      wasEmpty: true,
     });
     return;
   }
@@ -185,6 +191,7 @@ export function hydrate(): void {
     saveState: 'error',
     saveMessage: null,
     loadIssue: { kind, message: read.error },
+    wasEmpty: false,
   });
 }
 
