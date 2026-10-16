@@ -1,12 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#FFFDF7"/>
   <circle cx="860" cy="300" r="210" fill="#EDF7EA"/>
-  <circle cx="980" cy="150" r="18" fill="#FFCC33"/>
   <g transform="translate(140 150) scale(2)">
     <rect width="36" height="36" rx="10" fill="#237A32"/>
-    <path d="M12 8.5h11.2c1.4 0 2.3.9 2.3 2.2s-.9 2.2-2.3 2.2H16.2V27.2h-4.2V8.5z" fill="#FFFDF7"/>
-    <path d="M16.2 16.2h6.2c1.2 0 2 .8 2 1.8s-.8 1.8-2 1.8h-6.2v-3.6z" fill="#FFFDF7"/>
-    <path d="M25.2 6.2c1.5 1.6 2.2 2.7 2.2 3.6a2.2 2.2 0 0 1-4.4 0c0-.9.7-2 2.2-3.6z" fill="#FFCC33"/>
+    <path d="M12 9h10.5c1.3 0 2.2.8 2.2 2s-.9 2-2.2 2h-6.3v13.5h-4.2V9z" fill="#FFFDF7"/>
+    <path d="M16.2 16.5h5.8c1.1 0 1.9.7 1.9 1.6s-.8 1.6-1.9 1.6h-5.8v-3.2z" fill="#FFFDF7"/>
   </g>
   <text x="220" y="210" fill="#17324D" font-family="Nunito Sans, Segoe UI, sans-serif" font-size="72" font-weight="700">Festejito</text>
   <text x="150" y="340" fill="#17324D" font-family="Nunito Sans, Segoe UI, sans-serif" font-size="42" font-weight="700">Que el cumple sea una fiesta.</text>
